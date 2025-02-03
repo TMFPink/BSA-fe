@@ -1,0 +1,27 @@
+<ion-router-outlet></ion-router-outlet>
+
+  <div
+    class="fixed bottom-0 left-1/2 -translate-x-1/2 w-auto min-w-[400px] flex items-center justify-between p-5 bg-[var(--secondary-theme)] shadow-md mb-2 rounded-full"
+  >
+    <div class="text-white" routerLink="/home">
+      <nz-icon nzType="home" nzTheme="outline" class="text-3xl" />
+    </div>
+    <div class="text-white" >
+      <nz-icon nzType="container" nzTheme="outline"  class="text-4xl"/>
+    </div>
+    
+    <div
+      class="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center text-white bg-[var(--background-color)] rounded-full shadow-lg" routerLink="/create"
+    >
+      <nz-icon nzType="plus" nzTheme="outline" class="text-4xl" />
+    </div>
+    <div></div>
+    <div class="text-white" >
+      <nz-icon nzType="team" nzTheme="outline" class="text-3xl"/>  
+    </div>
+    
+    <div class="text-white" routerLink="/account">
+      <nz-icon nzType="user" nzTheme="outline" class="text-3xl" />
+    </div>
+  </div>
+

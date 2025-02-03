@@ -1,0 +1,33 @@
+.header {
+    h1 {
+      text-transform: capitalize;
+      font-size: 16px;
+    }
+  }
+  .title-center {
+    h1 {
+      text-align: center;
+    }
+  }
+  
+  .title-left {
+    h1 {
+      text-align: left;
+    }
+  }
+  
+  .title-right {
+    h1 {
+      text-align: right;
+    }
+  }
+  
+  .card {
+    // border-radius: var(--border-radius);
+    padding: 8px 12px;
+    height: 100%;
+    background: var(--secondary-theme) transparent;
+    border: 1px black solid;
+    
+  }
+  
