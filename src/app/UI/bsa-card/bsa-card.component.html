@@ -1,0 +1,26 @@
+<div class="card shadow-lg rounded-3xl mt-5 max-w-sm w-[400px]" [ngClass]="containerClass" #cardUI>
+  <div class=" flex justify-between items-center header border-b-4 py-3 border-[var(--secondary-theme)]">
+    <div
+      class="text-black"
+      #cardTitle
+    >
+      <div class="font-bold text-4xl">
+        <ng-content select="[cardTitle]"></ng-content>
+      </div>
+    </div>
+    <div
+    class="px-5 rounded-full " [ngStyle]="{ 'background-color': typeColor }"
+      
+    >
+      <div class="font-bold text-lg text-white"
+      >
+        {{cardType}}
+      </div>
+    </div>
+  </div>
+  
+  
+  <div class="my-5 content-center" [ngClass]="{ 'content-center': center }">
+    <ng-content></ng-content>
+  </div>
+</div>

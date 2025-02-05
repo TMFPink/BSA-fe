@@ -1,0 +1,44 @@
+<!-- <ion-header>
+  <ion-toolbar>
+    <div class="text-black flex items-center text-center">
+      <ion-title>Account Management</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header> -->
+<ion-content>
+  <div class="flex flex-col justify-center items-center mx-5 mt-10 mb-5">
+    <div class="bg-white rounded-full p-5">
+      <img
+        src="/assets/images/user-avt.webp"
+        alt="user-avt"
+        class="w-40 h-40"
+      />
+    </div>
+    <div class="text-black text-4xl font-bold mt-5">Hong Tran</div>
+  </div>
+
+  <div class="h-3/4 bg-[var(--secondary-theme)] text-white rounded-t-3xl">
+    <div class="flex flex-col">
+      <div class="text-2xl font-bold mt-10 p-5 border-t-2 border-gray-500">
+        Account Information
+      </div>
+      <div class="text-2xl font-bold p-5 border-t-2 border-gray-500">
+        Password Settings
+      </div>
+      <div class="text-2xl font-bold p-5 border-t-2 border-gray-500">
+        Linked Accounts
+      </div>
+      <div class="text-2xl font-bold p-5 border-y-2 border-gray-500">
+        Payments
+      </div>
+      <div class="flex items-center content-center justify-center my-5">
+        <div
+          class="text-2xl font-bold p-5 bg-red-400 text-white items-center content-center justify-center rounded-3xl"
+          (click)="onLogout()"
+        >
+          Log Out
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>

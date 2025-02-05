@@ -1,37 +1,54 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
 
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
 
-/* Basic CSS for apps built with Ionic */
+
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
 
-/* Optional CSS utils that can be commented out */
+
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
 
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "ng-zorro-antd/ng-zorro-antd.css";
+
+:root{
+    // --main-theme: #6dcfd1;
+    --main-theme: #6dcfd1;
+    --secondary-theme: #404040;
+    --font-color: #F2EFE7;
+    --side-color: #9ACBD0;
+    --background-color: #6dcfd1;
+    --ion-background-color: #6dcfd1 !important;
+    // --ion-background-color: white !important;
+    --ion-toolbar-background:     white !important;
+ 
+}
+
+.auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+
+  .no-ripple {
+    --ripple-color: transparent;
+  }
+
+  ion-searchbar.custom-searchbar {
+    --background: white;
+    --color: black ;
+    --placeholder-color: #404040;
+    --icon-color: #404040;
+    --clear-button-color: #fff;
+  
+    --border-radius: 8px;
+  }

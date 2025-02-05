@@ -1,0 +1,90 @@
+
+<ion-content>
+  <div class="mx-5 mt-20 mb-36">
+    <!-- <div class="flex flex-row justify-between fixed top-1 w-full bg-white">
+      
+    </div> -->
+
+    <div class="text-black text-3xl mt-5 font-bold">Summary</div>
+
+    <div class="relative space-y-1 w-full max-w-sm mx-auto mt-5">
+      <!-- Left Circle -->
+      <!-- <div
+        class="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-[var(--main-theme)] rounded-full"
+      ></div> -->
+
+      <!-- You Pay Section -->
+      <div
+        class="bg-[var(--secondary-theme)] py-6 px-7 rounded-t-3xl flex flex-row justify-between h-auto"
+      >
+        <div class="flex flex-col justify-center items-center">
+          <div class="font-bold text-3xl text-green-400">Owed You</div>
+          <div class="text-xl">100.000 VND</div>
+        </div>
+        <div class="flex flex-col justify-center items-center">
+          <div class="font-bold text-3xl text-red-400">You Owed</div>
+          <div class="text-xl">100.000 VND</div>
+        </div>
+      </div>
+
+      <!-- You Get Section -->
+      <div
+        class="bg-[var(--secondary-theme)] text-white p-6 rounded-b-3xl flex flex-row h-auto"
+      >
+        <div class="w-full h-56 justify-center content-center flex">
+          <!-- <div echarts [options]="pieChartOptions" class="w-full h-full"></div> -->
+        </div>
+      </div>
+
+      <!-- Right Circle -->
+      <!-- <div
+        class="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-[var(--main-theme)] rounded-full"
+      ></div> -->
+    </div>
+
+    <div class="text-black text-3xl mt-5 font-bold">Recent Activities</div>
+
+    <!-- <div class="flex justify-center content-center items-center"> -->
+      <div class="grid auto-grid gap-5 mt-5 place-items-center mx-auto">
+        <bsa-card-ui [cardType]="'Pay'">
+          <div cardTitle>abc</div>
+          
+          <div class="text-black">
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+          </div>
+        </bsa-card-ui>
+        <bsa-card-ui [cardType]="cardType">
+          <div cardTitle>abc</div>
+          
+          <div class="text-black">
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+          </div>
+        </bsa-card-ui>
+        <bsa-card-ui [cardType]="'Request'">
+          <div cardTitle>abc</div>
+          
+          <div class="text-black">
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+            <div>some text some txt</div>
+          </div>
+        </bsa-card-ui>
+      </div>
+    </div>
+    
+    
+  <!-- </div> -->
+</ion-content>
