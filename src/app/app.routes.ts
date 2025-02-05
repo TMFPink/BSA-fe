@@ -3,14 +3,16 @@ import { HomePage } from './Components/home/home.component';
 import { LoginComponent } from './Components/login/login.component';
 import { RegisterComponent } from './Components/register/register.component';
 import { ContentLayoutComponent } from './Components/content-layout/content-layout.component';
-import { AccountComponent } from './Components/account/account.component';
+import { AccountManagementComponent } from './Components/account-management/account-management.component';
 import { CreateBillComponent } from './Components/create-bill/create-bill.component';
+import { FriendsManagementComponent } from './Components/friends-management/friends-management.component';
+import { FriendsAddingComponent } from './Components/friends-adding/friends-adding.component';
 
 export const routes: Routes = [
   {
-    path:'',
+    path: '',
     component: ContentLayoutComponent,
-    children:[
+    children: [
       {
         path: '',
         redirectTo: 'home',
@@ -22,18 +24,35 @@ export const routes: Routes = [
       },
       {
         path: 'account',
-        component: AccountComponent,
+        component: AccountManagementComponent,
       },
       {
-        path:'create',
+        path: 'friends',
+        children: [
+          {
+            path: '',
+            component: FriendsManagementComponent,
+          },
+          {
+            path: 'add',
+            component: FriendsAddingComponent,
+          },
+          {
+            path: '**',
+            redirectTo: '',
+          },
+        ],
+      },
+      {
+        path: 'create',
         component: CreateBillComponent,
-      }
+      },
     ],
     providers: [],
   },
   {
     path: 'auth',
-    children:[
+    children: [
       {
         path: 'login',
         component: LoginComponent,
@@ -41,15 +60,15 @@ export const routes: Routes = [
       {
         path: 'register',
         component: RegisterComponent,
-      }, 
+      },
       {
-        path:'**',
+        path: '**',
         redirectTo: 'login',
-      }   
+      },
     ],
     providers: [],
   },
-  
+
   {
     path: '',
     redirectTo: 'auth',

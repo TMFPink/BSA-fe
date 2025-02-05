@@ -1,0 +1,51 @@
+<ion-content>
+  <div class="mx-5 mt-10 mb-5">
+    <ion-button
+      fill="clear"
+      class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
+      (click)="goBack()"
+    >
+      <ion-icon
+        name="caret-back-outline"
+        class="text-white text-4xl"
+      ></ion-icon>
+    </ion-button>
+    <ion-searchbar
+      class="rounded-lg custom-searchbar px-0"
+      placeholder="Find your new friends"
+    ></ion-searchbar>
+
+    <div class="flex flex-col items-center mt-5">
+      <div
+        class="w-[450px] bg-white rounded-2xl p-5 gap-x-5 flex flex-row items-center content-center"
+      >
+        <div
+          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
+        >
+          <img
+            src="/assets/images/user-avt.webp"
+            alt="user-avt"
+            class="w-28 h-28"
+          />
+        </div>
+
+        <div class="flex flex-col gap-y-5">
+          <div class="text-[var(--main-theme)] font-bold text-xl">
+            Le Huu Bached
+          </div>
+          <div class="text-sm text-black">4 mutual friends</div>
+        </div>
+
+        <ion-button
+          fill="clear"
+          class="no-ripple bg-[var(--main-theme)] rounded-lg"
+        >
+          <ion-icon
+            name="person-add-outline"
+            class="text-white text-4xl"
+          ></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>

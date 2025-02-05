@@ -28,7 +28,27 @@
     --font-color: #F2EFE7;
     --side-color: #9ACBD0;
     --background-color: #6dcfd1;
-    // --ion-background-color: #6dcfd1 !important;
-    --ion-background-color: white !important;
+    --ion-background-color: #6dcfd1 !important;
+    // --ion-background-color: white !important;
     --ion-toolbar-background:     white !important;
+ 
 }
+
+.auto-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  }
+
+  .no-ripple {
+    --ripple-color: transparent;
+  }
+
+  ion-searchbar.custom-searchbar {
+    --background: white;
+    --color: black ;
+    --placeholder-color: #404040;
+    --icon-color: #404040;
+    --clear-button-color: #fff;
+  
+    --border-radius: 8px;
+  }

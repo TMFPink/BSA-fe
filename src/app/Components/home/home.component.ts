@@ -18,9 +18,9 @@ import { CommonModule } from '@angular/common';
   templateUrl: 'home.html',
   styleUrls: ['home.page.scss'],
   imports: [
-    IonHeader,
-    IonToolbar,
-    IonTitle,
+    // IonHeader,
+    // IonToolbar,
+    // IonTitle,
     IonContent,
     NzIconModule,
     NzButtonModule,

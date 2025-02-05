@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { AccountComponent } from './account.component';
+import { AccountComponent } from './account-management.component';
 
 describe('AccountComponent', () => {
   let component: AccountComponent;

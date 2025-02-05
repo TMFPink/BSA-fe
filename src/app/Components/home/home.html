@@ -1,26 +1,9 @@
-<ion-header>
-  <ion-toolbar>
-    <div class="flex justify-between">
-      <ion-title><div class="text-[var(--secondary-theme)] font-bold">Hello, Bobby!</div></ion-title>
-      <div class="text-4xl text-black text-center flex mr-5">
-        <nz-icon nzType="bell" nzTheme="outline" />
-      </div>
-    </div>
-    
-    <!-- <div>
-      <div class="text-black text-2xl font-bold">Hi, Bobby!</div>
-      <div class="text-black text-lg">Welcome to the app!</div>
-    </div>
-    <div class="text-4xl text-black text-center flex">
-      <nz-icon nzType="bell" nzTheme="outline" />
-    </div> -->
-  </ion-toolbar>
-</ion-header>
+
 <ion-content>
-  <div class="mx-5 mt-5 mb-36">
-    <div class="flex flex-row justify-between fixed top-1 w-full bg-white">
+  <div class="mx-5 mt-20 mb-36">
+    <!-- <div class="flex flex-row justify-between fixed top-1 w-full bg-white">
       
-    </div>
+    </div> -->
 
     <div class="text-black text-3xl mt-5 font-bold">Summary</div>
 
@@ -62,8 +45,8 @@
     <div class="text-black text-3xl mt-5 font-bold">Recent Activities</div>
 
     <!-- <div class="flex justify-center content-center items-center"> -->
-      <div class="grid auto-grid gap-5 mt-5 place-items-center">
-        <bsa-card-ui [cardType]="cardType">
+      <div class="grid auto-grid gap-5 mt-5 place-items-center mx-auto">
+        <bsa-card-ui [cardType]="'Pay'">
           <div cardTitle>abc</div>
           
           <div class="text-black">
@@ -87,7 +70,7 @@
             <div>some text some txt</div>
           </div>
         </bsa-card-ui>
-        <bsa-card-ui [cardType]="cardType">
+        <bsa-card-ui [cardType]="'Request'">
           <div cardTitle>abc</div>
           
           <div class="text-black">
