@@ -11,12 +11,13 @@
 <ion-router-outlet></ion-router-outlet>
 
 <div
+  *ngIf="!hideNavBar"
   class="fixed bottom-0 left-1/2 -translate-x-1/2 w-auto min-w-[400px] flex items-center justify-between p-5 bg-[var(--secondary-theme)] mb-2 rounded-full"
 >
   <div class="text-white" routerLink="/home">
     <nz-icon nzType="home" nzTheme="outline" class="text-3xl" />
   </div>
-  <div class="text-white">
+  <div class="text-white" (click)="toggleDarkMode()">
     <nz-icon nzType="container" nzTheme="outline" class="text-4xl" />
   </div>
 

@@ -19,43 +19,9 @@
       </ion-button>
     </div>
 
-    <div class="grid auto-grid place-items-center">
-      <div
-        class="max-w-sm w-[400px] bg-white rounded-2xl p-5 flex flex-row items-center content-center"
-      >
-        <div
-          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
-        >
-          <img
-            src="/assets/images/user-avt.webp"
-            alt="user-avt"
-            class="w-28 h-28"
-          />
-        </div>
-
-        <div
-          class="ml-5 flex flex-col items-center content-center justify-center gap-y-5"
-        >
-          <div class="text-[var(--main-theme)] font-bold text-xl">
-            John Cena
-          </div>
-          <div class="text-sm text-black">4 mutual friends</div>
-          <div class="flex flex-row gap-5">
-            <ion-button
-              class="bg-[var(--secondary-theme)] rounded-lg"
-              fill="clear"
-            >
-              <ion-icon name="close-outline" class="text-white"></ion-icon>
-            </ion-button>
-            <ion-button fill="clear" class="bg-[var(--main-theme)] rounded-lg">
-              <ion-icon
-                class="font-bold text-black"
-                name="checkmark-outline"
-              ></ion-icon>
-            </ion-button>
-          </div>
-        </div>
-      </div>
+    <div class="grid auto-grid place-items-center gap-5">
+      <bsa-user-card [isFriendRequest]="true"></bsa-user-card>
+      <bsa-user-card [isFriendRequest]="true"></bsa-user-card>
     </div>
 
     <div
@@ -66,94 +32,8 @@
 
     <div class="text-black text-3xl my-5 font-bold">Your Friends</div>
     <div class="grid auto-grid gap-5 place-items-center">
-      <!-- friends card -->
-      <div
-        class="max-w-sm w-[400px] bg-white rounded-2xl p-5 flex flex-row items-center content-center"
-      >
-        <div
-          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
-        >
-          <img
-            src="/assets/images/user-avt.webp"
-            alt="user-avt"
-            class="w-28 h-28"
-          />
-        </div>
-
-        <div class="ml-5 flex flex-col items-center content-center gap-y-5">
-          <div class="text-[var(--main-theme)] font-bold text-xl">
-            Le Huu Bached
-          </div>
-          <div class="text-sm text-black">4 mutual friends</div>
-        </div>
-      </div>
-
-      <!-- friends card -->
-      <div
-        class="max-w-sm w-[400px] bg-white rounded-2xl p-5 flex flex-row items-center content-center"
-      >
-        <div
-          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
-        >
-          <img
-            src="/assets/images/user-avt.webp"
-            alt="user-avt"
-            class="w-28 h-28"
-          />
-        </div>
-
-        <div class="ml-5 flex flex-col items-center content-center gap-y-5">
-          <div class="text-[var(--main-theme)] font-bold text-xl">
-            Le Huu Bached
-          </div>
-          <div class="text-sm text-black">10-10-2010</div>
-        </div>
-      </div>
-
-      <!-- friends card -->
-      <div
-        class="max-w-sm w-[400px] bg-white rounded-2xl p-5 flex flex-row items-center content-center"
-      >
-        <div
-          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
-        >
-          <img
-            src="/assets/images/user-avt.webp"
-            alt="user-avt"
-            class="w-28 h-28"
-          />
-        </div>
-
-        <div class="ml-5 flex flex-col items-center content-center gap-y-5">
-          <div class="text-[var(--main-theme)] font-bold text-xl">
-            Le Huu Bached
-          </div>
-          <div class="text-sm text-black">10-10-2010</div>
-        </div>
-      </div>
-
-      <!-- friends card -->
-      <div
-        class="max-w-sm w-[400px] bg-white rounded-2xl p-5 flex flex-row items-center content-center"
-      >
-        <div
-          class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
-        >
-          <img
-            src="/assets/images/user-avt.webp"
-            alt="user-avt"
-            class="w-28 h-28"
-          />
-        </div>
-
-        <div class="ml-5 flex flex-col items-center content-center gap-y-5">
-          <div class="text-[var(--main-theme)] font-bold text-xl">
-            Le Huu Bached
-          </div>
-          <div class="text-sm text-black">10-10-2010</div>
-        </div>
-      </div>
-
+      <bsa-user-card></bsa-user-card>
+      <bsa-user-card></bsa-user-card>
       <div
         class="text-lg text-black items-center content-center justify-center flex m-5"
       >
