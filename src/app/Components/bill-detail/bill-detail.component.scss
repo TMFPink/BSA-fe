@@ -1,0 +1,12 @@
+// ...existing code...
+
+.selected-option {
+  border-bottom: 2px solid var(--secondary-theme);
+  padding-bottom: 5px;
+  color: black;
+  font-weight: bold;
+}
+
+.amount-custom-input {
+  border-radius: 15px !important;
+}

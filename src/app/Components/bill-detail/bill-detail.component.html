@@ -1,0 +1,165 @@
+<div class="text-black text-3xl my-5 font-bold">Bill Information</div>
+<div
+  class="flex flex-row content-center border bill-border bg-[var(--main-theme)] rounded-2xl items-center justify-between p-5 mt-5"
+>
+  <div class="flex flex-col content-center justify-center">
+    <div class="text-black text-2xl font-bold">Lunch Lobby</div>
+    <div class="text-black text-xl">05/12/2003</div>
+  </div>
+
+  <div
+    class="rounded-2xl px-5 py-2 flex items-center text-center text-3xl"
+    [ngStyle]="{ 'background-color': getBillCategoryBG('food') }"
+  >
+    Gaming
+  </div>
+</div>
+
+<div class="relative w-full mx-auto mt-10">
+  <!-- Wrapping profile pictures container -->
+
+  <!-- DO NOT DELETE THIS -->
+
+  <!-- <div
+    class="flex justify-center items-center gap-5 flex-wrap bill-border rounded-2xl p-5 w-full"
+  >
+    <ng-container *ngFor="let participant of participants; let i = index">
+      <div
+        class="rounded-full overflow-hidden border-4 border-[var(--main-theme)] p-5 flex items-center justify-center"
+      >
+        <img
+          [src]="participant.avatar"
+          class="w-16 h-16 object-cover"
+          alt="participant"
+        />
+      </div>
+    </ng-container>
+    <div
+      class="w-28 h-28 rounded-full overflow-hidden border-4 border-[var(--secondary-theme)] border-dashed p-5 flex items-center justify-center"
+    >
+      <div class="text-lg text-[var(--secondary-theme)]">Edit</div>
+    </div>
+  </div> -->
+</div>
+<div class="text-black text-3xl my-5 font-bold">Payer</div>
+<div
+  class="flex flex-col content-center items-center justify-center bg-[var(--main-theme)] border-2 bill-border rounded-2xl p-5 mt-5"
+>
+  <div class="flex flex-row gap-5 px-5 w-full justify-between">
+    <div
+      class="text-gray-500 text-lg font-bold cursor-pointer"
+      [ngClass]="{ 'selected-option': selectedPayerCate === 'all' }"
+      (click)="onChangeOptions('all', 'payer')"
+    >
+      Everyone paid
+    </div>
+    <div
+      class="text-gray-500 text-lg font-bold cursor-pointer"
+      [ngClass]="{ 'selected-option': selectedPayerCate === 'custom-payer' }"
+      (click)="onChangeOptions('custom-payer', 'payer')"
+    >
+      Pay for everyone
+    </div>
+  </div>
+  <div *ngIf="selectedPayerCate === 'custom-payer'">
+    <div class="mt-5">
+      <nz-select
+        [(ngModel)]="payerOption"
+        nzSize="large"
+        [nzShowArrow]="true"
+        class="min-w-[350px] w-full"
+      >
+        @for (participant of participants; track $index) {
+        <nz-option
+          [nzValue]="participant"
+          [nzLabel]="participant.name"
+        ></nz-option>
+        }
+      </nz-select>
+    </div>
+  </div>
+</div>
+
+<div class="text-black text-3xl my-5 font-bold">Splitting Information</div>
+<div
+  class="flex flex-col content-center items-center justify-center bg-[var(--main-theme)] border-2 bill-border rounded-2xl p-5 mt-5"
+>
+  <div class="text-black text-xl font-bold">Total Amount</div>
+  <div class="text-black text-4xl font-bold">
+    {{ formatMoney(totalAmount) }} VND
+  </div>
+
+  <div class="flex flex-row gap-5 mt-5 px-5 w-full justify-between">
+    <div
+      class="text-gray-500 text-2xl font-bold cursor-pointer"
+      [ngClass]="{ 'selected-option': selectedCategory === 'equal' }"
+      (click)="onChangeOptions('equal', 'split')"
+    >
+      Equal Split
+    </div>
+    <div
+      class="text-gray-500 text-2xl font-bold cursor-pointer"
+      [ngClass]="{ 'selected-option': selectedCategory === 'custom' }"
+      (click)="onChangeOptions('custom', 'split')"
+    >
+      Custom Split
+    </div>
+  </div>
+</div>
+<div class="w-full mt-5 space-y-5">
+  @for (participant of participants; track $index) {
+  <div
+    class="bg-white rounded-2xl shadow-md border-2 border-[var(--main-theme)] p-5 flex flex-col gap-5"
+  >
+    <div class="flex content-center items-center gap-5">
+      <div class="flex content-center items-center gap-5">
+        <div class="rounded-3xl border-[var(--main-theme)] border-2 p-2">
+          <img
+            src="/assets/images/user-avt.webp"
+            alt="user-avt"
+            class="w-16 h-16"
+          />
+        </div>
+        <div class="flex flex-col">
+          <div class="text-[var(--main-theme)] text-2xl font-bold">
+            Bached pay's for:
+          </div>
+          <div class="text-black text-2xl font-bold">
+            {{ formatTooltip(participant.splitAmount) }} VND
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="selectedCategory === 'equal'">
+      <nz-slider
+        [nzMin]="0"
+        [nzMax]="totalAmount"
+        [nzMarks]="marks"
+        [nzStep]="step"
+        [(ngModel)]="participant.splitAmount"
+        [nzTipFormatter]="formatTooltip"
+        (ngModelChange)="onSplitChange($event, $index)"
+      >
+      </nz-slider>
+    </div>
+    <div *ngIf="selectedCategory === 'custom'">
+      <nz-select
+        [(ngModel)]="participantSelections[$index]"
+        (ngModelChange)="onDetailSelect($event, $index)"
+        style="width: 100%"
+        nzMode="multiple"
+        nzSize="large"
+        [nzShowArrow]="true"
+      >
+        @for (detail of getAvailableDetails($index); track $index) {
+        <nz-option
+          [nzValue]="detail"
+          [nzLabel]="detail.description"
+        ></nz-option>
+        }
+      </nz-select>
+    </div>
+  </div>
+  }
+</div>

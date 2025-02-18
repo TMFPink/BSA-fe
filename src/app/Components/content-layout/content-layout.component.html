@@ -11,27 +11,54 @@
 <ion-router-outlet></ion-router-outlet>
 
 <div
+  *ngIf="!hideNavBar"
   class="fixed bottom-0 left-1/2 -translate-x-1/2 w-auto min-w-[400px] flex items-center justify-between p-5 bg-[var(--secondary-theme)] mb-2 rounded-full"
 >
-  <div class="text-white" routerLink="/home">
-    <nz-icon nzType="home" nzTheme="outline" class="text-3xl" />
+  <div
+    routerLink="/home"
+    [ngClass]="
+      isRouteActive('/home')
+        ? 'text-[var(--main-theme)] text-3xl '
+        : 'text-3xl text-white'
+    "
+  >
+    <nz-icon nzType="home" nzTheme="outline" />
   </div>
-  <div class="text-white">
+  <div (click)="toggleDarkMode()">
     <nz-icon nzType="container" nzTheme="outline" class="text-4xl" />
   </div>
 
   <div
     class="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center text-white bg-[var(--background-color)] rounded-full shadow-lg border-4 border-[var(--secondary-theme)]"
     routerLink="/create"
+    [ngClass]="
+      isRouteActive('/create')
+        ? 'text-3xl text-[var(--main-theme)]'
+        : 'text-3xl text-white'
+    "
   >
-    <nz-icon nzType="plus" nzTheme="outline" class="text-4xl" />
+    <nz-icon nzType="plus" nzTheme="outline" />
   </div>
   <div></div>
-  <div class="text-white" routerLink="/friends">
-    <nz-icon nzType="team" nzTheme="outline" class="text-3xl" />
+  <div
+    routerLink="/friends"
+    [ngClass]="
+      isRouteActive('/friends')
+        ? 'text-3xl text-[var(--main-theme)]'
+        : 'text-3xl text-white'
+    "
+  >
+    <nz-icon nzType="team" nzTheme="outline" />
   </div>
 
-  <div class="text-white" routerLink="/account">
-    <nz-icon nzType="user" nzTheme="outline" class="text-3xl" />
+  <div
+    routerLink="/account"
+    [ngClass]="
+      isRouteActive('/account')
+        ? 'text-3xl text-[var(--main-theme)]'
+        : 'text-3xl text-white'
+    "
+  >
+    <nz-icon nzType="user" nzTheme="outline" />
   </div>
 </div>

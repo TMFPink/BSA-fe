@@ -1,3 +1,206 @@
-<p>
-  create-bill works!
-</p>
+<!-- <ion-header>
+  <ion-toolbar>
+    <div class="text-black flex items-center text-center">
+      <ion-title>Friends Management</ion-title>
+    </div>
+  </ion-toolbar>
+</ion-header> -->
+<ion-content>
+  <div class="mx-5 mt-10 mb-32" [formGroup]="form">
+    <div class="flex justify-between">
+      <ion-button
+        fill="clear"
+        class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
+        (click)="onNavigate()"
+      >
+        <ion-icon
+          name="caret-back-outline"
+          class="text-white text-4xl"
+        ></ion-icon>
+      </ion-button>
+      <div class="flex items-center text-center text-4xl">
+        <div class="text-black">{{ currentStage }}</div>
+        <span class="text-[var(--secondary-theme)]">/3</span>
+      </div>
+    </div>
+
+    <!-- first stage -->
+    <div *ngIf="firstStage">
+      <nz-form-item>
+        <div class="text-black text-3xl my-5 font-bold">Bill Name</div>
+        <nz-form-control>
+          <input
+            nz-input
+            nzSize="large"
+            nz-input
+            placeholder="Bill's name"
+            class="h-14"
+            formControlName="billName"
+          />
+        </nz-form-control>
+      </nz-form-item>
+
+      <nz-form-item>
+        <div class="flex flex-col w-full">
+          <div class="text-black text-3xl my-5 font-bold">Date</div>
+          <nz-form-control>
+            <nz-date-picker
+              nzSize="large"
+              nzFormat="dd/MM/yyyy"
+              nzAllowClear="false"
+              nzSuffixIcon=""
+              class="shadow-lg h-14 w-full"
+              formControlName="date"
+            ></nz-date-picker>
+          </nz-form-control>
+        </div>
+      </nz-form-item>
+
+      <!-- <div class="text-black text-3xl my-5 font-bold">Groups</div> -->
+      <div class="text-black text-3xl my-5 font-bold">Participants</div>
+      <div class="grid auto-grid gap-5 place-items-center">
+        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+      </div>
+    </div>
+
+    <!-- second stage -->
+    <div *ngIf="secondStage">
+      <div class="text-black text-3xl my-5 font-bold">Categories</div>
+      <div
+        class="flex flex-row flex-wrap gap-4 content-center items-center justify-center border-2 bill-border rounded-2xl p-5 mt-5"
+      >
+        <!-- Food -->
+        <div
+          (click)="selectCategory('food')"
+          [ngClass]="{
+            'ring-4 ring-offset-2 ring-[#FEAE6F] scale-105 transform transition-all opacity-100':
+              selectedCategory === 'food',
+            'opacity-30': selectedCategory !== 'food'
+          }"
+          class="bg-[#FEAE6F] rounded-xl p-6 text-white cursor-pointer w-40 h-40 max-w-40 flex items-center justify-center content-center flex-col transition-all"
+        >
+          <div class="flex justify-center mb-4">
+            <ion-icon name="fast-food-outline" class="text-5xl"></ion-icon>
+          </div>
+          <div class="text-center text-2xl font-semibold">Food</div>
+        </div>
+
+        <!-- Game -->
+        <div
+          (click)="selectCategory('game')"
+          [ngClass]="{
+            'ring-4 ring-offset-2 ring-purple-600 scale-105 transform transition-all opacity-100':
+              selectedCategory === 'game',
+            'opacity-30': selectedCategory !== 'game'
+          }"
+          class="bg-purple-600 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
+        >
+          <div class="flex justify-center mb-4">
+            <ion-icon
+              name="game-controller-outline"
+              class="text-5xl"
+            ></ion-icon>
+          </div>
+          <div class="text-center text-2xl font-semibold">Gaming</div>
+        </div>
+        <!-- Transportation -->
+        <div
+          (click)="selectCategory('transport')"
+          [ngClass]="{
+            'ring-4 ring-offset-2 ring-blue-700 scale-105 transform transition-all opacity-100':
+              selectedCategory === 'transport',
+            'opacity-30': selectedCategory !== 'transport'
+          }"
+          class="bg-blue-700 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
+        >
+          <div class="flex justify-center mb-4">
+            <ion-icon name="car-outline" class="text-5xl"></ion-icon>
+          </div>
+          <div class="text-center text-2xl font-semibold">Transport</div>
+        </div>
+        <!-- Others -->
+        <div
+          (click)="selectCategory('others')"
+          [ngClass]="{
+            'ring-4 ring-offset-2 ring-[var(--secondary-theme)] scale-105 transform transition-all opacity-100':
+              selectedCategory === 'others',
+            'opacity-30': selectedCategory !== 'others'
+          }"
+          class="bg-[var(--secondary-theme)] rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
+        >
+          <div class="flex justify-center mb-4">
+            <ion-icon name="trail-sign-outline" class="text-5xl"></ion-icon>
+          </div>
+          <div class="text-center text-2xl font-semibold">Others</div>
+        </div>
+      </div>
+      <div class="text-black text-3xl my-5 font-bold">Bill Details</div>
+      <form nz-form>
+        <div class="flex flex-col gap-4 mb-4">
+          <textarea
+            nz-input
+            nzSize="large"
+            placeholder="Description"
+            [(ngModel)]="newDetailDescription"
+            [ngModelOptions]="{ standalone: true }"
+            class="h-40"
+          ></textarea>
+          <div class="flex gap-2">
+            <input
+              nz-input
+              type="number"
+              nzSize="large"
+              placeholder="Amount"
+              [(ngModel)]="newDetailAmount"
+              [ngModelOptions]="{ standalone: true }"
+              class="h-14"
+            />
+            <div class="flex justify-end">
+              <div
+                class="bg-[var(--secondary-theme)] text-white text-xl font-bold rounded-2xl w-32 flex items-center justify-center h-[70px]"
+                (click)="addBillDetail()"
+              >
+                Add
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+
+      @for (detail of billDetails; track $index) {
+      <div
+        class="flex gap-4 mb-4 w-full border-2 bill-border rounded-2xl p-5 items-center justify-between content-center"
+      >
+        <div class="text-black text-2xl">
+          {{ detail.description }}
+        </div>
+        <div class="text-black text-xl font-bold">
+          {{ formatMoneyDetail(detail.amount) }}VND
+        </div>
+      </div>
+      }
+      <div class="text-black text-3xl my-5 font-bold">Total Amount</div>
+      <div
+        class="text-black text-4xl font-bold border-2 bill-border rounded-2xl p-5 bg-white"
+      >
+        {{ formatMoney(totalAmount) }} VND
+      </div>
+    </div>
+    <div *ngIf="thirdStage">
+      <bsa-bill-detail
+        [billDetails]="billDetails"
+        [totalAmount]="totalAmount"
+      ></bsa-bill-detail>
+    </div>
+    <div
+      class="continue-button z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-full w-80 fixed bottom-14 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+      (click)="nextStage()"
+    >
+      Continue
+    </div>
+  </div>
+</ion-content>

@@ -16,6 +16,7 @@ import {
   closeOutline,
   personAddOutline,
 } from 'ionicons/icons';
+import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 @Component({
   selector: 'app-friends-management',
   templateUrl: './friends-management.component.html',
@@ -29,6 +30,7 @@ import {
     IonButton,
     IonIcon,
     RouterLink,
+    UserCardComponent,
   ],
 })
 export class FriendsManagementComponent implements OnInit {
