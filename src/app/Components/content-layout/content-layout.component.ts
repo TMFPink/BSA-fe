@@ -24,6 +24,7 @@ import { filter } from 'rxjs/operators';
 export class ContentLayoutComponent implements OnInit {
   hideNavBar: boolean = false;
   private routesWithoutNavBar = ['/friends/add', '/create']; // Add routes where you want to hide the nav bar
+  currentRoute: string = '';
 
   constructor(private router: Router, private navService: NavigationService) {
     this.router.events
@@ -32,12 +33,17 @@ export class ContentLayoutComponent implements OnInit {
         this.hideNavBar = this.routesWithoutNavBar.some((route) =>
           event.urlAfterRedirects.includes(route)
         );
+        this.currentRoute = event.urlAfterRedirects;
       });
 
     // Change 'light' to 'light-mode'
     if (localStorage.getItem('theme') == 'light') {
       document.documentElement.classList.add('light-mode');
     }
+  }
+
+  isRouteActive(route: string): boolean {
+    return this.currentRoute.startsWith(route);
   }
 
   toggleDarkMode() {

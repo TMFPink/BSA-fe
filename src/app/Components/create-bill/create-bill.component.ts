@@ -92,23 +92,15 @@ export class CreateBillComponent implements OnInit {
   }
 
   form: FormGroup = this.fb.group({
-    billName: '',
-    date: '',
-    totalAmount: '',
-    category: '',
-    billDetails: this.fb.array([
-      this.fb.group({
-        description: '',
-        amount: 0,
-      }),
-    ]),
+    billName: [''],
+    date: [null],
+    totalAmount: [''],
+    category: [''],
+    billDetails: this.fb.array([]),
   });
 
   ngOnInit() {
-    this.form.get('billDetails')?.valueChanges.subscribe((value: any) => {
-      this.newDetailDescription = value.description;
-      this.newDetailAmount = value.amount;
-    });
+    // Remove the previous subscription as it's not needed
   }
 
   onNavigate(): void {
@@ -162,13 +154,14 @@ export class CreateBillComponent implements OnInit {
 
   addBillDetail() {
     if (this.newDetailDescription && this.newDetailAmount > 0) {
-      // const billDetailsArray = this.form.get('billDetails') as FormArray;
-      // billDetailsArray.push(
-      //   this.fb.group({
-      //     description: this.newDetailDescription,
-      //     amount: this.newDetailAmount,
-      //   })
-      // );
+      const billDetailsArray = this.form.get('billDetails') as FormArray;
+      billDetailsArray.push(
+        this.fb.group({
+          description: this.newDetailDescription,
+          amount: this.newDetailAmount,
+        })
+      );
+
       this.billDetails.push({
         description: this.newDetailDescription,
         amount: this.newDetailAmount,
@@ -181,5 +174,9 @@ export class CreateBillComponent implements OnInit {
 
   selectCategory(category: string) {
     this.selectedCategory = category;
+  }
+
+  get billDetailsArray() {
+    return this.form.get('billDetails') as FormArray;
   }
 }

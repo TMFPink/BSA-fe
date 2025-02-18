@@ -15,6 +15,7 @@ import {
 import { IonIcon } from '@ionic/angular/standalone';
 import { formatCurrency } from 'src/app/utils/format-currency';
 import { NzMarks, NzSliderModule } from 'ng-zorro-antd/slider';
+import { NzSelectModule } from 'ng-zorro-antd/select';
 
 @Component({
   selector: 'bsa-bill-detail',
@@ -29,6 +30,7 @@ import { NzMarks, NzSliderModule } from 'ng-zorro-antd/slider';
     NzInputModule,
     FormsModule,
     NzSliderModule,
+    NzSelectModule,
   ],
 })
 export class BillDetailComponent implements OnInit {
@@ -36,16 +38,17 @@ export class BillDetailComponent implements OnInit {
   @Input() billDetails: { description: string; amount: number }[] = [];
   @Input() totalAmount: number = 0;
   participants = [
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0 },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'NA' },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Bached' },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Cuong' },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Hong' },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Kien' },
+    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Hung' },
     // { avatar: '/assets/images/user-avt.webp' },
   ];
 
   selectedCategory: string = 'equal';
+  selectedPayerCate: string = 'all';
   defaultSplitAmount: string = '';
 
   totalParticipants: number = 5;
@@ -55,6 +58,10 @@ export class BillDetailComponent implements OnInit {
 
   newDetailDescription: string = '';
   newDetailAmount: number = 0;
+
+  selectedItems: { [key: number]: any } = {};
+  participantSelections: any[] = new Array(this.totalParticipants).fill(null);
+  payerOption: string = 'all';
 
   constructor() {
     addIcons({
@@ -105,6 +112,36 @@ export class BillDetailComponent implements OnInit {
     }
   }
 
+  onDetailSelect(details: any[], participantIndex: number) {
+    // Clear previous selections for this participant
+    const previousSelections = this.selectedItems[participantIndex];
+    if (previousSelections) {
+      delete this.selectedItems[participantIndex];
+    }
+
+    // Add new selections
+    this.selectedItems[participantIndex] = details;
+
+    // Calculate total amount for all selected items
+    const totalAmount = details.reduce((sum, detail) => sum + detail.amount, 0);
+    this.participants[participantIndex].splitAmount = totalAmount;
+  }
+
+  getAvailableDetails(participantIndex: number) {
+    return this.billDetails.filter((detail) => {
+      // Check if this detail is selected by any other participant
+      return !Object.entries(this.selectedItems).some(
+        ([idx, selectedDetails]) => {
+          const otherParticipant = parseInt(idx) !== participantIndex;
+          const detailSelected =
+            Array.isArray(selectedDetails) &&
+            selectedDetails.some((selected) => selected === detail);
+          return otherParticipant && detailSelected;
+        }
+      );
+    });
+  }
+
   ngOnInit() {
     this.updateSliderConfig();
     for (let i = 0; i < this.participants.length; i++) {
@@ -130,5 +167,42 @@ export class BillDetailComponent implements OnInit {
 
     this.step = step;
     this.marks = marks;
+  }
+  onChangeOptions(value: string, type: string) {
+    switch (type) {
+      case 'split':
+        {
+          switch (value) {
+            case 'equal':
+              for (let i = 0; i < this.participants.length; i++) {
+                this.participants[i].splitAmount = Math.ceil(
+                  this.totalAmount / this.totalParticipants
+                );
+              }
+              this.selectedCategory = 'equal';
+              break;
+            case 'custom':
+              for (let i = 0; i < this.participants.length; i++) {
+                this.participants[i].splitAmount = 0;
+              }
+              this.selectedCategory = 'custom';
+              break;
+          }
+        }
+        break;
+      case 'payer':
+        {
+          switch (value) {
+            case 'all':
+              this.selectedPayerCate = 'all';
+              this.payerOption = 'all';
+              break;
+            case 'custom-payer':
+              this.selectedPayerCate = 'custom-payer';
+              break;
+          }
+        }
+        break;
+    }
   }
 }

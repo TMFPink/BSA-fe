@@ -191,32 +191,15 @@
 .ant-slider-mark-text{
   color: black !important;
 }
-// .ant-switch-checked {
-//   background-color: #6dcfd1 !important;
-// }
-
-// .ant-switch-checked .ant-switch-inner {
- 
-//   margin: 0 35px 0px 7px !important;
-// }
-
-// .ant-switch-inner {
-//   font-size: 25px !important;
-//   margin: 0 7px 0px 35px !important;
-// }
-// .ant-switch{
-//   height:50px !important;
-//   width: 200px !important;
-// }
-// .ant-switch-handle {
- 
-//   width: 45px !important;
-//   height: 45px !important;
-// }
-// .ant-switch-handle::before {
-//   border-radius: 100% !important;
-  
-// }
-// .ant-switch-checked .ant-switch-handle {
-//   left: calc(75%) !important;
-// }
+.ant-select:not(.ant-select-customize-input) .ant-select-selector{
+  border-radius: 10px !important;
+  border: 1px solid #6dcfd1 !important;
+}
+.ant-select-multiple .ant-select-selection-item{
+  border-radius: 10px !important;
+  background-color: var(--background-color) !important;
+}
+.ant-select-arrow .anticon:not(.ant-select-suffix){
+  color: #6dcfd1 !important;
+  font-size: large !important;
+}
