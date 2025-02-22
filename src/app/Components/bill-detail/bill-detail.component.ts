@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { NavigationService } from 'src/app/Service/navigation.service';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
@@ -11,18 +11,22 @@ import {
   carOutline,
   gameControllerOutline,
   trailSignOutline,
+  caretBackOutline,
 } from 'ionicons/icons';
-import { IonIcon } from '@ionic/angular/standalone';
-import { formatCurrency } from 'src/app/utils/format-currency';
+import { IonIcon, IonButton, IonContent } from '@ionic/angular/standalone';
+import { formatCurrency } from 'src/app/utils';
 import { NzMarks, NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSelectModule } from 'ng-zorro-antd/select';
-
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
 @Component({
   selector: 'bsa-bill-detail',
   templateUrl: './bill-detail.component.html',
   styleUrls: ['./bill-detail.component.scss'],
   standalone: true,
   imports: [
+    IonContent,
     CommonModule,
     NzSwitchModule,
     NzIconModule,
@@ -31,9 +35,12 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
     FormsModule,
     NzSliderModule,
     NzSelectModule,
+    IonIcon,
+    IonButton,
+    BackButtonComponent,
   ],
 })
-export class BillDetailComponent implements OnInit {
+export class BillDetailComponent implements OnInit, OnDestroy {
   // @Input() form!: FormGroup;
   @Input() billDetails: { description: string; amount: number }[] = [];
   @Input() totalAmount: number = 0;
@@ -63,13 +70,31 @@ export class BillDetailComponent implements OnInit {
   participantSelections: any[] = new Array(this.totalParticipants).fill(null);
   payerOption: string = 'all';
 
-  constructor() {
+  isBillDetail = false;
+
+  unsubscribe$ = new Subscription();
+  isBillDetail$ = this.route.data;
+
+  constructor(
+    private route: ActivatedRoute,
+    private routeService: NavigationService
+  ) {
     addIcons({
+      caretBackOutline,
       fastFoodOutline,
       carOutline,
       gameControllerOutline,
       trailSignOutline,
     });
+
+    this.unsubscribe$.add(
+      this.route.data.subscribe(({ isBillDetail }) => {
+        this.isBillDetail = isBillDetail;
+
+        if (this.isBillDetail) {
+        }
+      })
+    );
   }
 
   getBillCategoryBG(billCategory: string) {
@@ -204,5 +229,9 @@ export class BillDetailComponent implements OnInit {
         }
         break;
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.unsubscribe();
   }
 }

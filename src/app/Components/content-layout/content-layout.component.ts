@@ -6,7 +6,7 @@ import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
 import { NavigationService } from 'src/app/Service/navigation.service';
 import { filter } from 'rxjs/operators';
-
+import { DISABLED_ROUTES } from 'src/app/Constant';
 @Component({
   selector: 'app-content-layout',
   templateUrl: './content-layout.component.html',
@@ -23,13 +23,15 @@ import { filter } from 'rxjs/operators';
 })
 export class ContentLayoutComponent implements OnInit {
   hideNavBar: boolean = false;
-  private routesWithoutNavBar = ['/friends/add', '/create']; // Add routes where you want to hide the nav bar
+  disableRoutes = DISABLED_ROUTES;
+  routesWithoutNavBar: string[];
   currentRoute: string = '';
 
   constructor(private router: Router, private navService: NavigationService) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
+        this.routesWithoutNavBar = Object.values(this.disableRoutes);
         this.hideNavBar = this.routesWithoutNavBar.some((route) =>
           event.urlAfterRedirects.includes(route)
         );
@@ -37,9 +39,11 @@ export class ContentLayoutComponent implements OnInit {
       });
 
     // Change 'light' to 'light-mode'
-    if (localStorage.getItem('theme') == 'light') {
+    if (localStorage.getItem('theme') !== 'light') {
       document.documentElement.classList.add('light-mode');
     }
+
+    this.routesWithoutNavBar = Object.values(this.disableRoutes);
   }
 
   isRouteActive(route: string): boolean {

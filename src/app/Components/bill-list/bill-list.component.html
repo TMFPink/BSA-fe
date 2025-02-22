@@ -1,0 +1,11 @@
+<ion-content>
+  <div class="mx-5 mt-10 mb-32">
+    <div class="text-black text-3xl my-5 font-bold mt-5">Bill List</div>
+    @for (bill of billList; track $index) {
+    <div (click)="toBillDetail(bill.id)" class="cursor-pointer">
+      <bill-card-ui [bill]="bill"></bill-card-ui>
+    </div>
+
+    }
+  </div>
+</ion-content>

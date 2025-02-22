@@ -7,8 +7,9 @@ import {
 } from '@ionic/angular/standalone';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { BsaCardComponent } from 'src/app/UI/bsa-card/bsa-card.component';
+import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 // import { NgxEchartsModule } from 'ngx-echarts';
 // import { EChartsOption, PieSeriesOption, SeriesOption } from 'echarts';
 
@@ -24,18 +25,16 @@ import { CommonModule } from '@angular/common';
     IonContent,
     NzIconModule,
     NzButtonModule,
-    BsaCardComponent,
-    CommonModule
+    BillCardComponent,
+    CommonModule,
+    RouterModule,
     // NgxEchartsModule,
   ],
 })
 export class HomePage {
-  constructor() {
-    
-  }
+  constructor() {}
   cardType: string = 'Create Bill';
-  
-  
+
   // pieChartOptions: EChartsOption = {
   //   title: {
   //     text: 'Expense Breakdown',

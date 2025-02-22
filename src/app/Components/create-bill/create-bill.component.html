@@ -7,18 +7,22 @@
 </ion-header> -->
 <ion-content>
   <div class="mx-5 mt-10 mb-32" [formGroup]="form">
-    <div class="flex justify-between">
-      <ion-button
-        fill="clear"
-        class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
-        (click)="onNavigate()"
-      >
-        <ion-icon
-          name="caret-back-outline"
-          class="text-white text-4xl"
-        ></ion-icon>
-      </ion-button>
-      <div class="flex items-center text-center text-4xl">
+    <div class="flex justify-between items-center content-center">
+      <div class="flex items-center content-center gap-5">
+        <ion-button
+          fill="clear"
+          class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
+          (click)="onNavigate()"
+        >
+          <ion-icon
+            name="caret-back-outline"
+            class="text-white text-3xl"
+          ></ion-icon>
+        </ion-button>
+        <div class="text-black text-3xl my-5 font-bold">Create Bill</div>
+      </div>
+
+      <div class="flex items-center text-center text-3xl">
         <div class="text-black">{{ currentStage }}</div>
         <span class="text-[var(--secondary-theme)]">/3</span>
       </div>
@@ -27,17 +31,19 @@
     <!-- first stage -->
     <div *ngIf="firstStage">
       <nz-form-item>
-        <div class="text-black text-3xl my-5 font-bold">Bill Name</div>
-        <nz-form-control>
-          <input
-            nz-input
-            nzSize="large"
-            nz-input
-            placeholder="Bill's name"
-            class="h-14"
-            formControlName="billName"
-          />
-        </nz-form-control>
+        <div class="flex flex-col w-full">
+          <div class="text-black text-3xl my-5 font-bold">Bill Name</div>
+          <nz-form-control>
+            <input
+              nz-input
+              nzSize="large"
+              nz-input
+              placeholder="Bill's name"
+              class="h-14"
+              formControlName="billName"
+            />
+          </nz-form-control>
+        </div>
       </nz-form-item>
 
       <nz-form-item>
@@ -91,11 +97,11 @@
 
         <!-- Game -->
         <div
-          (click)="selectCategory('game')"
+          (click)="selectCategory('entertainment')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-purple-600 scale-105 transform transition-all opacity-100':
-              selectedCategory === 'game',
-            'opacity-30': selectedCategory !== 'game'
+              selectedCategory === 'entertainment',
+            'opacity-30': selectedCategory !== 'entertainment'
           }"
           class="bg-purple-600 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -105,7 +111,7 @@
               class="text-5xl"
             ></ion-icon>
           </div>
-          <div class="text-center text-2xl font-semibold">Gaming</div>
+          <div class="text-center text-2xl font-semibold">Entertainment</div>
         </div>
         <!-- Transportation -->
         <div

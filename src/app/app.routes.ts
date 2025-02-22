@@ -7,6 +7,8 @@ import { AccountManagementComponent } from './Components/account-management/acco
 import { CreateBillComponent } from './Components/create-bill/create-bill.component';
 import { FriendsManagementComponent } from './Components/friends-management/friends-management.component';
 import { FriendsAddingComponent } from './Components/friends-adding/friends-adding.component';
+import { BillDetailComponent } from './Components/bill-detail/bill-detail.component';
+import { BillListComponent } from './Components/bill-list/bill-list.component';
 
 export const routes: Routes = [
   {
@@ -34,7 +36,7 @@ export const routes: Routes = [
             component: FriendsManagementComponent,
           },
           {
-            path: 'add',
+            path: 'add-friends',
             component: FriendsAddingComponent,
           },
           {
@@ -44,8 +46,28 @@ export const routes: Routes = [
         ],
       },
       {
-        path: 'create',
-        component: CreateBillComponent,
+        path: 'bills',
+        children: [
+          {
+            path: '',
+            component: BillListComponent,
+          },
+          {
+            path: 'create-bill',
+            component: CreateBillComponent,
+          },
+          {
+            path: 'bill-detail/:id',
+            component: BillDetailComponent,
+            data: { isBillDetail: true },
+          },
+
+          {
+            path: '**',
+            redirectTo: '',
+            pathMatch: 'full',
+          },
+        ],
       },
     ],
     providers: [],

@@ -24,18 +24,20 @@
   >
     <nz-icon nzType="home" nzTheme="outline" />
   </div>
-  <div (click)="toggleDarkMode()">
+  <div
+    routerLink="/bills"
+    [ngClass]="
+      isRouteActive('/bills')
+        ? 'text-[var(--main-theme)] text-3xl '
+        : 'text-3xl text-white'
+    "
+  >
     <nz-icon nzType="container" nzTheme="outline" class="text-4xl" />
   </div>
 
   <div
-    class="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center text-white bg-[var(--background-color)] rounded-full shadow-lg border-4 border-[var(--secondary-theme)]"
-    routerLink="/create"
-    [ngClass]="
-      isRouteActive('/create')
-        ? 'text-3xl text-[var(--main-theme)]'
-        : 'text-3xl text-white'
-    "
+    class="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center text-white text-3xl bg-[var(--background-color)] rounded-full shadow-lg border-4 border-[var(--secondary-theme)]"
+    routerLink="/bills/create-bill"
   >
     <nz-icon nzType="plus" nzTheme="outline" />
   </div>
