@@ -4,30 +4,34 @@
     'friend-card': defaultCard,
     'friend-add-bill': isCreateBill
   }"
-  class="bg-white rounded-2xl p-5 justify-between flex flex-row items-center content-center border-2 border-[var(--main-theme)] shadow"
+  class="bg-white rounded-2xl p-5 justify-around flex flex-row items-center content-center border-2 border-[var(--main-theme)] shadow h-[170px]"
 >
   <div
     class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
   >
-    <img src="/assets/images/user-avt.webp" alt="user-avt" class="w-20 h-20" />
+    <img
+      src="/assets/images/user-avt.webp"
+      alt="user-avt"
+      class="w-[70px] h-[70px]"
+    />
   </div>
 
-  <div class="flex flex-col gap-y-5">
+  <div class="flex flex-col gap-y-2">
     <div class="text-[var(--main-theme)] font-bold text-xl">Le Huu Bached</div>
     <div class="text-sm text-black">4 mutual friends</div>
 
     <!-- friend request part -->
     <div *ngIf="isFriendRequest" class="flex flex-row gap-5">
-      <ion-button class="bg-[var(--secondary-theme)] rounded-lg" fill="clear">
-        <ion-icon
-          name="close-outline"
-          class="text-white text-2xl font-bold"
-        ></ion-icon>
-      </ion-button>
       <ion-button fill="clear" class="bg-[var(--main-theme)] rounded-lg">
         <ion-icon
           class="font-bold text-white text-2xl"
           name="checkmark-outline"
+        ></ion-icon>
+      </ion-button>
+      <ion-button class="bg-[var(--secondary-theme)] rounded-lg" fill="clear">
+        <ion-icon
+          name="close-outline"
+          class="text-white text-2xl font-bold"
         ></ion-icon>
       </ion-button>
     </div>
@@ -41,7 +45,7 @@
     >
       <ion-icon
         name="person-add-outline"
-        class="text-white text-4xl"
+        class="text-white text-2xl"
       ></ion-icon>
     </ion-button>
   </div>

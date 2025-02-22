@@ -37,7 +37,7 @@ import {
   FormGroup,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { formatCurrency } from 'src/app/utils/format-currency';
+import { formatCurrency } from 'src/app/utils';
 import { NzFormModule } from 'ng-zorro-antd/form';
 
 @Component({

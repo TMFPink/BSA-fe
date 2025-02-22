@@ -1,6 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { addIcons } from 'ionicons';
-import { personAddOutline, caretBackOutline } from 'ionicons/icons';
+import {
+  personAddOutline,
+  caretBackOutline,
+  checkmarkOutline,
+  closeOutline,
+} from 'ionicons/icons';
 import {
   IonContent,
   IonInput,
@@ -38,7 +43,12 @@ export class UserCardComponent implements OnInit {
   defaultCard: boolean = true;
 
   constructor() {
-    addIcons({ personAddOutline, caretBackOutline });
+    addIcons({
+      checkmarkOutline,
+      closeOutline,
+      personAddOutline,
+      caretBackOutline,
+    });
   }
 
   ngOnInit() {
