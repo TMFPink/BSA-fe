@@ -1,3 +1,5 @@
+/* eslint-disable @angular-eslint/no-unused-vars */
+
 import { Component } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { NzIconModule } from 'ng-zorro-antd/icon';

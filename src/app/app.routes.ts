@@ -9,6 +9,8 @@ import { FriendsManagementComponent } from './Components/friends-management/frie
 import { FriendsAddingComponent } from './Components/friends-adding/friends-adding.component';
 import { BillDetailComponent } from './Components/bill-detail/bill-detail.component';
 import { BillListComponent } from './Components/bill-list/bill-list.component';
+import { importProvidersFrom } from '@angular/core';
+import { NgxEchartsModule } from 'ngx-echarts';
 
 export const routes: Routes = [
   {
@@ -70,7 +72,13 @@ export const routes: Routes = [
         ],
       },
     ],
-    providers: [],
+    providers: [
+      importProvidersFrom(
+        NgxEchartsModule.forRoot({
+          echarts: () => import('echarts'),
+        })
+      ),
+    ],
   },
   {
     path: 'auth',
