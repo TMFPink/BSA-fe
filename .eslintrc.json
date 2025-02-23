@@ -40,7 +40,10 @@
     {
       "files": ["*.html"],
       "extends": ["plugin:@angular-eslint/template/recommended"],
-      "rules": {}
+      "rules": {
+        "no-unused-variable": false,
+        "no-unused-vars": "off"
+      }
     }
   ]
 }

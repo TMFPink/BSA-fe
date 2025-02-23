@@ -10,6 +10,8 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { NzCollapseModule } from 'ng-zorro-antd/collapse';
+import { formatCurrency } from 'src/app/utils';
 // import { NgxEchartsModule } from 'ngx-echarts';
 // import { EChartsOption, PieSeriesOption, SeriesOption } from 'echarts';
 
@@ -28,12 +30,44 @@ import { RouterModule } from '@angular/router';
     BillCardComponent,
     CommonModule,
     RouterModule,
+    NzCollapseModule,
     // NgxEchartsModule,
   ],
 })
 export class HomePage {
   constructor() {}
   cardType: string = 'Create Bill';
+
+  selectedFilter: string = 'all';
+
+  selectFilter(filter: string) {
+    this.selectedFilter = filter;
+  }
+
+  listUser = [
+    {
+      avt: 'assets/images/user-avt.webp',
+      name: 'John',
+      amount: 100,
+      owed: true,
+    },
+    {
+      avt: 'assets/images/user-avt.webp',
+      name: 'Doe',
+      amount: 200,
+      owed: false,
+    },
+    {
+      avt: 'assets/images/user-avt.webp',
+      name: 'Smith',
+      amount: 300,
+      owed: true,
+    },
+  ];
+
+  formatMoney(value: number): string {
+    return formatCurrency(value);
+  }
 
   // pieChartOptions: EChartsOption = {
   //   title: {

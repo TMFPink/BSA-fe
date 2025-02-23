@@ -1,50 +1,78 @@
 <ion-content>
   <div class="mx-5 mt-10 mb-36">
-    <!-- <div class="flex flex-row justify-between fixed top-1 w-full bg-white">
-      
-    </div> -->
-
+    <div class="text-black text-3xl mt-5 font-bold">Total spent</div>
     <div class="text-black text-3xl font-bold">Summary</div>
-
-    <div class="relative space-y-1 w-full max-w-sm mx-auto mt-5">
-      <!-- Left Circle -->
-      <!-- <div
-        class="absolute -left-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-[var(--main-theme)] rounded-full"
-      ></div> -->
-
-      <!-- You Pay Section -->
+    <div class="flex flex-row justify-between mt-5">
       <div
-        class="bg-[var(--secondary-theme)] py-6 px-7 rounded-t-3xl flex flex-row justify-between h-auto"
+        class="flex flex-col justify-between bg-[var(--secondary-theme)] py-6 px-3 rounded-2xl w-48 h-36 shadow-lg"
       >
-        <div class="flex flex-col justify-center items-center">
-          <div class="font-bold text-3xl text-green-400">Owed You</div>
-          <div class="text-xl">100.000 VND</div>
-        </div>
-        <div class="flex flex-col justify-center items-center">
-          <div class="font-bold text-3xl text-red-400">You Owed</div>
-          <div class="text-xl">100.000 VND</div>
-        </div>
+        <div class="font-bold text-xl text-green-400">Owed You</div>
+        <div class="text-xl flex justify-end font-bold">100 000vnd</div>
       </div>
-
-      <!-- You Get Section -->
       <div
-        class="bg-[var(--secondary-theme)] text-white p-6 rounded-b-3xl flex flex-row h-auto"
+        class="flex flex-col justify-between bg-[var(--secondary-theme)] py-6 px-3 rounded-2xl w-48 h-36 shadow-lg"
       >
-        <div class="w-full h-56 justify-center content-center flex">
-          <!-- <div echarts [options]="pieChartOptions" class="w-full h-full"></div> -->
-        </div>
+        <div class="font-bold text-xl text-red-400">You Owed</div>
+        <div class="text-xl flex justify-end font-bold">69 420vnd</div>
       </div>
-
-      <!-- Right Circle -->
-      <!-- <div
-        class="absolute -right-6 top-1/2 -translate-y-1/2 w-12 h-12 bg-[var(--main-theme)] rounded-full"
-      ></div> -->
     </div>
 
-    <div class="text-black text-3xl mt-5 font-bold">Recent Activities</div>
-
-    <!-- <div class="flex justify-center content-center items-center"> -->
-    <div class="grid auto-grid gap-5 mt-5 place-items-center mx-auto"></div>
+    <div class="flex justify-between">
+      <div></div>
+    </div>
+    <div class="flex gap-4 my-5">
+      <div
+        (click)="selectFilter('all')"
+        [ngClass]="{
+          'bg-[var(--secondary-theme)] text-white': selectedFilter === 'all',
+          'bg-gray-100 text-gray-600': selectedFilter !== 'all'
+        }"
+        class="px-6 py-3 rounded-full cursor-pointer transition-all text-lg font-semibold"
+      >
+        All
+      </div>
+      <div
+        (click)="selectFilter('owed')"
+        [ngClass]="{
+          'bg-green-400 text-white': selectedFilter === 'owed',
+          'bg-gray-100 text-gray-600': selectedFilter !== 'owed'
+        }"
+        class="px-6 py-3 rounded-full cursor-pointer transition-all text-lg font-semibold"
+      >
+        Owed You
+      </div>
+      <div
+        (click)="selectFilter('you-owed')"
+        [ngClass]="{
+          'bg-red-400 text-white': selectedFilter === 'you-owed',
+          'bg-gray-100 text-gray-600': selectedFilter !== 'you-owed'
+        }"
+        class="px-6 py-3 rounded-full cursor-pointer transition-all text-lg font-semibold"
+      >
+        You Owed
+      </div>
+    </div>
+    <div class="flex flex-col gap-y-5 mt-5">
+      @for (user of listUser; track $index) {
+      <div
+        class="bill-border border w-full flex flex-row justify-between rounded-2xl px-2 py-2"
+      >
+        <div class="flex flex-row gap-5 items-center">
+          <div class="rounded-full border bill-border p-2">
+            <img [src]="user.avt" alt="avatar" class="w-10 h-10" />
+          </div>
+          <div class="text-black text-lg">{{user.name}}</div>
+        </div>
+        <div
+          class="text-lg font-bold flex items-center gap-2"
+          [ngClass]="{'text-green-400':user.owed ,'text-red-400':!user.owed}"
+        >
+          <div>{{user.owed ? '+' : '-'}}</div>
+          <div>{{formatMoney(user.amount)}} VND</div>
+        </div>
+      </div>
+      }
+    </div>
   </div>
 
   <!-- </div> -->
