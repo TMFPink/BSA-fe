@@ -1,19 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import {
-  IonHeader,
-  IonToolbar,
-  IonTitle,
-  IonContent,
-} from '@ionic/angular/standalone';
+import { Component } from '@angular/core';
+import { IonContent } from '@ionic/angular/standalone';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
-import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { formatCurrency } from 'src/app/utils';
-// import { NgxEchartsModule } from 'ngx-echarts';
-// import { EChartsOption, PieSeriesOption, SeriesOption } from 'echarts';
+import { NgxEchartsModule } from 'ngx-echarts';
+import { EChartsOption } from 'echarts';
 
 @Component({
   selector: 'app-home',
@@ -21,17 +15,13 @@ import { formatCurrency } from 'src/app/utils';
   templateUrl: 'home.html',
   styleUrls: ['home.page.scss'],
   imports: [
-    // IonHeader,
-    // IonToolbar,
-    // IonTitle,
     IonContent,
     NzIconModule,
     NzButtonModule,
-    BillCardComponent,
     CommonModule,
     RouterModule,
     NzCollapseModule,
-    // NgxEchartsModule,
+    NgxEchartsModule,
   ],
 })
 export class HomePage {
@@ -39,6 +29,10 @@ export class HomePage {
   cardType: string = 'Create Bill';
 
   selectedFilter: string = 'all';
+
+  formatMoney(value: number) {
+    return formatCurrency(value);
+  }
 
   selectFilter(filter: string) {
     this.selectedFilter = filter;
@@ -65,42 +59,61 @@ export class HomePage {
     },
   ];
 
-  formatMoney(value: number): string {
-    return formatCurrency(value);
-  }
-
-  // pieChartOptions: EChartsOption = {
-  //   title: {
-  //     text: 'Expense Breakdown',
-  //     left: 'center',
-  //   },
-  //   tooltip: {
-  //     trigger: 'item',
-  //   },
-  //   legend: {
-  //     orient: 'vertical',
-  //     left: 'left',
-  //   },
-  //   series: [
-  //     {
-  //       name: 'Expenses',
-  //       type: 'pie',
-  //       radius: '50%',
-  //       data: [
-  //         { value: 500000, name: 'Rent' },
-  //         { value: 300000, name: 'Food' },
-  //         { value: 200000, name: 'Transport' },
-  //         { value: 150000, name: 'Entertainment' },
-  //         { value: 100000, name: 'Others' },
-  //       ],
-  //       emphasis: {
-  //         itemStyle: {
-  //           shadowBlur: 10,
-  //           shadowOffsetX: 0,
-  //           shadowColor: 'rgba(0, 0, 0, 0.5)',
-  //         },
-  //       },
-  //     },
-  //   ],
-  // };
+  chartOption = {
+    grid: {
+      left: '1%',
+      right: '10%',
+      bottom: '10%',
+      top: '10%',
+      containLabel: true,
+    },
+    xAxis: {
+      type: 'category',
+      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      axisLabel: {
+        color: '#000',
+        fontSize: 14,
+      },
+    },
+    yAxis: {
+      type: 'value',
+      axisLabel: {
+        color: '#000',
+        fontSize: 10,
+        formatter: (value: number) => formatCurrency(value, true) + ' VND',
+      },
+      splitLine: {
+        show: true,
+        lineStyle: {
+          color: '#ddd',
+          type: 'dashed',
+        },
+      },
+    },
+    series: [
+      {
+        data: [150000, 230000, 180000, 280000, 170000, 190000],
+        type: 'bar',
+        barWidth: '40%',
+        barCategoryGap: '20%',
+        itemStyle: {
+          color: '#6dcfd1',
+          borderRadius: [3, 3, 0, 0],
+        },
+      },
+    ],
+    tooltip: {
+      trigger: 'axis',
+      backgroundColor: 'rgba(0,0,0,0.7)',
+      textStyle: {
+        color: '#fff',
+      },
+      formatter: (params: any) => {
+        return `${params[0].name}: ${formatCurrency(
+          params[0].value,
+          true
+        )} VND`;
+      },
+    },
+  } as EChartsOption;
 }

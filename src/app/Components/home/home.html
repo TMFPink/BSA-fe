@@ -1,12 +1,17 @@
 <ion-content>
   <div class="mx-5 mt-10 mb-36">
     <div class="text-black text-3xl mt-5 font-bold">Total spent</div>
+
+    <div class="mt-5 h-[300px] w-full">
+      <div echarts [options]="chartOption" class="w-full h-full"></div>
+    </div>
+
     <div class="text-black text-3xl font-bold">Summary</div>
     <div class="flex flex-row justify-between mt-5">
       <div
         class="flex flex-col justify-between bg-[var(--secondary-theme)] py-6 px-3 rounded-2xl w-48 h-36 shadow-lg"
       >
-        <div class="font-bold text-xl text-green-400">Owed You</div>
+        <div class="font-bold text-xl text-[var(--main-theme)]">Owed You</div>
         <div class="text-xl flex justify-end font-bold">100 000vnd</div>
       </div>
       <div
@@ -34,7 +39,7 @@
       <div
         (click)="selectFilter('owed')"
         [ngClass]="{
-          'bg-green-400 text-white': selectedFilter === 'owed',
+          'bg-[var(--main-theme)] text-white': selectedFilter === 'owed',
           'bg-gray-100 text-gray-600': selectedFilter !== 'owed'
         }"
         class="px-6 py-3 rounded-full cursor-pointer transition-all text-lg font-semibold"
@@ -65,7 +70,7 @@
         </div>
         <div
           class="text-lg font-bold flex items-center gap-2"
-          [ngClass]="{'text-green-400':user.owed ,'text-red-400':!user.owed}"
+          [ngClass]="{'text-[var(--main-theme)]':user.owed ,'text-red-400':!user.owed}"
         >
           <div>{{user.owed ? '+' : '-'}}</div>
           <div>{{formatMoney(user.amount)}} VND</div>

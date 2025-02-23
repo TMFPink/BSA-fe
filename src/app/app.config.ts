@@ -26,9 +26,6 @@ import {
 
 import { routes } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
-// import { provideEchartsCore } from 'ngx-echarts';
-// import * as echarts from 'echarts/core';
-// import { NgxEchartsModule } from 'ngx-echarts';
 
 registerLocaleData(en);
 
@@ -44,12 +41,5 @@ export const appConfig: ApplicationConfig = {
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     importProvidersFrom(HttpClientModule),
-    // provideEchartsCore({ echarts }),
-    // importProvidersFrom(
-    //   NgxEchartsModule.forRoot({
-    //     echarts: () => import('echarts'),
-    //   })
-    // ),
-    // provideHttpClient(withInterceptors([AuthInterceptor, errorInterceptor],)),
   ],
 };

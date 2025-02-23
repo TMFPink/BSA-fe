@@ -15,6 +15,9 @@ log.txt
 ios
 www
 
+.env
+.vscode
+
 /.sourcemaps
 /.versions
 /coverage
