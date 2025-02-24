@@ -1,4 +1,19 @@
 
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+
+html {
+  @include mat.theme((
+    color: (
+      theme-type: light,
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+}
 @import "@ionic/angular/css/core.css";
 
 
@@ -32,7 +47,7 @@
 
 
 
-    --ion-toolbar-background:     white !important;
+    --ion-toolbar-background:white !important;
     ion-searchbar.custom-searchbar {
       --background: white;
       --color: black ;
@@ -102,10 +117,21 @@
     }
     
   }
+  --ion-toolbar-background:white !important;
+  
+  ion-modal {
+    --border-radius: 16px;
+  }
+  
+  
+  
+  ion-modal ion-toolbar {
+    --background: #6dcfd1;
+    --color: white;
+  }
 
   nz-date-picker{
     border: 2px solid  var(--main-theme) !important;
-    
   }
   .ant-input{
     font-weight: bold;
@@ -152,10 +178,15 @@
     width: 100%;
     // height: 50px;
   }
+.ion-padding{
+  // mx-5 mt-10
+  margin: 40px 20px !important;
+}
+
 .ant-picker, .ant-input{
   border-radius: 16px !important;
-  height: 70px !important;
-  font-size: 30px !important;
+  height: 50px !important;
+  font-size: 25px !important;
 }
 
 .searchbar-input.sc-ion-searchbar-ios{
@@ -164,9 +195,41 @@
 
 .ant-picker-input{
   input{
-    font-size: 30px !important;
+    font-size: 25px !important;
   }
 }
+
+.bill-filter{
+  .ant-picker{
+    border-radius: 10px !important;
+    height: 38px !important;
+    font-size: 16px !important;
+  }
+  .ant-picker-input{
+    input{
+      font-size: 16px !important;
+      color: black !important;
+      font-weight: normal;
+    }
+  }
+  .ant-input{
+    border-radius: 10px !important;
+    height: 38px !important;
+    font-size: 16px !important;
+  }
+  nz-date-picker{
+    border: 1px solid  var(--main-theme) !important;
+  }
+  .ant-input{
+    font-weight: normal;
+    color: black !important;
+    border: 1px solid  var(--main-theme) !important;
+  }
+  .ant-picker, .ant-input{
+    background-color: white !important;
+  }
+}
+
 
 .ant-slider-rail{
   background-color: #404040 !important;
@@ -207,3 +270,5 @@
   color: #6dcfd1 !important;
   font-size: large !important;
 }
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

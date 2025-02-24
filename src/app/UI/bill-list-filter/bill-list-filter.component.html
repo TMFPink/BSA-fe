@@ -1,0 +1,71 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="light" (click)="clear()">Clear</ion-button>
+    </ion-buttons>
+    <ion-title>Filter</ion-title>
+    <ion-buttons slot="end">
+      <ion-button color="light" (click)="confirm()">Confirm</ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="h-screen bg-white px-5 pt-5 bill-filter">
+    <form nz-form [formGroup]="form">
+      <nz-form-item>
+        <nz-form-label>Bill Name</nz-form-label>
+        <nz-form-control>
+          <input
+            nz-input
+            nzSize="large"
+            nz-input
+            placeholder="Bill's name"
+            formControlName="billName"
+          />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Category</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            nzSize="large"
+            [nzShowArrow]="true"
+            class="min-w-[350px] w-full"
+            formControlName="billCategory"
+          >
+            @for (category of billCategories; track category) {
+            <nz-option [nzValue]="category" [nzLabel]="category"></nz-option>
+            }
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Payment Status</nz-form-label>
+        <nz-form-control>
+          <nz-select
+            nzSize="large"
+            [nzShowArrow]="true"
+            class="min-w-[350px] w-full"
+            formControlName="isPaid"
+          >
+            <nz-option nzValue="true" nzLabel="Paid"></nz-option>
+            <nz-option nzValue="false" nzLabel="Unpaid"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label>Bill Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker
+            nzSize="small"
+            nzFormat="dd/MM/yyyy"
+            [nzAllowClear]="false"
+            nzSuffixIcon=""
+            class="w-full"
+            formControlName="billDate"
+          ></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</ion-content>

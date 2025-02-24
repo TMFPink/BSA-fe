@@ -16,13 +16,13 @@
         >
           <ion-icon
             name="caret-back-outline"
-            class="text-white text-3xl"
+            class="text-white text-xl"
           ></ion-icon>
         </ion-button>
-        <div class="text-black text-3xl my-5 font-bold">Create Bill</div>
+        <div class="text-black text-xl my-5 font-bold">Create Bill</div>
       </div>
 
-      <div class="flex items-center text-center text-3xl">
+      <div class="flex items-center text-center text-xl">
         <div class="text-black">{{ currentStage }}</div>
         <span class="text-[var(--secondary-theme)]">/3</span>
       </div>
@@ -32,7 +32,7 @@
     <div *ngIf="firstStage">
       <nz-form-item>
         <div class="flex flex-col w-full">
-          <div class="text-black text-3xl my-5 font-bold">Bill Name</div>
+          <div class="text-black text-xl my-5 font-bold">Bill Name</div>
           <nz-form-control>
             <input
               nz-input
@@ -48,7 +48,7 @@
 
       <nz-form-item>
         <div class="flex flex-col w-full">
-          <div class="text-black text-3xl my-5 font-bold">Date</div>
+          <div class="text-black text-xl mb-5 font-bold">Date</div>
           <nz-form-control>
             <nz-date-picker
               nzSize="large"
@@ -62,8 +62,8 @@
         </div>
       </nz-form-item>
 
-      <!-- <div class="text-black text-3xl my-5 font-bold">Groups</div> -->
-      <div class="text-black text-3xl my-5 font-bold">Participants</div>
+      <!-- <div class="text-black text-xl my-5 font-bold">Groups</div> -->
+      <div class="text-black text-xl my-5 font-bold">Participants</div>
       <div class="grid auto-grid gap-5 place-items-center">
         <bsa-user-card [isCreateBill]="true"></bsa-user-card>
         <bsa-user-card [isCreateBill]="true"></bsa-user-card>
@@ -75,7 +75,7 @@
 
     <!-- second stage -->
     <div *ngIf="secondStage">
-      <div class="text-black text-3xl my-5 font-bold">Categories</div>
+      <div class="text-black text-xl my-5 font-bold">Categories</div>
       <div
         class="flex flex-row flex-wrap gap-4 content-center items-center justify-center border-2 bill-border rounded-2xl p-5 mt-5"
       >
@@ -144,7 +144,7 @@
           <div class="text-center text-2xl font-semibold">Others</div>
         </div>
       </div>
-      <div class="text-black text-3xl my-5 font-bold">Bill Details</div>
+      <div class="text-black text-xl my-5 font-bold">Bill Details</div>
       <form nz-form>
         <div class="flex flex-col gap-4 mb-4">
           <textarea
@@ -153,7 +153,8 @@
             placeholder="Description"
             [(ngModel)]="newDetailDescription"
             [ngModelOptions]="{ standalone: true }"
-            class="h-40"
+            [nzAutosize]="{ minRows: 2, maxRows: 4 }"
+            class="overflow-hidden"
           ></textarea>
           <div class="flex gap-2">
             <input
@@ -167,7 +168,7 @@
             />
             <div class="flex justify-end">
               <div
-                class="bg-[var(--secondary-theme)] text-white text-xl font-bold rounded-2xl w-32 flex items-center justify-center h-[70px]"
+                class="bg-[var(--secondary-theme)] text-white text-xl font-bold rounded-2xl w-32 flex items-center justify-center h-[50px]"
                 (click)="addBillDetail()"
               >
                 Add
@@ -189,9 +190,9 @@
         </div>
       </div>
       }
-      <div class="text-black text-3xl my-5 font-bold">Total Amount</div>
+      <div class="text-black text-xl my-5 font-bold">Total Amount</div>
       <div
-        class="text-black text-4xl font-bold border-2 bill-border rounded-2xl p-5 bg-white"
+        class="text-black text-3xl font-bold border-2 bill-border rounded-2xl p-5 bg-white"
       >
         {{ formatMoney(totalAmount) }} VND
       </div>

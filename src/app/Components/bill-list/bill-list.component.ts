@@ -1,9 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { IonIcon, IonButton, IonContent } from '@ionic/angular/standalone';
 import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
 import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
+import { IonicModule, ModalController } from '@ionic/angular';
+import { BillListFilterComponent } from 'src/app/UI/bill-list-filter/bill-list-filter.component';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-bill-list',
@@ -12,9 +14,7 @@ import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
   standalone: true,
   imports: [
     CommonModule,
-    IonContent,
-    IonIcon,
-    IonButton,
+    IonicModule,
     BackButtonComponent,
     RouterModule,
     BillCardComponent,
@@ -22,9 +22,39 @@ import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class BillListComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private modalCtrl: ModalController,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit() {}
+
+  filterForm = this.fb.group({
+    billName: [''],
+    billCategory: [''],
+    isPaid: [''],
+    billDate: [''],
+  });
+
+  async openFilter() {
+    const modal = await this.modalCtrl.create({
+      component: BillListFilterComponent,
+      initialBreakpoint: 0.6,
+      componentProps: {
+        form: this.filterForm,
+      },
+    });
+    modal.present();
+
+    const { data } = await modal.onDidDismiss();
+    if (data) this.filterBill(data);
+  }
+
+  filterBill(data: any) {
+    const payload = data;
+    console.log(payload);
+  }
 
   billList = [
     {

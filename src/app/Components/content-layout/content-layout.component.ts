@@ -1,12 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import { IonApp, IonRouterOutlet, IonIcon } from '@ionic/angular/standalone';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
 import { NavigationService } from 'src/app/Service/navigation.service';
 import { filter } from 'rxjs/operators';
-import { DISABLED_ROUTES } from 'src/app/Constant';
+import { DISABLED_ROUTES } from 'src/app/utils/Constant';
+import { IonContent } from '@ionic/angular';
+import { receiptOutline } from 'ionicons/icons';
+import { addIcons } from 'ionicons';
 @Component({
   selector: 'app-content-layout',
   templateUrl: './content-layout.component.html',
@@ -19,6 +22,7 @@ import { DISABLED_ROUTES } from 'src/app/Constant';
     IonHeader,
     IonToolbar,
     IonTitle,
+    IonIcon,
   ],
 })
 export class ContentLayoutComponent implements OnInit {
@@ -27,7 +31,11 @@ export class ContentLayoutComponent implements OnInit {
   routesWithoutNavBar: string[];
   currentRoute: string = '';
 
-  constructor(private router: Router, private navService: NavigationService) {
+  constructor(private router: Router) {
+    addIcons({
+      receiptOutline,
+    });
+
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
@@ -37,7 +45,6 @@ export class ContentLayoutComponent implements OnInit {
         );
         this.currentRoute = event.urlAfterRedirects;
       });
-
     // Change 'light' to 'light-mode'
     if (localStorage.getItem('theme') !== 'light') {
       document.documentElement.classList.add('light-mode');

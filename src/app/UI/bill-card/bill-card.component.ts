@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
-import { BILL_TYPE_COLOR } from 'src/app/Constant';
+import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
 
 @Component({
   selector: 'bill-card-ui',
@@ -13,7 +13,7 @@ export class BillCardComponent implements OnInit {
   constructor() {}
 
   ngOnInit() {}
-  getBillCategoryBG(billCategory: keyof typeof BILL_TYPE_COLOR) {
-    return BILL_TYPE_COLOR[billCategory];
+  getBillCategoryBG(billCategory: keyof typeof BILL_CATEGORY_COLOR) {
+    return BILL_CATEGORY_COLOR[billCategory];
   }
 }
