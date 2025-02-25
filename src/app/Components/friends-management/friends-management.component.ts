@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -16,6 +17,8 @@ import {
   closeOutline,
   personAddOutline,
 } from 'ionicons/icons';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 @Component({
   selector: 'app-friends-management',
@@ -31,10 +34,16 @@ import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
     IonIcon,
     RouterLink,
     UserCardComponent,
+    NzFormModule,
+    ReactiveFormsModule,
+    NzInputModule,
   ],
 })
 export class FriendsManagementComponent implements OnInit {
-  constructor() {
+  friendsFilterForm = this.fb.group({
+    name: [''],
+  });
+  constructor(private fb: FormBuilder) {
     addIcons({ checkmarkOutline, closeOutline, personAddOutline });
   }
 

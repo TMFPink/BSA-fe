@@ -62,7 +62,7 @@ export class HomePage {
   chartOption = {
     grid: {
       left: '1%',
-      right: '10%',
+      right: '1%',
       bottom: '10%',
       top: '10%',
       containLabel: true,

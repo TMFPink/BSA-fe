@@ -4,54 +4,43 @@
     class="absolute top-0 left-0 w-52 h-52 bg-[var(--main-theme)] rounded-full -translate-x-10 -translate-y-10"
   ></div>
   <div
-    class="absolute bottom-0 right-0 w-24 h-24 bg-[var(--secondary-theme)] rounded-full translate-x-10 translate-y-10"
+    class="absolute bottom-0 right-0 w-32 h-32 bg-[var(--secondary-theme)] rounded-full translate-x-10 translate-y-10"
   ></div>
 
-  <div id="welcomeScreen" class="flex flex-col items-center text-white">
-    <div
-      class="w-24 h-24 rounded-full bg-white flex items-center justify-center"
-    ></div>
-    <h1 class="text-2xl font-bold mt-4">WELCOME</h1>
-    <!-- <button
-      onclick="showScreen('loginScreen')"
-      class="mt-6 bg-[var(--main-theme)] text-white font-bold py-2 px-6 rounded-full"
-    >
-      LOGIN
-    </button> -->
-    <!-- <button
-      onclick="showScreen('registerScreen')"
-      class="mt-3 text-white font-bold py-2 px-6 rounded-full"
-    >
-      REGISTER
-    </button> -->
+  <div class="flex flex-col items-center mt-[156px]">
+    <div class="text-3xl font-bold mt-4">Welcome!</div>
+  </div>
+
+  <div class="my-6 flex justify-center">
+    <img src="assets/icon/split_bill_icon.webp" alt="logo" class="w-32 h-32" />
   </div>
 
   <!-- Login Screen -->
-  <div id="loginScreen" class="">
-    <button onclick="showScreen('welcomeScreen')" class="text-white">
-      &larr; Back
-    </button>
-    <h2 class="text-white text-lg font-bold mt-4">Login to your account</h2>
+  <div class="">
     <input
       type="email"
       placeholder="sub.an@gmail.com"
-      class="mt-3 w-full px-4 py-5 text-xl bg-white rounded-full text-gray-800 border-2 border-black"
+      class="w-full p-2 text-lg bg-white rounded-lg text-gray-800 border-2 border-black"
     />
     <input
       type="password"
       placeholder="••••••••"
-      class="mt-3 w-full px-4 py-5 text-xl bg-white rounded-full text-gray-800 border-2 border-black"
+      class="mt-3 w-full p-2 text-lg bg-white rounded-lg text-gray-800 border-2 border-black"
     />
+
     <button
-      class="mt-6 w-full bg-[var(--main-theme)] text-white font-bold py-5 rounded-full text-xl"
+      class="mt-6 w-full bg-[var(--main-theme)] text-white font-bold p-3 rounded-lg text-xl"
       (click)="onLogin()"
     >
-      LOGIN
+      Sign In
     </button>
     <div class="flex justify-between px-4">
-      <a href="/auth/register" class="text-black mt-3 block text-center text-md"
-        >Don't have account? Register</a
+      <div
+        routerLink="/auth/register"
+        class="text-black mt-3 block text-center text-md"
       >
+        Don't have account? Register
+      </div>
       <a href="#" class="text-black mt-3 block text-center text-md"
         >Forgot Password?</a
       >
