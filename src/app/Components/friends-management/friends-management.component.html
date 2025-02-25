@@ -31,6 +31,21 @@
     </div>
 
     <div class="text-black text-2xl my-5 font-bold">Your Friends</div>
+    <form nz-form [formGroup]="friendsFilterForm">
+      <div class="mb-5">
+        <nz-form-control>
+          <input
+            nz-input
+            nzSize="large"
+            nz-input
+            placeholder="Find your friend"
+            formControlName="name"
+            class="h-14"
+          />
+        </nz-form-control>
+      </div>
+    </form>
+
     <div class="grid auto-grid gap-5 place-items-center">
       <bsa-user-card></bsa-user-card>
       <bsa-user-card></bsa-user-card>

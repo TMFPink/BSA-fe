@@ -48,7 +48,7 @@ html {
 
 
     --ion-toolbar-background:white !important;
-    ion-searchbar.custom-searchbar {
+    ion-searchbar.searchbar-add-friend{
       --background: white;
       --color: black ;
       --placeholder-color: #404040;
@@ -90,8 +90,17 @@ html {
 }
 .light-mode{
   --ion-background-color: white !important;
-  ion-searchbar.custom-searchbar {
+  ion-searchbar.searchbar-add-friend{
     --background: #404040;
+    --color: white ;
+    --placeholder-color: white;
+    --icon-color: white;
+    --clear-button-color: #fff;
+  
+    --border-radius: 8px;
+  }
+  ion-searchbar.searchbar-find-friend {
+    --background: #6dcfd1;
     --color: white ;
     --placeholder-color: white;
     --icon-color: white;

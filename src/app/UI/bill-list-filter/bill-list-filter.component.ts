@@ -33,8 +33,8 @@ export class BillListFilterComponent implements OnInit {
     await this.modalCtrl.dismiss(this.form.value);
     this.form.reset();
   }
-  async clear() {
-    await this.form.reset();
+  clear() {
+    this.form.reset();
   }
 
   ngOnInit() {}

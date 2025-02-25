@@ -64,6 +64,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     FormsModule,
     ReactiveFormsModule,
     NzFormModule,
+    IonSearchbar,
   ],
 })
 export class CreateBillComponent implements OnInit {
