@@ -11,6 +11,9 @@ import { BillDetailComponent } from './Components/bill-detail/bill-detail.compon
 import { BillListComponent } from './Components/bill-list/bill-list.component';
 import { importProvidersFrom } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxsModule } from '@ngxs/store';
+import { BillsState } from './store/bills/bills.state';
+import { AuthState } from './store/auth';
 
 export const routes: Routes = [
   {
@@ -76,7 +79,8 @@ export const routes: Routes = [
       importProvidersFrom(
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts'),
-        })
+        }),
+        NgxsModule.forFeature([BillsState])
       ),
     ],
   },
@@ -96,7 +100,7 @@ export const routes: Routes = [
         redirectTo: 'login',
       },
     ],
-    providers: [],
+    providers: [importProvidersFrom(NgxsModule.forFeature([AuthState]))],
   },
 
   {
