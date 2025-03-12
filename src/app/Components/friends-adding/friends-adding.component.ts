@@ -7,7 +7,7 @@ import {
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { personAddOutline, caretBackOutline } from 'ionicons/icons';
-import { NavigationService } from 'src/app/Service/navigation.service';
+import { NavigationService } from 'src/app/service/navigation.service';
 import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 @Component({

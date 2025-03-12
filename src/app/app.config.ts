@@ -30,6 +30,7 @@ import { environment } from 'src/environments/environment';
 import { ApiModule } from './api/api.module';
 import { NgxsModule } from '@ngxs/store';
 import { AuthState } from './store/auth';
+import { authInterceptorProvider } from './interceptors/auth.interceptor';
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
@@ -49,5 +50,6 @@ export const appConfig: ApplicationConfig = {
       NgxsModule.forRoot([])
     ),
     provideAnimationsAsync('noop'),
+    authInterceptorProvider,
   ],
 };

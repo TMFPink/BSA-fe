@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { NavigationService } from 'src/app/Service/navigation.service';
+import { NavigationService } from 'src/app/service/navigation.service';
 import { IonIcon, IonButton } from '@ionic/angular/standalone';
 import { caretBackOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';

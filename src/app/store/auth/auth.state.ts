@@ -4,6 +4,8 @@ import { AuthService } from 'src/app/api/services';
 import { AuthAction } from './auth.action';
 import { BaseState } from 'src/app/utils/base-state/base-state-model';
 import { catchError, tap } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
+import { HandleErrorService } from 'src/app/service/handle-error.service';
 
 interface authStateModel {
   status: 'loading' | 'success' | 'error' | null;
@@ -23,7 +25,11 @@ export class AuthState extends BaseState<authStateModel> {
   static status({ status }: authStateModel) {
     return status;
   }
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private cookieService: CookieService,
+    private _handleErrorService: HandleErrorService
+  ) {
     super();
   }
 
@@ -37,16 +43,28 @@ export class AuthState extends BaseState<authStateModel> {
           response,
           'Error while logging in',
           (data: any) => {
-            localStorage.setItem('token', data.token);
+            console.log(data);
+            var token = data.accessToken;
+            localStorage.setItem('token', token);
+            this.cookieService.set('token', token, 365, '/');
+
+            ctx.patchState({ token });
           }
         );
       }),
-      catchError((error) => this.handleError(ctx, error))
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this._handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
     );
   }
 
   @Action(AuthAction.Logout)
   logout(ctx: StateContext<authStateModel>) {
-    console.log('hello');
+    this.cookieService.delete('token');
+    localStorage.removeItem('token');
+    ctx.patchState({ token: '' });
   }
 }

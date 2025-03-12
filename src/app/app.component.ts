@@ -9,6 +9,9 @@ import {
   IonTitle,
   IonContent,
 } from '@ionic/angular/standalone';
+import { HandleErrorService } from './service/handle-error.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ToastService } from './service/toast.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -24,5 +27,15 @@ import {
   ],
 })
 export class AppComponent {
-  constructor() {}
+  constructor(
+    private _handlerError: HandleErrorService,
+    private _toast: ToastService
+  ) {
+    this._handlerError.messageError$
+      .pipe(takeUntilDestroyed())
+      .subscribe((message) => {
+        if (!message) return;
+        this._toast.showSnackBar(message, 'error');
+      });
+  }
 }

@@ -10,6 +10,7 @@ import {
   IonHeader,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngxs/store';
+import { AuthAction } from 'src/app/store/auth';
 import { BillAction } from 'src/app/store/bills/bills.action';
 
 @Component({
@@ -31,6 +32,7 @@ export class AccountManagementComponent implements OnInit {
 
   ngOnInit() {}
   onLogout() {
+    this.store.dispatch(new AuthAction.Logout());
     this.router.navigate(['/auth']);
   }
 

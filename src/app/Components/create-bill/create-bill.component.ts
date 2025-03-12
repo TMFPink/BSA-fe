@@ -14,7 +14,7 @@ import {
   IonModal,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { NavigationService } from 'src/app/Service/navigation.service';
+import { NavigationService } from 'src/app/service/navigation.service';
 import {
   personAddOutline,
   caretBackOutline,
