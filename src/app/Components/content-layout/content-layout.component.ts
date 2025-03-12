@@ -4,7 +4,7 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IonApp, IonRouterOutlet, IonIcon } from '@ionic/angular/standalone';
 import { Router, RouterLink, NavigationEnd } from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
-import { NavigationService } from 'src/app/Service/navigation.service';
+import { NavigationService } from 'src/app/service/navigation.service';
 import { filter } from 'rxjs/operators';
 import { DISABLED_ROUTES } from 'src/app/utils/Constant';
 import { IonContent } from '@ionic/angular';

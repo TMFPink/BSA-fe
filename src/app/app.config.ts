@@ -26,7 +26,11 @@ import {
 
 import { routes } from './app.routes';
 import { HttpClientModule } from '@angular/common/http';
-
+import { environment } from 'src/environments/environment';
+import { ApiModule } from './api/api.module';
+import { NgxsModule } from '@ngxs/store';
+import { AuthState } from './store/auth';
+import { authInterceptorProvider } from './interceptors/auth.interceptor';
 registerLocaleData(en);
 
 export const appConfig: ApplicationConfig = {
@@ -40,6 +44,12 @@ export const appConfig: ApplicationConfig = {
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes, withPreloading(PreloadAllModules)),
-    importProvidersFrom(HttpClientModule), provideAnimationsAsync('noop'),
+    importProvidersFrom(
+      // HttpClientModule,
+      ApiModule.forRoot({ rootUrl: environment.ApiUrl }),
+      NgxsModule.forRoot([])
+    ),
+    provideAnimationsAsync('noop'),
+    authInterceptorProvider,
   ],
 };

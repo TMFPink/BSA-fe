@@ -36,6 +36,90 @@ html {
 @tailwind utilities;
 @import "ng-zorro-antd/ng-zorro-antd.css";
 
+// Add this at the end of the file
+
+// Update your snackbar styles
+
+// SnackBar styles
+.mat-mdc-snack-bar-container {
+  &.snack_style {
+    --mdc-snackbar-container-color: rgba(255, 255, 255, 0.9);
+    --mat-snack-bar-button-color: black;
+    --mdc-snackbar-supporting-text-color: black;
+    
+    // Add animation if desired
+    .mdc-snackbar__surface {
+      animation: slide-up 0.3s ease-out;
+    }
+  }
+  
+  &.success {
+    --mdc-snackbar-container-color: rgba(76, 175, 80, 0.9);
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+  
+  &.warning {
+    --mdc-snackbar-container-color: rgba(255, 152, 0, 0.9);
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+  
+  &.error {
+    --mdc-snackbar-container-color: rgba(244, 67, 54, 0.9);
+    --mat-snack-bar-button-color: white;
+    --mdc-snackbar-supporting-text-color: white;
+  }
+  
+  // Add this to apply rounded corners to all snackbars
+  .mdc-snackbar__surface {
+    border-radius: 16px !important; // Increased border-radius for more roundness
+  }
+  
+  // Make the text bold and centered
+  .mat-mdc-snack-bar-label {
+    font-weight: bold !important;
+    text-align: center !important;
+    width: 100% !important;
+  }
+  
+  // Center the entire content
+  .mdc-snackbar__label {
+    text-align: center !important;
+    width: 100% !important;
+    font-weight: bold !important;
+    justify-content: center !important;
+    padding: 14px 16px !important;
+  }
+}
+
+// To override Material Design's default border-radius, use more specific selectors
+.mat-mdc-snack-bar-container .mdc-snackbar__surface {
+  border-radius: 16px !important;
+}
+
+// Target the action buttons if any
+.mat-mdc-snack-bar-container .mat-mdc-button {
+  font-weight: bold;
+}
+
+// Force center alignment for the content
+.mat-mdc-snack-bar-container .mdc-snackbar__actions {
+  justify-content: center !important;
+  padding-left: 0 !important;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
 :root{
     // --main-theme: #6dcfd1;
     --main-theme: #6dcfd1;
@@ -281,3 +365,5 @@ html {
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

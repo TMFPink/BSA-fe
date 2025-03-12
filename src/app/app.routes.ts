@@ -11,11 +11,39 @@ import { BillDetailComponent } from './Components/bill-detail/bill-detail.compon
 import { BillListComponent } from './Components/bill-list/bill-list.component';
 import { importProvidersFrom } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
+import { NgxsModule } from '@ngxs/store';
+import { BillsState } from './store/bills/bills.state';
+import { AuthState } from './store/auth';
+import { authGuard, unAuthGuard } from './guards/auth.guard';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 export const routes: Routes = [
   {
+    path: 'auth',
+    canActivateChild: [unAuthGuard],
+    children: [
+      {
+        path: 'login',
+        component: LoginComponent,
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
+      },
+      {
+        path: '**',
+        redirectTo: 'login',
+      },
+    ],
+    providers: [
+      importProvidersFrom(NgxsModule.forFeature([AuthState])),
+      MatSnackBarModule,
+    ],
+  },
+  {
     path: '',
     component: ContentLayoutComponent,
+    canActivateChild: [authGuard],
     children: [
       {
         path: '',
@@ -76,29 +104,12 @@ export const routes: Routes = [
       importProvidersFrom(
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts'),
-        })
+        }),
+        NgxsModule.forFeature([BillsState, AuthState]),
+        MatSnackBarModule
       ),
     ],
   },
-  {
-    path: 'auth',
-    children: [
-      {
-        path: 'login',
-        component: LoginComponent,
-      },
-      {
-        path: 'register',
-        component: RegisterComponent,
-      },
-      {
-        path: '**',
-        redirectTo: 'login',
-      },
-    ],
-    providers: [],
-  },
-
   {
     path: '',
     redirectTo: 'auth',

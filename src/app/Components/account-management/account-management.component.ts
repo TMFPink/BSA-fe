@@ -9,6 +9,9 @@ import {
   IonToolbar,
   IonHeader,
 } from '@ionic/angular/standalone';
+import { Store } from '@ngxs/store';
+import { AuthAction } from 'src/app/store/auth';
+import { BillAction } from 'src/app/store/bills/bills.action';
 
 @Component({
   selector: 'app-account',
@@ -25,10 +28,16 @@ import {
   standalone: true,
 })
 export class AccountManagementComponent implements OnInit {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private store: Store) {}
 
   ngOnInit() {}
   onLogout() {
+    this.store.dispatch(new AuthAction.Logout());
     this.router.navigate(['/auth']);
+  }
+
+  onClick() {
+    const payload = {};
+    this.store.dispatch(new BillAction.LoadBills(payload));
   }
 }
