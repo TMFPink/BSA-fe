@@ -20,6 +20,8 @@ import {
   PreloadAllModules,
   DetachedRouteHandle,
   ActivatedRouteSnapshot,
+  RouterModule,
+  withRouterConfig,
 } from '@angular/router';
 import {
   IonicRouteStrategy,
@@ -34,26 +36,46 @@ import { NgxsModule } from '@ngxs/store';
 import { AuthState } from './store/auth';
 import { authInterceptorProvider } from './interceptors/auth.interceptor';
 import { FriendsState } from './store';
+import { IonicModule } from '@ionic/angular';
 registerLocaleData(en);
 
-// Custom route reuse strategy that never reuses routes to ensure components are always initialized
-export class CustomRouteReuseStrategy implements RouteReuseStrategy {
-  shouldDetach(): boolean {
-    return false;
-  }
-  store(): void {}
-  shouldAttach(): boolean {
-    return false;
-  }
-  retrieve(): DetachedRouteHandle | null {
+export class CustomRouteReuseStrategy extends IonicRouteStrategy {
+  private getComponent(snapshot: ActivatedRouteSnapshot): any {
+    if (snapshot.routeConfig && snapshot.routeConfig.component) {
+      return snapshot.routeConfig.component;
+    }
+    for (const child of snapshot.children) {
+      const cmp = this.getComponent(child);
+      if (cmp) {
+        return cmp;
+      }
+    }
     return null;
   }
-  shouldReuseRoute(
+
+  override shouldReuseRoute(
     future: ActivatedRouteSnapshot,
     curr: ActivatedRouteSnapshot
   ): boolean {
-    // This forces the component to be recreated every time
+    // Force recreation by returning false if components differ (or are not found)
     return false;
+  }
+
+  override shouldDetach(route: ActivatedRouteSnapshot): boolean {
+    return false;
+  }
+
+  override store(
+    route: ActivatedRouteSnapshot,
+    handle: DetachedRouteHandle | null
+  ): void {}
+
+  override shouldAttach(route: ActivatedRouteSnapshot): boolean {
+    return false;
+  }
+
+  override retrieve(route: ActivatedRouteSnapshot): DetachedRouteHandle | null {
+    return null;
   }
 }
 
@@ -64,15 +86,18 @@ export const appConfig: ApplicationConfig = {
     provideNzI18n(en_US),
     provideAnimationsAsync(),
     provideIonicAngular(),
-
-    provideRouter(routes, withPreloading(PreloadAllModules)),
-
-    { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy },
+    provideRouter(routes),
     importProvidersFrom(
       ApiModule.forRoot({ rootUrl: environment.ApiUrl }),
-      NgxsModule.forRoot([FriendsState])
+      NgxsModule.forRoot([]),
+      IonicModule.forRoot({
+        mode: 'ios',
+        swipeBackEnabled: false,
+      })
     ),
     provideAnimationsAsync('noop'),
     authInterceptorProvider,
+    // Move the custom RouteReuseStrategy here so it overrides any previously provided strategy
+    { provide: RouteReuseStrategy, useClass: CustomRouteReuseStrategy },
   ],
 };

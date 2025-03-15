@@ -60,21 +60,9 @@ export const routes: Routes = [
       },
       {
         path: 'friends',
-        children: [
-          {
-            path: '',
-            component: FriendsManagementComponent,
-          },
-          {
-            path: 'add-friends',
-            component: FriendsAddingComponent,
-          },
-          {
-            path: '**',
-            redirectTo: '',
-          },
-        ],
-        providers: [importProvidersFrom(NgxsModule.forFeature([FriendsState]))],
+        data: { preload: false, reuse: false },
+        loadChildren: async () =>
+          (await import('./routing/friends.routing')).FRIENDS_ROUTES,
       },
       {
         path: 'bills',
@@ -106,7 +94,7 @@ export const routes: Routes = [
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts'),
         }),
-        NgxsModule.forFeature([BillsState, AuthState]),
+        NgxsModule.forFeature([BillsState, AuthState, FriendsState]),
         MatSnackBarModule
       ),
     ],

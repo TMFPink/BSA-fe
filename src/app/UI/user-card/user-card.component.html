@@ -24,13 +24,21 @@
 
     <!-- friend request part -->
     <div *ngIf="isFriendRequest" class="flex flex-row gap-5">
-      <ion-button fill="clear" class="bg-[var(--main-theme)] rounded-lg">
+      <ion-button
+        fill="clear"
+        class="bg-[var(--main-theme)] rounded-lg"
+        (click)="acceptFriendRequest.emit(user.id)"
+      >
         <ion-icon
           class="font-bold text-white text-2xl"
           name="checkmark-outline"
         ></ion-icon>
       </ion-button>
-      <ion-button class="bg-[var(--secondary-theme)] rounded-lg" fill="clear">
+      <ion-button
+        class="bg-[var(--secondary-theme)] rounded-lg"
+        fill="clear"
+        (click)="rejectFriendRequest.emit(user.id)"
+      >
         <ion-icon
           name="close-outline"
           class="text-white text-2xl font-bold"
@@ -45,7 +53,7 @@
     <ion-button
       fill="clear"
       class="no-ripple bg-[var(--main-theme)] rounded-lg"
-      (click)="sendFriendRequest()"
+      (click)="sendFriendRequest.emit(user.id)"
     >
       <ion-icon
         name="person-add-outline"

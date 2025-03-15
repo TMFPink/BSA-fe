@@ -15,7 +15,7 @@
   class="fixed bottom-0 left-1/2 -translate-x-1/2 w-auto min-w-[400px] flex items-center justify-between p-5 bg-[var(--secondary-theme)] mb-2 rounded-full"
 >
   <div
-    routerLink="/home"
+    (click)="onNavigate('/home')"
     [ngClass]="
       isRouteActive('/home')
         ? 'text-[var(--main-theme)] text-3xl '
@@ -25,7 +25,7 @@
     <nz-icon nzType="home" nzTheme="outline" />
   </div>
   <div
-    routerLink="/bills"
+    (click)="onNavigate('/bills')"
     [ngClass]="
       isRouteActive('/bills')
         ? 'text-[var(--main-theme)] text-3xl '
@@ -40,13 +40,13 @@
 
   <div
     class="absolute -top-6 left-1/2 -translate-x-1/2 w-20 h-20 flex items-center justify-center text-white text-3xl bg-[var(--background-color)] rounded-full shadow-lg border-4 border-[var(--secondary-theme)]"
-    routerLink="/bills/create-bill"
+    (click)="onNavigate('/bills/create-bill')"
   >
     <nz-icon nzType="plus" nzTheme="outline" />
   </div>
   <div></div>
   <div
-    routerLink="/friends"
+    (click)="onNavigate('/friends')"
     [ngClass]="
       isRouteActive('/friends')
         ? 'text-3xl text-[var(--main-theme)]'
@@ -57,7 +57,7 @@
   </div>
 
   <div
-    routerLink="/account"
+    (click)="onNavigate('/account')"
     [ngClass]="
       isRouteActive('/account')
         ? 'text-3xl text-[var(--main-theme)]'

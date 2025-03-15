@@ -14,7 +14,12 @@
 
     <div class="grid auto-grid place-items-center gap-5">
       @for (user of selectors.friendsRequest(); track $index) {
-      <bsa-user-card [user]="user" [isFriendRequest]="true"></bsa-user-card>
+      <bsa-user-card
+        [user]="user"
+        [isFriendRequest]="true"
+        (acceptFriendRequest)="acceptFriendRequest($event)"
+        (rejectFriendRequest)="rejectFriendRequest($event)"
+      ></bsa-user-card>
       }
     </div>
 

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { RouterLink, Router, NavigationEnd } from '@angular/router';
 import {
   IonContent,
   IonInput,
@@ -15,15 +15,20 @@ import {
 import { createDispatchMap, createSelectMap } from '@ngxs/store';
 import { addIcons } from 'ionicons';
 import {
+  add,
   checkmarkOutline,
   closeOutline,
   personAddOutline,
+  send,
 } from 'ionicons/icons';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
 import { FriendsAction } from 'src/app/store/friends/friends.action';
 import { FriendsState } from 'src/app/store/friends/friends.state';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
+import { Subject } from 'rxjs';
+import { takeUntil, filter } from 'rxjs/operators';
+
 @Component({
   selector: 'app-friends-management',
   templateUrl: './friends-management.component.html',
@@ -45,6 +50,8 @@ import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
   ],
 })
 export class FriendsManagementComponent implements OnInit, OnDestroy {
+  private destroy$ = new Subject<void>();
+
   friendsFilterForm = this.fb.group({
     name: [''],
   });
@@ -58,14 +65,17 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
   action = createDispatchMap({
     getFriends: FriendsAction.GetFriends,
     getFriendsRequest: FriendsAction.GetFriendsRequest,
-    acceptRequest: FriendsAction.AddFriend,
+    sendFriendRequest: FriendsAction.SendFriendRequest,
+    addFriend: FriendsAction.AddFriend,
+    rejectFriendRequest: FriendsAction.RejectFriendRequest,
   });
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private router: Router) {
     addIcons({ checkmarkOutline, closeOutline, personAddOutline });
   }
 
-  ngOnInit() {
+  ngOnInit() {}
+  ionViewWillEnter() {
     this.loadFriendsData();
   }
 
@@ -74,7 +84,23 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
     this.action.getFriendsRequest();
   }
 
+  acceptFriendRequest(userId: string) {
+    const payload = {
+      friend_id: userId,
+    };
+    this.action.addFriend(payload);
+  }
+
+  rejectFriendRequest(userId: string) {
+    const payload = {
+      friend_id: userId,
+    };
+    this.action.rejectFriendRequest(payload);
+  }
+
   ngOnDestroy() {
-    console.log('destroy');
+    console.log('Destroying friends management component');
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

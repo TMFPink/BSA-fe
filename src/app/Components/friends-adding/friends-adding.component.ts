@@ -35,4 +35,11 @@ export class FriendsAddingComponent implements OnInit {
   ngOnInit() {
     this.store.dispatch(new FriendsAction.GetFriendsSuggestions(''));
   }
+
+  sendFriendRequest(userId: string) {
+    const payload = {
+      friend_id: userId,
+    };
+    this.store.dispatch(new FriendsAction.SendFriendRequest(payload));
+  }
 }

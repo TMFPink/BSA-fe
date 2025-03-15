@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { addIcons } from 'ionicons';
 import {
   personAddOutline,
@@ -44,6 +44,12 @@ export class UserCardComponent implements OnInit {
   @Input() isFriendAdd: boolean = false;
   @Input() isFriendRequest: boolean = false;
   @Input() isCreateBill: boolean = false;
+  @Output() sendFriendRequest: EventEmitter<string> =
+    new EventEmitter<string>();
+  @Output() acceptFriendRequest: EventEmitter<string> =
+    new EventEmitter<string>();
+  @Output() rejectFriendRequest: EventEmitter<string> =
+    new EventEmitter<string>();
 
   defaultCard: boolean = true;
 
@@ -60,12 +66,5 @@ export class UserCardComponent implements OnInit {
     if (this.isFriendAdd || this.isCreateBill) {
       this.defaultCard = false;
     }
-  }
-
-  sendFriendRequest() {
-    const payload = {
-      friend_id: this.user.id,
-    };
-    this.store.dispatch(new FriendsAction.AddFriend(payload));
   }
 }

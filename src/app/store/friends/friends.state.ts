@@ -69,7 +69,7 @@ export class FriendsState extends BaseState<FriendsStateModel> {
           friends,
           'Error fetching friends',
           (data: any) => {
-            ctx.patchState({ friends: data.user });
+            ctx.patchState({ friends: data });
           }
         );
       })
@@ -77,9 +77,51 @@ export class FriendsState extends BaseState<FriendsStateModel> {
   }
 
   @Action(FriendsAction.AddFriend)
-  addFriend(
+  acceptFriendRequest(
     ctx: StateContext<FriendsStateModel>,
     action: FriendsAction.AddFriend
+  ) {
+    this.setLoading(ctx);
+    return this.friendService.friendsAddCreate(action.payload).pipe(
+      tap((friends) => {
+        this.handleApiResponse(
+          ctx,
+          friends,
+          'Error adding friend',
+          (data: any) => {
+            this.getFriends(ctx);
+            this.getFriendRequest(ctx);
+          }
+        );
+      })
+    );
+  }
+
+  @Action(FriendsAction.RejectFriendRequest)
+  rejectFriendRequest(
+    ctx: StateContext<FriendsStateModel>,
+    action: FriendsAction.RejectFriendRequest
+  ) {
+    this.setLoading(ctx);
+    return this.friendService.friendsRejectRequestCreate(action.payload).pipe(
+      tap((friends) => {
+        this.handleApiResponse(
+          ctx,
+          friends,
+          'Error rejecting friend request',
+          (data: any) => {
+            this.getFriends(ctx);
+            this.getFriendRequest(ctx);
+          }
+        );
+      })
+    );
+  }
+
+  @Action(FriendsAction.SendFriendRequest)
+  SendFriendRequest(
+    ctx: StateContext<FriendsStateModel>,
+    action: FriendsAction.SendFriendRequest
   ) {
     this.setLoading(ctx);
     return this.friendService.friendsSendRequestCreate(action.payload).pipe(
@@ -89,7 +131,7 @@ export class FriendsState extends BaseState<FriendsStateModel> {
           friends,
           'Error adding friend',
           (data: any) => {
-            this.getFriends(ctx);
+            this.getSuggestionFriends;
           }
         );
       })

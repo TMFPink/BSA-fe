@@ -11,6 +11,7 @@
         [isFriendAdd]="true"
         [user]="userSuggestion.user"
         [hasSentRequest]="userSuggestion.has_sent_request"
+        (sendFriendRequest)="sendFriendRequest($event)"
       ></bsa-user-card
       >}
     </div>
