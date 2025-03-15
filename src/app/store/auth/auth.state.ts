@@ -28,7 +28,7 @@ export class AuthState extends BaseState<authStateModel> {
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
-    private _handleErrorService: HandleErrorService
+    private handleErrorService: HandleErrorService
   ) {
     super();
   }
@@ -55,7 +55,7 @@ export class AuthState extends BaseState<authStateModel> {
       catchError((error) => {
         this.handleError(ctx, error);
         const errorMessage = error.error.error;
-        this._handleErrorService.messageError$.next(errorMessage);
+        this.handleErrorService.messageError$.next(errorMessage);
         return error;
       })
     );

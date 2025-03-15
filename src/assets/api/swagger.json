@@ -48,13 +48,16 @@
             "description": "Login successful",
             "examples": {
               "application/json": {
-                "refresh-token": "string",
-                "access-token": "string"
+                "refreshToken": "string",
+                "accessToken": "string"
               }
             }
           },
           "401": {
             "description": "Invalid Credentials"
+          },
+          "404": {
+            "description": "User not found"
           }
         },
         "tags": [
@@ -142,10 +145,36 @@
       "post": {
         "operationId": "bills_add-participants_create",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "bill_id",
+                "participants"
+              ],
+              "type": "object",
+              "properties": {
+                "bill_id": {
+                  "description": "Hashed bill ID",
+                  "type": "string"
+                },
+                "participants": {
+                  "description": "List of hashed participant IDs",
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        ],
         "responses": {
           "201": {
-            "description": ""
+            "description": "Participants added successfully!"
           }
         },
         "tags": [
@@ -166,6 +195,13 @@
             "schema": {
               "$ref": "#/definitions/BillParticipant"
             }
+          },
+          {
+            "name": "pk",
+            "in": "path",
+            "description": "Primary key of the bill participant",
+            "type": "integer",
+            "required": true
           }
         ],
         "responses": {
@@ -218,7 +254,15 @@
       "get": {
         "operationId": "bills_read",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "hashed_id",
+            "in": "path",
+            "description": "Hashed bill ID",
+            "type": "string",
+            "required": true
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -240,6 +284,197 @@
         }
       ]
     },
+    "/friends/": {
+      "get": {
+        "operationId": "friends_list",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/add/": {
+      "post": {
+        "operationId": "friends_add_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "friend_id"
+              ],
+              "type": "object",
+              "properties": {
+                "friend_id": {
+                  "description": "Hashed friend ID",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Friend added successfully!"
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/reject-request/": {
+      "post": {
+        "operationId": "friends_reject-request_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "friend_id"
+              ],
+              "type": "object",
+              "properties": {
+                "friend_id": {
+                  "description": "Hashed friend ID",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Friend request rejected successfully!"
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/remove/": {
+      "post": {
+        "operationId": "friends_remove_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "friend_id"
+              ],
+              "type": "object",
+              "properties": {
+                "friend_id": {
+                  "description": "Hashed friend ID",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Friend removed successfully!"
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/requests/": {
+      "get": {
+        "operationId": "friends_requests_list",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/send-request/": {
+      "post": {
+        "operationId": "friends_send-request_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "required": [
+                "friend_id"
+              ],
+              "type": "object",
+              "properties": {
+                "friend_id": {
+                  "description": "Hashed friend ID",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Friend request sent successfully!"
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
+    "/friends/suggestions/": {
+      "get": {
+        "operationId": "friends_suggestions_list",
+        "description": "",
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Username to search for",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of friend suggestions"
+          }
+        },
+        "tags": [
+          "friends"
+        ]
+      },
+      "parameters": []
+    },
     "/users/all/": {
       "get": {
         "operationId": "users_all_list",
@@ -247,54 +482,6 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      },
-      "parameters": []
-    },
-    "/users/friends/": {
-      "get": {
-        "operationId": "users_friends_list",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      },
-      "parameters": []
-    },
-    "/users/friends/add/": {
-      "post": {
-        "operationId": "users_friends_add_create",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "users"
-        ]
-      },
-      "parameters": []
-    },
-    "/users/friends/remove/": {
-      "delete": {
-        "operationId": "users_friends_remove_delete",
-        "description": "",
-        "parameters": [],
-        "responses": {
-          "204": {
             "description": ""
           }
         },
@@ -393,6 +580,74 @@
         }
       }
     },
+    "BillDetail": {
+      "required": [
+        "item_name",
+        "item_price"
+      ],
+      "type": "object",
+      "properties": {
+        "item_name": {
+          "title": "Item name",
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "item_price": {
+          "title": "Item price",
+          "type": "string",
+          "format": "decimal"
+        }
+      }
+    },
+    "Bill": {
+      "required": [
+        "title",
+        "total_amount"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
+        "title": {
+          "title": "Title",
+          "type": "string",
+          "maxLength": 255,
+          "minLength": 1
+        },
+        "total_amount": {
+          "title": "Total amount",
+          "type": "string",
+          "format": "decimal"
+        },
+        "category": {
+          "title": "Category",
+          "type": "string",
+          "maxLength": 255,
+          "x-nullable": true
+        },
+        "all_paid": {
+          "title": "All paid",
+          "type": "boolean"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BillDetail"
+          }
+        }
+      }
+    },
     "BillParticipant": {
       "required": [
         "user",
@@ -410,48 +665,6 @@
         },
         "is_paid": {
           "title": "Is paid",
-          "type": "boolean"
-        }
-      }
-    },
-    "Bill": {
-      "required": [
-        "title",
-        "total_amount"
-      ],
-      "type": "object",
-      "properties": {
-        "id": {
-          "title": "Id",
-          "type": "string",
-          "readOnly": true
-        },
-        "participants": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BillParticipant"
-          },
-          "readOnly": true
-        },
-        "title": {
-          "title": "Title",
-          "type": "string",
-          "maxLength": 255,
-          "minLength": 1
-        },
-        "total_amount": {
-          "title": "Total amount",
-          "type": "string",
-          "format": "decimal"
-        },
-        "created_at": {
-          "title": "Created at",
-          "type": "string",
-          "format": "date-time",
-          "readOnly": true
-        },
-        "all_paid": {
-          "title": "All paid",
           "type": "boolean"
         }
       }

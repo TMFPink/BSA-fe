@@ -12,10 +12,10 @@ import { BillListComponent } from './Components/bill-list/bill-list.component';
 import { importProvidersFrom } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxsModule } from '@ngxs/store';
-import { BillsState } from './store/bills/bills.state';
-import { AuthState } from './store/auth';
+
 import { authGuard, unAuthGuard } from './guards/auth.guard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthState, BillsState, FriendsState } from './store';
 
 export const routes: Routes = [
   {
@@ -74,6 +74,7 @@ export const routes: Routes = [
             redirectTo: '',
           },
         ],
+        providers: [importProvidersFrom(NgxsModule.forFeature([FriendsState]))],
       },
       {
         path: 'bills',
