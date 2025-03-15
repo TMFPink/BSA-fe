@@ -67,4 +67,9 @@ export class UserCardComponent implements OnInit {
       this.defaultCard = false;
     }
   }
+
+  handleSendFriendRequest() {
+    this.sendFriendRequest.emit(this.user.id);
+    this.hasSentRequest = true;
+  }
 }

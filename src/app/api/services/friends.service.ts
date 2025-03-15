@@ -25,10 +25,15 @@ class FriendsService extends __BaseService {
   ) {
     super(config, http);
   }
-  friendsListResponse(): __Observable<__StrictHttpResponse<null>> {
+
+  /**
+   * @param username Username to filter friends by
+   */
+  friendsListResponse(username?: string): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+    if (username != null) __params = __params.set('username', username.toString());
     let req = new HttpRequest<any>(
       'GET',
       this.rootUrl + `/friends/`,
@@ -45,8 +50,12 @@ class FriendsService extends __BaseService {
         return _r as __StrictHttpResponse<null>;
       })
     );
-  }  friendsList(): __Observable<null> {
-    return this.friendsListResponse().pipe(
+  }
+  /**
+   * @param username Username to filter friends by
+   */
+  friendsList(username?: string): __Observable<null> {
+    return this.friendsListResponse(username).pipe(
       __map(_r => _r.body as null)
     );
   }

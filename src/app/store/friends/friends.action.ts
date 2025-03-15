@@ -12,6 +12,7 @@ const enum FriendsActionTypes {
 export namespace FriendsAction {
   export class GetFriends {
     static readonly type = FriendsActionTypes.GET_FRIENDS;
+    constructor(public payload: any) {}
   }
   export class AddFriend {
     static readonly type = FriendsActionTypes.ADD_FRIEND;

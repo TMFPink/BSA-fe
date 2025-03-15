@@ -27,7 +27,7 @@ import { FriendsAction } from 'src/app/store/friends/friends.action';
 import { FriendsState } from 'src/app/store/friends/friends.state';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 import { Subject } from 'rxjs';
-import { takeUntil, filter } from 'rxjs/operators';
+import { takeUntil, filter, debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-friends-management',
@@ -40,6 +40,7 @@ import { takeUntil, filter } from 'rxjs/operators';
     // IonTitle,
     // IonToolbar,
     IonButton,
+    IonSearchbar,
     // IonIcon,
     RouterLink,
     UserCardComponent,
@@ -53,7 +54,7 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   friendsFilterForm = this.fb.group({
-    name: [''],
+    username: [''],
   });
 
   selectors = createSelectMap({
@@ -72,6 +73,11 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private router: Router) {
     addIcons({ checkmarkOutline, closeOutline, personAddOutline });
+    this.friendsFilterForm.valueChanges
+      .pipe(takeUntil(this.destroy$), debounceTime(500))
+      .subscribe((value) => {
+        this.action.getFriends(value.username);
+      });
   }
 
   ngOnInit() {}
@@ -80,7 +86,7 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
   }
 
   private loadFriendsData() {
-    this.action.getFriends();
+    this.action.getFriends('');
     this.action.getFriendsRequest();
   }
 

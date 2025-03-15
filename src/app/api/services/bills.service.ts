@@ -291,6 +291,7 @@ module BillsService {
      * Hashed bill ID
      */
     hashedId: string;
+    // hashedId: string;
   }
 }
 

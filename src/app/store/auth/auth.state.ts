@@ -67,4 +67,28 @@ export class AuthState extends BaseState<authStateModel> {
     localStorage.removeItem('token');
     ctx.patchState({ token: '' });
   }
+
+  @Action(AuthAction.Register)
+  register(
+    ctx: StateContext<authStateModel>,
+    { payload }: AuthAction.Register
+  ) {
+    this.setLoading(ctx);
+    return this.authService.authRegisterCreate(payload).pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while registering',
+          (data: any) => {}
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
+  }
 }

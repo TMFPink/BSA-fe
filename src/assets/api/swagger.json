@@ -288,10 +288,17 @@
       "get": {
         "operationId": "friends_list",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "username",
+            "in": "query",
+            "description": "Username to filter friends by",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
-            "description": ""
+            "description": "List of friends"
           }
         },
         "tags": [

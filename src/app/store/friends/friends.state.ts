@@ -60,9 +60,12 @@ export class FriendsState extends BaseState<FriendsStateModel> {
   }
 
   @Action(FriendsAction.GetFriends)
-  getFriends(ctx: StateContext<FriendsStateModel>) {
+  getFriends(
+    ctx: StateContext<FriendsStateModel>,
+    action: FriendsAction.GetFriends
+  ) {
     this.setLoading(ctx);
-    return this.friendService.friendsList().pipe(
+    return this.friendService.friendsList(action.payload).pipe(
       tap((friends) => {
         this.handleApiResponse(
           ctx,
@@ -89,8 +92,8 @@ export class FriendsState extends BaseState<FriendsStateModel> {
           friends,
           'Error adding friend',
           (data: any) => {
-            this.getFriends(ctx);
-            this.getFriendRequest(ctx);
+            ctx.dispatch(new FriendsAction.GetFriendsRequest());
+            ctx.dispatch(new FriendsAction.GetFriends(''));
           }
         );
       })
@@ -110,8 +113,7 @@ export class FriendsState extends BaseState<FriendsStateModel> {
           friends,
           'Error rejecting friend request',
           (data: any) => {
-            this.getFriends(ctx);
-            this.getFriendRequest(ctx);
+            ctx.dispatch(new FriendsAction.GetFriendsRequest());
           }
         );
       })
@@ -131,7 +133,7 @@ export class FriendsState extends BaseState<FriendsStateModel> {
           friends,
           'Error adding friend',
           (data: any) => {
-            this.getSuggestionFriends;
+            ctx.dispatch(new FriendsAction.GetFriendsSuggestions(''));
           }
         );
       })
