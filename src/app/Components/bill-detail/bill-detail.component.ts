@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import { addIcons } from 'ionicons';
 import { NavigationService } from 'src/app/service/navigation.service';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
@@ -40,25 +47,21 @@ import { BackButtonComponent } from 'src/app/UI/back-button/back-button.componen
     BackButtonComponent,
   ],
 })
-export class BillDetailComponent implements OnInit, OnDestroy {
-  // @Input() form!: FormGroup;
+export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
+  @Input() billInfo: { billName: string; category: string; date: string } = {
+    billName: '',
+    category: '',
+    date: '',
+  };
   @Input() billDetails: { description: string; amount: number }[] = [];
   @Input() totalAmount: number = 0;
-  participants = [
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'NA' },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Bached' },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Cuong' },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Hong' },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Kien' },
-    { avatar: '/assets/images/user-avt.webp', splitAmount: 0, name: 'Hung' },
-    // { avatar: '/assets/images/user-avt.webp' },
-  ];
+  @Input() participants: { id: string; name: string; splitAmount: number }[] =
+    [];
 
   selectedCategory: string = 'equal';
   selectedPayerCate: string = 'all';
-  defaultSplitAmount: string = '';
 
-  totalParticipants: number = 5;
+  totalParticipants: number = 0;
 
   marks: NzMarks = {};
   step: number = 1;
@@ -95,6 +98,10 @@ export class BillDetailComponent implements OnInit, OnDestroy {
         }
       })
     );
+
+    // this.totalParticipants = this.participants.length;
+    // console.log(this.participants);
+    // console.log(this.participants.length);
   }
 
   getBillCategoryBG(billCategory: string) {
@@ -103,7 +110,7 @@ export class BillDetailComponent implements OnInit, OnDestroy {
         return '#FEAE6F';
       case 'transport':
         return '#2d98da';
-      case 'game':
+      case 'entertainment':
         return '#9333ea';
       case 'others':
         return 'var(--secondary-theme)';
@@ -118,6 +125,14 @@ export class BillDetailComponent implements OnInit, OnDestroy {
 
   formatTooltip(value: number) {
     return formatCurrency(value, true);
+  }
+
+  formatDate(date: string): string {
+    const d = new Date(date);
+    const day = String(d.getDate()).padStart(2, '0');
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
   }
 
   onSplitChange(value: string, index: number) {
@@ -167,32 +182,47 @@ export class BillDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['participants'] && changes['participants'].currentValue) {
+      this.totalParticipants = this.participants.length;
+      this.updateSliderConfig();
+    }
+
+    if (changes['totalAmount'] && !changes['totalAmount'].firstChange) {
+      this.updateSliderConfig();
+    }
+  }
+
   ngOnInit() {
+    this.totalParticipants = this.participants.length;
     this.updateSliderConfig();
     for (let i = 0; i < this.participants.length; i++) {
       this.participants[i].splitAmount = Math.ceil(
-        this.totalAmount / this.totalParticipants
+        this.totalAmount / this.participants.length
       );
     }
   }
 
   updateSliderConfig() {
-    const step = Math.ceil(this.totalAmount / 10);
-    const participantStep = Math.ceil(
-      this.totalAmount / this.totalParticipants
-    );
-    const marks: NzMarks = { 0: '0' };
+    if (this.totalAmount > 0 && this.totalParticipants > 0) {
+      const step = Math.ceil(this.totalAmount / 10);
+      const participantStep = Math.ceil(
+        this.totalAmount / this.totalParticipants
+      );
+      const marks: NzMarks = { 0: '0' };
 
-    for (let i = 1; i <= this.totalParticipants; i++) {
-      marks[participantStep * i] = formatCurrency(
-        participantStep * i,
-        true
-      ).toString();
+      for (let i = 1; i <= this.totalParticipants; i++) {
+        marks[participantStep * i] = formatCurrency(
+          participantStep * i,
+          true
+        ).toString();
+      }
+
+      this.step = step;
+      this.marks = marks;
     }
-
-    this.step = step;
-    this.marks = marks;
   }
+
   onChangeOptions(value: string, type: string) {
     switch (type) {
       case 'split':

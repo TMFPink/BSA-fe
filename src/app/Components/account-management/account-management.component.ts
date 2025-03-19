@@ -11,6 +11,7 @@ import {
 } from '@ionic/angular/standalone';
 import { Store } from '@ngxs/store';
 import { AuthAction } from 'src/app/store/auth';
+import { AuthFacade } from 'src/app/store/auth/auth.facade';
 import { BillAction } from 'src/app/store/bills/bills.action';
 
 @Component({
@@ -28,12 +29,16 @@ import { BillAction } from 'src/app/store/bills/bills.action';
   standalone: true,
 })
 export class AccountManagementComponent implements OnInit {
-  constructor(private router: Router, private store: Store) {}
+  constructor(
+    private router: Router,
+    private store: Store,
+    private authFc: AuthFacade
+  ) {}
 
   ngOnInit() {}
   onLogout() {
-    this.store.dispatch(new AuthAction.Logout());
-    this.router.navigate(['/auth']);
+    console.log('logout');
+    this.authFc.logout();
   }
 
   onClick() {

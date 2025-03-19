@@ -28,7 +28,7 @@ export class AuthState extends BaseState<authStateModel> {
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
-    private _handleErrorService: HandleErrorService
+    private handleErrorService: HandleErrorService
   ) {
     super();
   }
@@ -55,7 +55,7 @@ export class AuthState extends BaseState<authStateModel> {
       catchError((error) => {
         this.handleError(ctx, error);
         const errorMessage = error.error.error;
-        this._handleErrorService.messageError$.next(errorMessage);
+        this.handleErrorService.messageError$.next(errorMessage);
         return error;
       })
     );
@@ -66,5 +66,29 @@ export class AuthState extends BaseState<authStateModel> {
     this.cookieService.delete('token');
     localStorage.removeItem('token');
     ctx.patchState({ token: '' });
+  }
+
+  @Action(AuthAction.Register)
+  register(
+    ctx: StateContext<authStateModel>,
+    { payload }: AuthAction.Register
+  ) {
+    this.setLoading(ctx);
+    return this.authService.authRegisterCreate(payload).pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while registering',
+          (data: any) => {}
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
   }
 }

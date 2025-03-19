@@ -2,7 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { IonApp, IonRouterOutlet, IonIcon } from '@ionic/angular/standalone';
-import { Router, RouterLink, NavigationEnd } from '@angular/router';
+import {
+  Router,
+  RouterLink,
+  NavigationEnd,
+  RouterOutlet,
+} from '@angular/router';
 import { IonHeader, IonToolbar, IonTitle } from '@ionic/angular/standalone';
 import { NavigationService } from 'src/app/service/navigation.service';
 import { filter } from 'rxjs/operators';
@@ -23,6 +28,7 @@ import { addIcons } from 'ionicons';
     IonToolbar,
     IonTitle,
     IonIcon,
+    RouterOutlet,
   ],
 })
 export class ContentLayoutComponent implements OnInit {
@@ -55,6 +61,10 @@ export class ContentLayoutComponent implements OnInit {
 
   isRouteActive(route: string): boolean {
     return this.currentRoute.startsWith(route);
+  }
+
+  onNavigate(route: string) {
+    this.router.navigate([route]);
   }
 
   toggleDarkMode() {

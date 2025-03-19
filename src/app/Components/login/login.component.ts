@@ -8,9 +8,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterLink, RouterModule } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { select, Store } from '@ngxs/store';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { AuthAction, AuthState } from 'src/app/store/auth';
+import { AuthFacade } from 'src/app/store/auth/auth.facade';
 
 @Component({
   selector: 'app-login',
@@ -33,17 +34,18 @@ export class LoginComponent implements OnInit {
   constructor(
     private router: Router,
     private store: Store,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private facade: AuthFacade
   ) {
     effect(() => {
-      const loginStatus = this.statusSignal();
-      if (loginStatus === 'success') {
-        this.router.navigate(['/home']);
-      }
+      // const loginStatus = this.statusSignal();
+      // if (loginStatus === 'success') {
+      //   this.router.navigate(['/home']);
+      // }
     });
   }
 
-  statusSignal = toSignal(this.store.select(AuthState.status));
+  statusSignal = select(AuthState.status);
 
   ngOnInit() {}
 
@@ -55,6 +57,6 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.get('password')?.value ?? '',
     };
 
-    this.store.dispatch(new AuthAction.Login(payload));
+    this.facade.login(payload);
   }
 }

@@ -1,6 +1,11 @@
 /* tslint:disable */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpRequest, HttpResponse, HttpHeaders } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpRequest,
+  HttpResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import { BaseService as __BaseService } from '../base-service';
 import { ApiConfiguration as __Configuration } from '../api-configuration';
 import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-response';
@@ -20,36 +25,28 @@ class BillsService extends __BaseService {
   static readonly billsPayPartialUpdatePath = '/bills/pay/{id}/';
   static readonly billsReadPath = '/bills/{hashed_id}/';
 
-  constructor(
-    config: __Configuration,
-    http: HttpClient
-  ) {
+  constructor(config: __Configuration, http: HttpClient) {
     super(config, http);
   }
   billsListResponse(): __Observable<__StrictHttpResponse<Array<Bill>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-    let req = new HttpRequest<any>(
-      'GET',
-      this.rootUrl + `/bills/`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json'
-      });
+    let req = new HttpRequest<any>('GET', this.rootUrl + `/bills/`, __body, {
+      headers: __headers,
+      params: __params,
+      responseType: 'json',
+    });
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<Array<Bill>>;
       })
     );
-  }  billsList(): __Observable<Array<Bill>> {
-    return this.billsListResponse().pipe(
-      __map(_r => _r.body as Array<Bill>)
-    );
+  }
+  billsList(): __Observable<Array<Bill>> {
+    return this.billsListResponse().pipe(__map((_r) => _r.body as Array<Bill>));
   }
 
   /**
@@ -60,18 +57,14 @@ class BillsService extends __BaseService {
     let __headers = new HttpHeaders();
     let __body: any = null;
     __body = data;
-    let req = new HttpRequest<any>(
-      'POST',
-      this.rootUrl + `/bills/`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json'
-      });
+    let req = new HttpRequest<any>('POST', this.rootUrl + `/bills/`, __body, {
+      headers: __headers,
+      params: __params,
+      responseType: 'json',
+    });
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<Bill>;
       })
@@ -81,14 +74,20 @@ class BillsService extends __BaseService {
    * @param data undefined
    */
   billsCreate(data: Bill): __Observable<Bill> {
-    return this.billsCreateResponse(data).pipe(
-      __map(_r => _r.body as Bill)
-    );
+    return this.billsCreateResponse(data).pipe(__map((_r) => _r.body as Bill));
   }
-  billsAddParticipantsCreateResponse(): __Observable<__StrictHttpResponse<null>> {
+
+  /**
+   * @param data undefined
+   */
+  billsAddParticipantsCreateResponse(data: {
+    bill_id: string;
+    participants: Array<string>;
+  }): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+    __body = data;
     let req = new HttpRequest<any>(
       'POST',
       this.rootUrl + `/bills/add-participants/`,
@@ -96,29 +95,41 @@ class BillsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
-      });
+        responseType: 'json',
+      }
+    );
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<null>;
       })
     );
-  }  billsAddParticipantsCreate(): __Observable<null> {
-    return this.billsAddParticipantsCreateResponse().pipe(
-      __map(_r => _r.body as null)
+  }
+  /**
+   * @param data undefined
+   */
+  billsAddParticipantsCreate(data: {
+    bill_id: string;
+    participants: Array<string>;
+  }): __Observable<null> {
+    return this.billsAddParticipantsCreateResponse(data).pipe(
+      __map((_r) => _r.body as null)
     );
   }
 
   /**
    * @param params The `BillsService.BillsPayUpdateParams` containing the following parameters:
    *
+   * - `pk`: Primary key of the bill participant
+   *
    * - `id`:
    *
    * - `data`:
    */
-  billsPayUpdateResponse(params: BillsService.BillsPayUpdateParams): __Observable<__StrictHttpResponse<BillParticipant>> {
+  billsPayUpdateResponse(
+    params: BillsService.BillsPayUpdateParams
+  ): __Observable<__StrictHttpResponse<BillParticipant>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -131,11 +142,12 @@ class BillsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
-      });
+        responseType: 'json',
+      }
+    );
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<BillParticipant>;
       })
@@ -144,13 +156,17 @@ class BillsService extends __BaseService {
   /**
    * @param params The `BillsService.BillsPayUpdateParams` containing the following parameters:
    *
+   * - `pk`: Primary key of the bill participant
+   *
    * - `id`:
    *
    * - `data`:
    */
-  billsPayUpdate(params: BillsService.BillsPayUpdateParams): __Observable<BillParticipant> {
+  billsPayUpdate(
+    params: BillsService.BillsPayUpdateParams
+  ): __Observable<BillParticipant> {
     return this.billsPayUpdateResponse(params).pipe(
-      __map(_r => _r.body as BillParticipant)
+      __map((_r) => _r.body as BillParticipant)
     );
   }
 
@@ -161,7 +177,9 @@ class BillsService extends __BaseService {
    *
    * - `data`:
    */
-  billsPayPartialUpdateResponse(params: BillsService.BillsPayPartialUpdateParams): __Observable<__StrictHttpResponse<BillParticipant>> {
+  billsPayPartialUpdateResponse(
+    params: BillsService.BillsPayPartialUpdateParams
+  ): __Observable<__StrictHttpResponse<BillParticipant>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -174,11 +192,12 @@ class BillsService extends __BaseService {
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
-      });
+        responseType: 'json',
+      }
+    );
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<BillParticipant>;
       })
@@ -191,53 +210,67 @@ class BillsService extends __BaseService {
    *
    * - `data`:
    */
-  billsPayPartialUpdate(params: BillsService.BillsPayPartialUpdateParams): __Observable<BillParticipant> {
+  billsPayPartialUpdate(
+    params: BillsService.BillsPayPartialUpdateParams
+  ): __Observable<BillParticipant> {
     return this.billsPayPartialUpdateResponse(params).pipe(
-      __map(_r => _r.body as BillParticipant)
+      __map((_r) => _r.body as BillParticipant)
     );
   }
 
   /**
-   * @param hashed_id undefined
+   * @param params The `BillsService.BillsReadParams` containing the following parameters:
+   *
+   * - `hashed_id`: Hashed bill ID
+   *
+   * - `hashed_id`:
    */
-  billsReadResponse(hashedId: string): __Observable<__StrictHttpResponse<Bill>> {
+  billsReadResponse(
+    params: BillsService.BillsReadParams
+  ): __Observable<__StrictHttpResponse<Bill>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
 
     let req = new HttpRequest<any>(
       'GET',
-      this.rootUrl + `/bills/${encodeURIComponent(String(hashedId))}/`,
+      this.rootUrl + `/bills/${encodeURIComponent(String(params.hashedId))}/`,
       __body,
       {
         headers: __headers,
         params: __params,
-        responseType: 'json'
-      });
+        responseType: 'json',
+      }
+    );
 
     return this.http.request<any>(req).pipe(
-      __filter(_r => _r instanceof HttpResponse),
+      __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
         return _r as __StrictHttpResponse<Bill>;
       })
     );
   }
   /**
-   * @param hashed_id undefined
+   * @param params The `BillsService.BillsReadParams` containing the following parameters:
+   *
+   * - `hashed_id`: Hashed bill ID
+   *
+   * - `hashed_id`:
    */
-  billsRead(hashedId: string): __Observable<Bill> {
-    return this.billsReadResponse(hashedId).pipe(
-      __map(_r => _r.body as Bill)
-    );
+  billsRead(params: BillsService.BillsReadParams): __Observable<Bill> {
+    return this.billsReadResponse(params).pipe(__map((_r) => _r.body as Bill));
   }
 }
 
 module BillsService {
-
   /**
    * Parameters for billsPayUpdate
    */
   export interface BillsPayUpdateParams {
+    /**
+     * Primary key of the bill participant
+     */
+    pk: number;
     id: string;
     data: BillParticipant;
   }
@@ -249,6 +282,17 @@ module BillsService {
     id: string;
     data: BillParticipant;
   }
+
+  /**
+   * Parameters for billsRead
+   */
+  export interface BillsReadParams {
+    /**
+     * Hashed bill ID
+     */
+    hashedId: string;
+    // hashedId: string;
+  }
 }
 
-export { BillsService }
+export { BillsService };

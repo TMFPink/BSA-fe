@@ -1,10 +1,11 @@
 /* tslint:disable */
-import { BillParticipant } from './bill-participant';
+import { BillDetail } from './bill-detail';
 export interface Bill {
   all_paid?: boolean;
-  created_at?: string;
-  id?: string;
-  participants?: Array<BillParticipant>;
+  category?: null | string;
+  details?: Array<BillDetail>;
+  id?: number;
+  participants?: Array<string>;
   title: string;
   total_amount: string;
 }

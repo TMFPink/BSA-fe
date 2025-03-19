@@ -1,16 +1,9 @@
-<!-- <ion-header>
-  <ion-toolbar>
-    <div class="text-black flex items-center text-center">
-      <ion-title>Friends Management</ion-title>
-    </div>
-  </ion-toolbar>
-</ion-header> -->
 <ion-content>
   <div class="mx-5 mt-10 mb-5">
     <div class="flex justify-between items-center">
       <div class="text-black text-2xl my-5 font-bold">Friend Request</div>
       <ion-button
-        class="text-white text-lg font-bold bg-[var(--secondary-theme)] rounded-lg border border-[var(--secondary-theme)] capitalize"
+        class="text-white text-lg font-bold bg-[var(--secondary-theme)] rounded-3xl border border-[var(--secondary-theme)] capitalize"
         fill="clear"
         routerLink="add-friends"
         size="small"
@@ -20,40 +13,47 @@
     </div>
 
     <div class="grid auto-grid place-items-center gap-5">
-      <bsa-user-card [isFriendRequest]="true"></bsa-user-card>
-      <bsa-user-card [isFriendRequest]="true"></bsa-user-card>
+      @for (user of selectors.friendsRequest(); track $index) {
+      <bsa-user-card
+        [user]="user"
+        [isFriendRequest]="true"
+        (acceptFriendRequest)="acceptFriendRequest($event)"
+        (rejectFriendRequest)="rejectFriendRequest($event)"
+      ></bsa-user-card>
+      }
     </div>
 
+    @if (!selectors.friendsRequest()) {
     <div
       class="text-lg text-black items-center content-center justify-center flex m-5"
     >
       There are no new friend request
     </div>
+    }
 
     <div class="text-black text-2xl my-5 font-bold">Your Friends</div>
-    <form nz-form [formGroup]="friendsFilterForm">
-      <div class="mb-5">
-        <nz-form-control>
-          <input
-            nz-input
-            nzSize="large"
-            nz-input
-            placeholder="Find your friend"
-            formControlName="name"
-            class="h-14"
-          />
-        </nz-form-control>
-      </div>
-    </form>
 
-    <div class="grid auto-grid gap-5 place-items-center">
-      <bsa-user-card></bsa-user-card>
-      <bsa-user-card></bsa-user-card>
+    <div class="flex justify-center items-center">
+      <form nz-form [formGroup]="friendsFilterForm">
+        <ion-searchbar
+          class="rounded-lg searchbar-add-friend px-0 -mt-5 w-[400px]"
+          formControlName="username"
+          placeholder="Find your friends"
+        ></ion-searchbar>
+      </form>
+    </div>
+
+    <!-- <div class="grid auto-grid gap-5 place-items-center"> -->
+    <div class="flex flex-col items-center gap-y-5">
+      @for (user of selectors.friends(); track $index) {
+      <bsa-user-card [user]="user"></bsa-user-card>
+      } @if (!selectors.friends()) {
       <div
         class="text-lg text-black items-center content-center justify-center flex m-5"
       >
         You have no friend? T.T
       </div>
+      }
     </div>
   </div>
 </ion-content>

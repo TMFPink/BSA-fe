@@ -6,7 +6,7 @@
   </ion-toolbar>
 </ion-header> -->
 <ion-content>
-  <div class="mx-5 mt-10 mb-32" [formGroup]="form">
+  <div class="mx-5 mt-10 mb-32" [formGroup]="billForm">
     <div class="flex justify-between items-center content-center">
       <div class="flex items-center content-center gap-5">
         <ion-button
@@ -64,24 +64,28 @@
 
       <!-- <div class="text-black text-xl my-5 font-bold">Groups</div> -->
       <div class="text-black text-xl my-5 font-bold">Participants</div>
-      <div class="mb-5">
+      <form nz-form class="mb-5" [formGroup]="searchFriendForm">
         <nz-form-control>
           <input
             nz-input
+            formControlName="username"
             nzSize="large"
             nz-input
             placeholder="Find your friend"
             class="h-14"
           />
         </nz-form-control>
-      </div>
+      </form>
 
-      <div class="grid auto-grid gap-5 place-items-center">
-        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
-        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
-        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
-        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
-        <bsa-user-card [isCreateBill]="true"></bsa-user-card>
+      <div class="mt-5 grid auto-grid gap-5 place-items-center">
+        @for (friend of selectors.friends(); track $index) {
+        <bsa-user-card
+          [user]="friend"
+          [isCreateBill]="true"
+          [isSelected]="isParticipantSelected(friend.id ?? '')"
+          (toggleParticipantEvent)="handleToggleParticipant($event)"
+        ></bsa-user-card>
+        }
       </div>
     </div>
 
@@ -197,8 +201,16 @@
         <div class="text-black text-2xl">
           {{ detail.description }}
         </div>
-        <div class="text-black text-xl font-bold">
-          {{ formatMoneyDetail(detail.amount) }}VND
+        <div class="flex items-center gap-4">
+          <div class="text-black text-xl font-bold">
+            {{ formatMoneyDetail(detail.amount) }}VND
+          </div>
+
+          <ion-icon
+            name="trash-outline"
+            class="text-red-500 text-2xl cursor-pointer"
+            (click)="deleteBillDetail($index)"
+          ></ion-icon>
         </div>
       </div>
       }
@@ -211,12 +223,20 @@
     </div>
     <div *ngIf="thirdStage">
       <bsa-bill-detail
+        [billInfo]="billInfo"
         [billDetails]="billDetails"
         [totalAmount]="totalAmount"
+        [participants]="participantsArray.value"
       ></bsa-bill-detail>
     </div>
     <div
-      class="continue-button z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-full w-80 fixed bottom-14 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+      class="z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-3xl w-80 fixed bottom-14 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+      [ngClass]="{
+        'bg-gray-400': !checkBillForm(),
+        'continue-button': checkBillForm()
+      }"
+      [class.cursor-not-allowed]="!checkBillForm()"
+      [attr.disabled]="!checkBillForm() ? true : null"
       (click)="nextStage()"
     >
       Continue

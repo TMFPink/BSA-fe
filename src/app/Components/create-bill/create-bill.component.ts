@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -24,6 +24,8 @@ import {
   gameControllerOutline,
   trailSignOutline,
   addCircleOutline,
+  trashOutline,
+  trashBinOutline,
 } from 'ionicons/icons';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
@@ -36,9 +38,19 @@ import {
   FormArray,
   FormGroup,
   ReactiveFormsModule,
+  Validators,
 } from '@angular/forms';
 import { formatCurrency } from 'src/app/utils';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { createDispatchMap, createSelectMap } from '@ngxs/store';
+import { FriendsAction, FriendsState } from 'src/app/store';
+import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { User } from 'src/app/api/models';
+
+interface Participant {
+  id: string;
+  splitAmount: number;
+}
 
 @Component({
   selector: 'app-create-bill',
@@ -67,7 +79,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
     IonSearchbar,
   ],
 })
-export class CreateBillComponent implements OnInit {
+export class CreateBillComponent implements OnInit, OnDestroy {
   firstStage: boolean = true;
   secondStage: boolean = false;
   thirdStage: boolean = false;
@@ -78,31 +90,62 @@ export class CreateBillComponent implements OnInit {
   newDetailAmount: number = 0;
   totalAmount: number = 0;
   billDetails: { description: string; amount: number }[] = [];
+  participants: Participant[] = [];
 
-  constructor(private navService: NavigationService, private fb: FormBuilder) {
-    addIcons({
-      personAddOutline,
-      caretBackOutline,
-      caretForwardOutline,
-      fastFoodOutline,
-      carOutline,
-      gameControllerOutline,
-      trailSignOutline,
-      addCircleOutline,
-    });
-  }
+  destroy$ = new Subject<void>();
 
-  form: FormGroup = this.fb.group({
-    billName: [''],
-    date: [null],
+  searchFriendForm = this.fb.group({
+    username: [''],
+  });
+  billForm = this.fb.group({
+    // stage1
+    billName: ['', Validators.required],
+    date: [null, Validators.required],
+    participants: this.fb.array([]),
+
+    // stage2
     totalAmount: [''],
-    category: [''],
+    category: ['', Validators.required],
     billDetails: this.fb.array([]),
   });
 
-  ngOnInit() {
-    // Remove the previous subscription as it's not needed
+  billInfo = {
+    billName: '',
+    category: '',
+    date: '',
+  };
+
+  constructor(private navService: NavigationService, private fb: FormBuilder) {
+    addIcons({
+      caretBackOutline,
+      fastFoodOutline,
+      gameControllerOutline,
+      carOutline,
+      trailSignOutline,
+      trashOutline,
+      personAddOutline,
+      caretForwardOutline,
+      addCircleOutline,
+      trashBinOutline,
+    });
+    this.searchFriendForm.valueChanges
+      .pipe(takeUntil(this.destroy$), debounceTime(500))
+      .subscribe((value) => {
+        this.actions.getFriends(value.username);
+      });
   }
+
+  ngOnInit() {
+    this.actions.getFriends('');
+  }
+
+  selectors = createSelectMap({
+    friends: FriendsState.friendsList,
+  });
+
+  actions = createDispatchMap({
+    getFriends: FriendsAction.GetFriends,
+  });
 
   onNavigate(): void {
     if (!this.firstStage) this.backStage();
@@ -110,23 +153,55 @@ export class CreateBillComponent implements OnInit {
   }
 
   goBack(): void {
-    console.log('Going back');
+    this.billForm.reset();
     this.navService.goBack();
   }
 
   nextStage(): void {
+    if (this.checkBillForm()) {
+      switch (this.currentStage) {
+        case 1:
+          this.secondStage = true;
+          this.firstStage = false;
+          this.currentStage = 2;
+          break;
+        case 2:
+          this.billInfo = {
+            billName: this.billForm.get('billName')?.value ?? '',
+            category: this.selectedCategory,
+            date: this.billForm.get('date')?.value ?? '',
+          };
+
+          this.thirdStage = true;
+          this.secondStage = false;
+          this.currentStage = 3;
+          break;
+      }
+    }
+  }
+
+  checkBillForm(): boolean {
+    let isValid = true;
     switch (this.currentStage) {
       case 1:
-        this.secondStage = true;
-        this.firstStage = false;
-        this.currentStage = 2;
+        if (!this.billForm.get('billName')?.value) isValid = false;
+
+        if (!this.billForm.get('date')?.value) isValid = false;
+
+        if (this.participantsArray.length === 0) isValid = false;
+
         break;
       case 2:
-        this.thirdStage = true;
-        this.secondStage = false;
-        this.currentStage = 3;
+        // Check if category is selected and there is at least one bill detail
+        if (!this.selectedCategory) {
+          isValid = false;
+        }
+        if (this.billDetails.length === 0) {
+          isValid = false;
+        }
         break;
     }
+    return isValid;
   }
 
   backStage(): void {
@@ -155,7 +230,7 @@ export class CreateBillComponent implements OnInit {
 
   addBillDetail() {
     if (this.newDetailDescription && this.newDetailAmount > 0) {
-      const billDetailsArray = this.form.get('billDetails') as FormArray;
+      const billDetailsArray = this.billForm.get('billDetails') as FormArray;
       billDetailsArray.push(
         this.fb.group({
           description: this.newDetailDescription,
@@ -173,11 +248,53 @@ export class CreateBillComponent implements OnInit {
     }
   }
 
+  deleteBillDetail(index: number) {
+    const billDetailsArray = this.billForm.get('billDetails') as FormArray;
+    const detail = this.billDetails[index];
+    this.totalAmount -= detail.amount;
+    this.billDetails.splice(index, 1);
+    billDetailsArray.removeAt(index);
+  }
+
   selectCategory(category: string) {
     this.selectedCategory = category;
   }
 
   get billDetailsArray() {
-    return this.form.get('billDetails') as FormArray;
+    return this.billForm.get('billDetails') as FormArray;
+  }
+
+  get participantsArray() {
+    return this.billForm.get('participants') as FormArray;
+  }
+
+  handleToggleParticipant(user: User) {
+    const participantsArray = this.participantsArray;
+    const index = participantsArray.controls.findIndex(
+      (control) => control.get('id')?.value === user.id
+    );
+
+    if (index === -1) {
+      participantsArray.push(
+        this.fb.group({
+          id: [user.id, Validators.required],
+          splitAmount: [0],
+          name: [user.username],
+        })
+      );
+    } else {
+      participantsArray.removeAt(index);
+    }
+  }
+
+  isParticipantSelected(userId: string): boolean {
+    return this.participantsArray.controls.some(
+      (control) => control.get('id')?.value === userId
+    );
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

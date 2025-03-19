@@ -1,13 +1,24 @@
 <ion-content>
   <div class="mx-5 mt-10 mb-5">
     <back-button></back-button>
-    <ion-searchbar
-      class="rounded-lg searchbar-add-friend px-0"
-      placeholder="Find your new friends"
-    ></ion-searchbar>
+    <div class="flex justify-center items-center">
+      <form nz-form [formGroup]="searchForm">
+        <ion-searchbar
+          class="rounded-lg searchbar-add-friend px-0 w-[400px]"
+          formControlName="username"
+          placeholder="Find your friends"
+        ></ion-searchbar>
+      </form>
+    </div>
 
-    <div class="flex flex-col items-center">
-      <bsa-user-card [isFriendAdd]="true"></bsa-user-card>
+    <div class="flex flex-col items-center gap-y-5">
+      @for (userSuggestion of friendsSuggestion(); track $index) {<bsa-user-card
+        [isFriendAdd]="true"
+        [user]="userSuggestion.user"
+        [hasSentRequest]="userSuggestion.has_sent_request"
+        (sendFriendRequest)="sendFriendRequest($event)"
+      ></bsa-user-card
+      >}
     </div>
   </div>
 </ion-content>

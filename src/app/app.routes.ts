@@ -12,10 +12,10 @@ import { BillListComponent } from './Components/bill-list/bill-list.component';
 import { importProvidersFrom } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { NgxsModule } from '@ngxs/store';
-import { BillsState } from './store/bills/bills.state';
-import { AuthState } from './store/auth';
+
 import { authGuard, unAuthGuard } from './guards/auth.guard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthState, BillsState, FriendsState } from './store';
 
 export const routes: Routes = [
   {
@@ -60,20 +60,9 @@ export const routes: Routes = [
       },
       {
         path: 'friends',
-        children: [
-          {
-            path: '',
-            component: FriendsManagementComponent,
-          },
-          {
-            path: 'add-friends',
-            component: FriendsAddingComponent,
-          },
-          {
-            path: '**',
-            redirectTo: '',
-          },
-        ],
+        data: { preload: false, reuse: false },
+        loadChildren: async () =>
+          (await import('./routing/friends.routing')).FRIENDS_ROUTES,
       },
       {
         path: 'bills',
@@ -105,7 +94,7 @@ export const routes: Routes = [
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts'),
         }),
-        NgxsModule.forFeature([BillsState, AuthState]),
+        NgxsModule.forFeature([BillsState, AuthState, FriendsState]),
         MatSnackBarModule
       ),
     ],

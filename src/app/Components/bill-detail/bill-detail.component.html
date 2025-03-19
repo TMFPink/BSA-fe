@@ -19,15 +19,15 @@
     class="flex flex-row content-center border bill-border bg-[var(--main-theme)] rounded-2xl items-center justify-between p-5 mt-5"
   >
     <div class="flex flex-col content-center justify-center">
-      <div class="text-black text-2xl font-bold">Lunch Lobby</div>
-      <div class="text-black text-xl">05/12/2003</div>
+      <div class="text-black text-2xl font-bold">{{ billInfo.billName }}</div>
+      <div class="text-black text-xl">{{ formatDate(billInfo.date) }}</div>
     </div>
 
     <div
       class="rounded-2xl px-5 py-2 flex items-center text-center text-xl"
-      [ngStyle]="{ 'background-color': getBillCategoryBG('food') }"
+      [ngStyle]="{ 'background-color': getBillCategoryBG(billInfo.category) }"
     >
-      Gaming
+      <div class="capitalize">{{ billInfo.category }}</div>
     </div>
   </div>
 
@@ -140,7 +140,7 @@
           </div>
           <div class="flex flex-col">
             <div class="text-[var(--main-theme)] text-2xl font-bold">
-              Bached pay's for:
+              {{ participant.name }} pay's for:
             </div>
             <div class="text-black text-2xl font-bold">
               {{ formatTooltip(participant.splitAmount) }} VND

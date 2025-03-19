@@ -5,6 +5,7 @@ import { ApiConfiguration, ApiConfigurationInterface } from './api-configuration
 
 import { AuthService } from './services/auth.service';
 import { BillsService } from './services/bills.service';
+import { FriendsService } from './services/friends.service';
 import { UsersService } from './services/users.service';
 
 /**
@@ -22,6 +23,7 @@ import { UsersService } from './services/users.service';
     ApiConfiguration,
     AuthService,
     BillsService,
+    FriendsService,
     UsersService
   ],
 })
