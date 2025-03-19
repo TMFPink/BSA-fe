@@ -28,6 +28,7 @@ import { FriendsState } from 'src/app/store/friends/friends.state';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 import { Subject } from 'rxjs';
 import { takeUntil, filter, debounceTime } from 'rxjs/operators';
+import { FriendsFacade } from 'src/app/store/friends/friends.facade';
 
 @Component({
   selector: 'app-friends-management',
@@ -71,7 +72,11 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
     rejectFriendRequest: FriendsAction.RejectFriendRequest,
   });
 
-  constructor(private fb: FormBuilder, private router: Router) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private friendsFacade: FriendsFacade
+  ) {
     addIcons({ checkmarkOutline, closeOutline, personAddOutline });
     this.friendsFilterForm.valueChanges
       .pipe(takeUntil(this.destroy$), debounceTime(500))
@@ -94,7 +99,7 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
     const payload = {
       friend_id: userId,
     };
-    this.action.addFriend(payload);
+    this.friendsFacade.addFriend(payload);
   }
 
   rejectFriendRequest(userId: string) {
@@ -105,7 +110,6 @@ export class FriendsManagementComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('Destroying friends management component');
     this.destroy$.next();
     this.destroy$.complete();
   }

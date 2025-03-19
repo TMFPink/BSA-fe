@@ -72,6 +72,9 @@
 
   <!-- check select part  -->
   <div *ngIf="isCreateBill">
-    <ion-checkbox></ion-checkbox>
+    <ion-checkbox
+      [checked]="isSelected"
+      (ionChange)="toggleParticipant($event)"
+    ></ion-checkbox>
   </div>
 </div>

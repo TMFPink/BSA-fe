@@ -24,11 +24,18 @@ export class FriendsFacade {
     rejectFriendRequest: FriendsAction.RejectFriendRequest,
   });
 
-  // addFriend(payload: any) {
-  //     this.actionMap.addFriend(payload).subscribe({
-  //     complete: () => {
-  //         this.toast.showSnackBar('Friend added', 'success');
-  //     },
-  //     });
-  // }
+  addFriend(payload: any) {
+    this.actionMap.addFriend(payload).subscribe({
+      complete: () => {
+        this.toast.showSnackBar('Friend added successfully', 'success');
+      },
+    });
+  }
+  sendFriendRequest(payload: any) {
+    this.actionMap.sendFriendRequest(payload).subscribe({
+      complete: () => {
+        this.toast.showSnackBar('Friend request sent successfully', 'success');
+      },
+    });
+  }
 }

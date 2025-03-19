@@ -14,6 +14,7 @@ import { Subject, Subscription, takeUntil } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 import { NavigationService } from 'src/app/service/navigation.service';
 import { FriendsAction, FriendsState } from 'src/app/store';
+import { FriendsFacade } from 'src/app/store/friends/friends.facade';
 import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
 import { UserCardComponent } from 'src/app/UI/user-card/user-card.component';
 @Component({
@@ -39,7 +40,11 @@ export class FriendsAddingComponent implements OnInit {
 
   unsubscribe$ = new Subject<void>();
 
-  constructor(private store: Store, private fb: FormBuilder) {
+  constructor(
+    private store: Store,
+    private fb: FormBuilder,
+    private friendsFacade: FriendsFacade
+  ) {
     addIcons({ personAddOutline, caretBackOutline });
 
     this.searchForm.valueChanges
@@ -60,7 +65,7 @@ export class FriendsAddingComponent implements OnInit {
     const payload = {
       friend_id: userId,
     };
-    this.store.dispatch(new FriendsAction.SendFriendRequest(payload));
+    this.friendsFacade.sendFriendRequest(payload);
   }
 
   ngOnDestroy() {

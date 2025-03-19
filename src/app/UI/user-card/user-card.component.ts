@@ -44,12 +44,15 @@ export class UserCardComponent implements OnInit {
   @Input() isFriendAdd: boolean = false;
   @Input() isFriendRequest: boolean = false;
   @Input() isCreateBill: boolean = false;
+  @Input() isSelected: boolean = false;
   @Output() sendFriendRequest: EventEmitter<string> =
     new EventEmitter<string>();
   @Output() acceptFriendRequest: EventEmitter<string> =
     new EventEmitter<string>();
   @Output() rejectFriendRequest: EventEmitter<string> =
     new EventEmitter<string>();
+  @Output() toggleParticipantEvent: EventEmitter<User> =
+    new EventEmitter<User>();
 
   defaultCard: boolean = true;
 
@@ -66,10 +69,19 @@ export class UserCardComponent implements OnInit {
     if (this.isFriendAdd || this.isCreateBill) {
       this.defaultCard = false;
     }
+    if (this.isCreateBill) {
+      this.hasSentRequest = this.isSelected;
+    }
   }
 
   handleSendFriendRequest() {
     this.sendFriendRequest.emit(this.user.id);
     this.hasSentRequest = true;
+  }
+
+  toggleParticipant(event: any) {
+    if (event.detail.checked) {
+      this.toggleParticipantEvent.emit(this.user);
+    }
   }
 }
