@@ -16,6 +16,7 @@ import { NgxsModule } from '@ngxs/store';
 import { authGuard, unAuthGuard } from './guards/auth.guard';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthState, BillsState, FriendsState } from './store';
+import { ProfileState } from './store/profile/profile.state';
 
 export const routes: Routes = [
   {

@@ -10,6 +10,8 @@ import {
   IonHeader,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngxs/store';
+import { User } from 'src/app/api/models';
+import { ProfileState } from 'src/app/store';
 import { AuthAction } from 'src/app/store/auth';
 import { AuthFacade } from 'src/app/store/auth/auth.facade';
 import { BillAction } from 'src/app/store/bills/bills.action';
@@ -35,9 +37,12 @@ export class AccountManagementComponent implements OnInit {
     private authFc: AuthFacade
   ) {}
 
-  ngOnInit() {}
+  user: User | null = null;
+  ngOnInit() {
+    console.log(this.store.selectSnapshot(ProfileState.user));
+    this.user = this.store.selectSnapshot(ProfileState.user);
+  }
   onLogout() {
-    console.log('logout');
     this.authFc.logout();
   }
 
