@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BillsService } from 'src/app/api/services';
 import { BillAction } from './bills.action';
 import { Bill } from 'src/app/api/models';
@@ -32,16 +32,31 @@ export class BillsState extends BaseState<BillStateModel> {
     super();
   }
 
+  @Selector()
+  static billsList({ bills }: BillStateModel) {
+    return bills;
+  }
+
   @Action(BillAction.LoadBills)
   loadBills(ctx: StateContext<BillStateModel>, action: BillAction.LoadBills) {
     ctx.patchState({ loading: true });
-    this.billService.billsList().subscribe((bills) => console.log(bills));
+    return this.billService.billsList().pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while getting bills',
+          (data: Bill[]) => {
+            ctx.patchState({ bills: data });
+          }
+        );
+      })
+    );
   }
 
-  @Action(BillAction.AddBill)
-  addBill(ctx: StateContext<BillStateModel>, action: BillAction.AddBill) {
-    ctx.patchState({ loading: true });
-    this.billService.billsCreate(action.payload).pipe(
+  @Action(BillAction.CreateBill)
+  CreateBill(ctx: StateContext<BillStateModel>, action: BillAction.CreateBill) {
+    return this.billService.billsCreate(action.payload).pipe(
       tap((bill) => {
         this.handleApiResponse(
           ctx,
@@ -51,7 +66,6 @@ export class BillsState extends BaseState<BillStateModel> {
             // const bills = ctx.getState().bills;
             // bills.push(data);
             // ctx.patchState({ bills });
-            console.log(data);
           }
         );
       })

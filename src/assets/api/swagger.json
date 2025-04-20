@@ -123,7 +123,98 @@
             "in": "body",
             "required": true,
             "schema": {
-              "$ref": "#/definitions/Bill"
+              "required": [
+                "billName",
+                "category",
+                "date",
+                "shared",
+                "billDetails",
+                "participants",
+                "payer"
+              ],
+              "type": "object",
+              "properties": {
+                "billName": {
+                  "description": "billName of the bill",
+                  "type": "string"
+                },
+                "category": {
+                  "description": "Category of the bill",
+                  "type": "string"
+                },
+                "date": {
+                  "description": "Creation date of the bill",
+                  "type": "date-time"
+                },
+                "shared": {
+                  "description": "Whether the bill is shared",
+                  "type": "boolean"
+                },
+                "billDetails": {
+                  "description": "List of bill details",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "description": {
+                        "description": "Name of the item",
+                        "type": "string"
+                      },
+                      "amount": {
+                        "description": "Price of the item",
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "participants": {
+                  "description": "List of participants",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "description": "Hashed participant ID",
+                        "type": "string"
+                      },
+                      "name": {
+                        "description": "Name of the participant",
+                        "type": "string"
+                      },
+                      "split_amount": {
+                        "description": "Split amount for the participant",
+                        "type": "number"
+                      },
+                      "paid": {
+                        "description": "Whether the participant has paid",
+                        "type": "boolean"
+                      }
+                    }
+                  }
+                },
+                "payer": {
+                  "description": "Payer details",
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Hashed payer ID",
+                      "type": "string"
+                    },
+                    "name": {
+                      "description": "Name of the payer",
+                      "type": "string"
+                    },
+                    "split_amount": {
+                      "description": "Split amount for the payer",
+                      "type": "number"
+                    },
+                    "paid": {
+                      "description": "Whether the payer has paid",
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
             }
           }
         ],
@@ -551,19 +642,19 @@
         "username": {
           "title": "Username",
           "type": "string",
-          "maxLength": 30,
+          "maxLength": 150,
           "minLength": 1
         },
         "first_name": {
           "title": "First name",
           "type": "string",
-          "maxLength": 30,
+          "maxLength": 150,
           "minLength": 1
         },
         "last_name": {
           "title": "Last name",
           "type": "string",
-          "maxLength": 30,
+          "maxLength": 150,
           "minLength": 1
         },
         "email": {
@@ -582,34 +673,69 @@
         "password": {
           "title": "Password",
           "type": "string",
-          "maxLength": 30,
+          "maxLength": 128,
           "minLength": 1
         }
       }
     },
     "BillDetail": {
       "required": [
-        "item_name",
-        "item_price"
+        "description",
+        "amount"
       ],
       "type": "object",
       "properties": {
-        "item_name": {
-          "title": "Item name",
+        "description": {
+          "title": "Description",
           "type": "string",
           "maxLength": 255,
           "minLength": 1
         },
-        "item_price": {
-          "title": "Item price",
+        "amount": {
+          "title": "Amount",
           "type": "string",
           "format": "decimal"
         }
       }
     },
+    "Participant": {
+      "required": [
+        "id",
+        "name",
+        "split_amount",
+        "paid"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "title": "Name",
+          "type": "string",
+          "minLength": 1
+        },
+        "split_amount": {
+          "title": "Split amount",
+          "type": "string",
+          "format": "decimal"
+        },
+        "paid": {
+          "title": "Paid",
+          "type": "boolean"
+        }
+      }
+    },
     "Bill": {
       "required": [
-        "title",
+        "billDetails",
+        "billName",
+        "category",
+        "date",
+        "participants",
+        "shared",
         "total_amount"
       ],
       "type": "object",
@@ -619,56 +745,72 @@
           "type": "integer",
           "readOnly": true
         },
-        "title": {
-          "title": "Title",
+        "billDetails": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/BillDetail"
+          }
+        },
+        "billName": {
+          "title": "Billname",
           "type": "string",
-          "maxLength": 255,
           "minLength": 1
+        },
+        "category": {
+          "title": "Category",
+          "type": "string",
+          "minLength": 1
+        },
+        "date": {
+          "title": "Date",
+          "type": "string",
+          "format": "date-time"
+        },
+        "participants": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Participant"
+          }
+        },
+        "payer": {
+          "title": "Payer",
+          "type": "string"
+        },
+        "shared": {
+          "title": "Shared",
+          "type": "boolean"
         },
         "total_amount": {
           "title": "Total amount",
           "type": "string",
           "format": "decimal"
-        },
-        "category": {
-          "title": "Category",
-          "type": "string",
-          "maxLength": 255,
-          "x-nullable": true
-        },
-        "all_paid": {
-          "title": "All paid",
-          "type": "boolean"
-        },
-        "participants": {
-          "type": "array",
-          "items": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "details": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/BillDetail"
-          }
         }
       }
     },
     "BillParticipant": {
       "required": [
         "user",
-        "amount_owed"
+        "bill"
       ],
       "type": "object",
       "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
         "user": {
           "$ref": "#/definitions/User"
         },
-        "amount_owed": {
-          "title": "Amount owed",
+        "bill": {
+          "title": "Bill",
+          "type": "integer"
+        },
+        "split_amount": {
+          "title": "Split amount",
           "type": "string",
-          "format": "decimal"
+          "format": "decimal",
+          "readOnly": true
         },
         "is_paid": {
           "title": "Is paid",

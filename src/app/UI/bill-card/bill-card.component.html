@@ -1,7 +1,7 @@
 <div class="relative">
   <div
     class="shadow-xl mt-5 max-w-sm w-[400px] h-auto border border-[var(--main-theme)] rounded-t-2xl"
-    [class.opacity-60]="bill.isPaid"
+    [class.opacity-60]="bill.billName"
   >
     <div
       class="border border-t rounded-t-2xl text-lg font-bold py-5 px-5 flex flex-row justify-between items-center text-black bg-[var(--main-theme)]"
@@ -10,12 +10,12 @@
         {{ bill.billName }}
       </div>
       <div class="">
-        {{ bill.billDate }}
+        {{ formatDate(bill.date) }}
       </div>
     </div>
     <div class="px-5 flex flex-col bg-white rounded-b-2xl relative">
       <!-- Add the PAID stamp overlay here -->
-      @if (bill.isPaid) {
+      <!-- @if (bill.isPaid) {
       <div
         class="absolute top-16 left-0 flex items-center justify-center w-full h-[calc(100%-8rem)] z-10 opacity-60"
       >
@@ -27,35 +27,40 @@
           >
         </div>
       </div>
-      }
+      } -->
       <div class="flex flex-col justify-between items-center mt-5">
         <div
           class="w-full font-bold text-lg flex justify-center border-b pb-5 border-[var(--secondary-theme)]"
         >
           <div
             [ngStyle]="{
-              'background-color': getBillCategoryBG(bill.billCategory)
+              'background-color': getBillCategoryBG(bill.category)
             }"
             class="rounded-2xl px-5 py-1 text-white"
           >
-            {{ bill.billCategory }}
+            {{ bill.category }}
           </div>
         </div>
         <div
           class="flex flex-wrap w-full gap-2 border-b py-5 border-[var(--secondary-theme)]"
         >
-          @for (user of bill.users; track $index) {
+          @for (user of bill.participants; track $index) {
           <div
             class="rounded-full object-cover border border-[var(--secondary-theme)] p-1"
           >
-            <img [src]="user.avt" class="w-10 h-10" alt="avatar" />
+            <!-- <img [src]="user.avt" class="w-10 h-10" alt="avatar" /> -->
+            <img
+              src="assets/images/user-avt.webp"
+              class="w-10 h-10"
+              alt="avatar"
+            />
           </div>
           }
         </div>
       </div>
-      @for (billDetail of bill.billDetail; track $index) {
+      @for (billDetail of bill.billDetails; track $index) {
       <div class="flex flex-row justify-between items-center my-5">
-        <div class="text-gray-600">{{ billDetail.name }}</div>
+        <div class="text-gray-600">{{ billDetail.description }}</div>
         <div class="whitespace-nowrap text-black font-bold">
           {{ billDetail.amount }}
         </div>
@@ -66,7 +71,7 @@
       >
         <div class="text-black font-bold">TOTAL</div>
         <div class="whitespace-nowrap text-black font-bold">
-          {{ bill.billAmount }}
+          {{ bill.total_amount }}
         </div>
       </div>
     </div>

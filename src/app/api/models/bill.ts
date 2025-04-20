@@ -1,11 +1,14 @@
 /* tslint:disable */
 import { BillDetail } from './bill-detail';
+import { Participant } from './participant';
 export interface Bill {
-  all_paid?: boolean;
-  category?: null | string;
-  details?: Array<BillDetail>;
+  billDetails: Array<BillDetail>;
+  billName: string;
+  category: string;
+  date: string;
   id?: number;
-  participants?: Array<string>;
-  title: string;
+  participants: Array<Participant>;
+  payer?: string;
+  shared: boolean;
   total_amount: string;
 }

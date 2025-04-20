@@ -52,7 +52,25 @@ class BillsService extends __BaseService {
   /**
    * @param data undefined
    */
-  billsCreateResponse(data: Bill): __Observable<__StrictHttpResponse<Bill>> {
+  billsCreateResponse(data: {
+    billName: string;
+    category: string;
+    date: any;
+    shared: boolean;
+    billDetails: Array<{ description?: string; amount?: number }>;
+    participants: Array<{
+      id?: string;
+      name?: string;
+      split_amount?: number;
+      paid?: boolean;
+    }>;
+    payer: {
+      id?: string;
+      name?: string;
+      split_amount?: number;
+      paid?: boolean;
+    };
+  }): __Observable<__StrictHttpResponse<Bill>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -73,7 +91,25 @@ class BillsService extends __BaseService {
   /**
    * @param data undefined
    */
-  billsCreate(data: Bill): __Observable<Bill> {
+  billsCreate(data: {
+    billName: string;
+    category: string;
+    date: any;
+    shared: boolean;
+    billDetails: Array<{ description?: string; amount?: number }>;
+    participants: Array<{
+      id?: string;
+      name?: string;
+      split_amount?: number;
+      paid?: boolean;
+    }>;
+    payer: {
+      id?: string;
+      name?: string;
+      split_amount?: number;
+      paid?: boolean;
+    };
+  }): __Observable<Bill> {
     return this.billsCreateResponse(data).pipe(__map((_r) => _r.body as Bill));
   }
 
@@ -290,8 +326,8 @@ module BillsService {
     /**
      * Hashed bill ID
      */
-    hashedId: string;
     // hashedId: string;
+    hashedId: string;
   }
 }
 

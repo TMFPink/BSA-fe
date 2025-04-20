@@ -6,8 +6,8 @@ export const BILL_CATEGORY_COLOR = {
 };
 
 export const BILL_CATEGORY = [
-  'Food',
-  'Transportation',
-  'Entertainment',
-  'Others',
+  'food',
+  'transportation',
+  'entertainment',
+  'others',
 ];

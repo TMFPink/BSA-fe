@@ -5,7 +5,9 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  Output,
   SimpleChanges,
+  EventEmitter,
 } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { NavigationService } from 'src/app/service/navigation.service';
@@ -21,7 +23,7 @@ import {
   caretBackOutline,
 } from 'ionicons/icons';
 import { IonIcon, IonButton, IonContent } from '@ionic/angular/standalone';
-import { formatCurrency } from 'src/app/utils';
+import { formatCurrency, formatDateToString } from 'src/app/utils';
 import { NzMarks, NzSliderModule } from 'ng-zorro-antd/slider';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ActivatedRoute } from '@angular/router';
@@ -54,9 +56,12 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     date: '',
   };
   @Input() billDetails: { description: string; amount: number }[] = [];
-  @Input() totalAmount: number = 0;
+  @Input() total_amount: number = 0;
   @Input() participants: { id: string; name: string; splitAmount: number }[] =
     [];
+
+  @Output() payerChange = new EventEmitter<string>();
+  @Output() sharedChange = new EventEmitter<boolean>();
 
   selectedCategory: string = 'equal';
   selectedPayerCate: string = 'all';
@@ -71,7 +76,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   selectedItems: { [key: number]: any } = {};
   participantSelections: any[] = new Array(this.totalParticipants).fill(null);
-  payerOption: string = 'all';
+  payerOption: string = '';
 
   isBillDetail = false;
 
@@ -128,11 +133,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
   }
 
   formatDate(date: string): string {
-    const d = new Date(date);
-    const day = String(d.getDate()).padStart(2, '0');
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+    return formatDateToString(date);
   }
 
   onSplitChange(value: string, index: number) {
@@ -163,8 +164,11 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.selectedItems[participantIndex] = details;
 
     // Calculate total amount for all selected items
-    const totalAmount = details.reduce((sum, detail) => sum + detail.amount, 0);
-    this.participants[participantIndex].splitAmount = totalAmount;
+    const total_amount = details.reduce(
+      (sum, detail) => sum + detail.amount,
+      0
+    );
+    this.participants[participantIndex].splitAmount = total_amount;
   }
 
   getAvailableDetails(participantIndex: number) {
@@ -188,7 +192,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
       this.updateSliderConfig();
     }
 
-    if (changes['totalAmount'] && !changes['totalAmount'].firstChange) {
+    if (changes['total_amount'] && !changes['total_amount'].firstChange) {
       this.updateSliderConfig();
     }
   }
@@ -198,16 +202,16 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.updateSliderConfig();
     for (let i = 0; i < this.participants.length; i++) {
       this.participants[i].splitAmount = Math.ceil(
-        this.totalAmount / this.participants.length
+        this.total_amount / this.participants.length
       );
     }
   }
 
   updateSliderConfig() {
-    if (this.totalAmount > 0 && this.totalParticipants > 0) {
-      const step = Math.ceil(this.totalAmount / 10);
+    if (this.total_amount > 0 && this.totalParticipants > 0) {
+      const step = Math.ceil(this.total_amount / 10);
       const participantStep = Math.ceil(
-        this.totalAmount / this.totalParticipants
+        this.total_amount / this.totalParticipants
       );
       const marks: NzMarks = { 0: '0' };
 
@@ -231,7 +235,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
             case 'equal':
               for (let i = 0; i < this.participants.length; i++) {
                 this.participants[i].splitAmount = Math.ceil(
-                  this.totalAmount / this.totalParticipants
+                  this.total_amount / this.totalParticipants
                 );
               }
               this.selectedCategory = 'equal';
@@ -251,9 +255,13 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
             case 'all':
               this.selectedPayerCate = 'all';
               this.payerOption = 'all';
+              this.sharedChange.emit(true); // Emit shared as true
+              this.payerChange.emit(''); // Emit empty payer
               break;
             case 'custom-payer':
               this.selectedPayerCate = 'custom-payer';
+              this.sharedChange.emit(false);
+
               break;
           }
         }

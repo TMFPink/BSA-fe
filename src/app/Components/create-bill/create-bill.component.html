@@ -6,7 +6,7 @@
   </ion-toolbar>
 </ion-header> -->
 <ion-content>
-  <div class="mx-5 mt-10 mb-32" [formGroup]="billForm">
+  <div class="mx-5 mt-10 mb-[40%]" [formGroup]="billForm">
     <div class="flex justify-between items-center content-center">
       <div class="flex items-center content-center gap-5">
         <ion-button
@@ -78,6 +78,12 @@
       </form>
 
       <div class="mt-5 grid auto-grid gap-5 place-items-center">
+        <bsa-user-card
+          [user]="selectors.user()!"
+          [isCreateBill]="true"
+          [isSelected]="true"
+          [isUser]="true"
+        ></bsa-user-card>
         @for (friend of selectors.friends(); track $index) {
         <bsa-user-card
           [user]="friend"
@@ -218,15 +224,17 @@
       <div
         class="text-black text-3xl font-bold border-2 bill-border rounded-2xl p-5 bg-white"
       >
-        {{ formatMoney(totalAmount) }} VND
+        {{ formatMoney(totalAmount ?? 0) }} VND
       </div>
     </div>
     <div *ngIf="thirdStage">
       <bsa-bill-detail
         [billInfo]="billInfo"
         [billDetails]="billDetails"
-        [totalAmount]="totalAmount"
+        [total_amount]="totalAmount ?? 0"
         [participants]="participantsArray.value"
+        (payerChange)="updatePayer($event)"
+        (sharedChange)="updateShared($event)"
       ></bsa-bill-detail>
     </div>
     <div

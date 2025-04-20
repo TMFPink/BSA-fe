@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, OnDestroy, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -43,13 +43,20 @@ import {
 import { formatCurrency } from 'src/app/utils';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { createDispatchMap, createSelectMap } from '@ngxs/store';
-import { FriendsAction, FriendsState } from 'src/app/store';
+import {
+  BillAction,
+  BillsState,
+  FriendsAction,
+  FriendsState,
+  ProfileState,
+} from 'src/app/store';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/api/models';
 
 interface Participant {
   id: string;
-  splitAmount: number;
+  split_amount: number;
+  paid: boolean;
 }
 
 @Component({
@@ -88,7 +95,6 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
   newDetailDescription: string = '';
   newDetailAmount: number = 0;
-  totalAmount: number = 0;
   billDetails: { description: string; amount: number }[] = [];
   participants: Participant[] = [];
 
@@ -104,9 +110,13 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     participants: this.fb.array([]),
 
     // stage2
-    totalAmount: [''],
+    total_amount: [0],
     category: ['', Validators.required],
     billDetails: this.fb.array([]),
+
+    // stage3
+    payer: [''],
+    shared: [true],
   });
 
   billInfo = {
@@ -133,6 +143,19 @@ export class CreateBillComponent implements OnInit, OnDestroy {
       .subscribe((value) => {
         this.actions.getFriends(value.username);
       });
+
+    effect(() => {
+      if (this.selectors.user()) {
+        this.participantsArray.push(
+          this.fb.group({
+            id: [this.selectors.user()?.id, Validators.required],
+            split_amount: [0],
+            name: [this.selectors.user()?.username],
+            paid: [false],
+          })
+        );
+      }
+    });
   }
 
   ngOnInit() {
@@ -141,10 +164,12 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
   selectors = createSelectMap({
     friends: FriendsState.friendsList,
+    user: ProfileState.user,
   });
 
   actions = createDispatchMap({
     getFriends: FriendsAction.GetFriends,
+    createBill: BillAction.CreateBill,
   });
 
   onNavigate(): void {
@@ -171,11 +196,13 @@ export class CreateBillComponent implements OnInit, OnDestroy {
             category: this.selectedCategory,
             date: this.billForm.get('date')?.value ?? '',
           };
-
           this.thirdStage = true;
           this.secondStage = false;
           this.currentStage = 3;
           break;
+        case 3:
+          console.log(this.billForm.value);
+          this.actions.createBill(this.billForm.value);
       }
     }
   }
@@ -231,6 +258,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
   addBillDetail() {
     if (this.newDetailDescription && this.newDetailAmount > 0) {
       const billDetailsArray = this.billForm.get('billDetails') as FormArray;
+      const currentTotal = this.billForm.get('total_amount')?.value || 0;
       billDetailsArray.push(
         this.fb.group({
           description: this.newDetailDescription,
@@ -242,7 +270,9 @@ export class CreateBillComponent implements OnInit, OnDestroy {
         description: this.newDetailDescription,
         amount: this.newDetailAmount,
       });
-      this.totalAmount += this.newDetailAmount;
+      this.billForm
+        .get('total_amount')
+        ?.setValue(currentTotal + this.newDetailAmount);
       this.newDetailDescription = '';
       this.newDetailAmount = 0;
     }
@@ -250,14 +280,17 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
   deleteBillDetail(index: number) {
     const billDetailsArray = this.billForm.get('billDetails') as FormArray;
+    const currentTotal = this.billForm.get('total_amount')?.value || 0;
     const detail = this.billDetails[index];
-    this.totalAmount -= detail.amount;
+    this.billForm.get('total_amount')?.setValue(currentTotal - detail.amount);
+
     this.billDetails.splice(index, 1);
     billDetailsArray.removeAt(index);
   }
 
   selectCategory(category: string) {
     this.selectedCategory = category;
+    this.billForm.patchValue({ category });
   }
 
   get billDetailsArray() {
@@ -266,6 +299,18 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
   get participantsArray() {
     return this.billForm.get('participants') as FormArray;
+  }
+
+  get payer() {
+    return this.billForm.get('payer')?.value;
+  }
+
+  get shared() {
+    return this.billForm.get('shared')?.value;
+  }
+
+  get totalAmount() {
+    return this.billForm.get('total_amount')?.value;
   }
 
   handleToggleParticipant(user: User) {
@@ -278,8 +323,9 @@ export class CreateBillComponent implements OnInit, OnDestroy {
       participantsArray.push(
         this.fb.group({
           id: [user.id, Validators.required],
-          splitAmount: [0],
+          split_amount: [0],
           name: [user.username],
+          paid: [false],
         })
       );
     } else {
@@ -291,6 +337,15 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     return this.participantsArray.controls.some(
       (control) => control.get('id')?.value === userId
     );
+  }
+
+  updatePayer(payer: string) {
+    console.log(payer);
+    this.billForm.patchValue({ payer });
+  }
+
+  updateShared(shared: boolean) {
+    this.billForm.patchValue({ shared });
   }
 
   ngOnDestroy() {
