@@ -62,7 +62,7 @@
       <div class="flex flex-row justify-between items-center my-5">
         <div class="text-gray-600">{{ billDetail.description }}</div>
         <div class="whitespace-nowrap text-black font-bold">
-          {{ billDetail.amount }}
+          {{ formatMoney(billDetail.amount) }}
         </div>
       </div>
       }
@@ -71,7 +71,7 @@
       >
         <div class="text-black font-bold">TOTAL</div>
         <div class="whitespace-nowrap text-black font-bold">
-          {{ bill.total_amount }}
+          {{ formatMoney(bill.total_amount) }}
         </div>
       </div>
     </div>

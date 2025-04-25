@@ -65,7 +65,8 @@
       <div
         class="text-gray-500 text-lg font-bold cursor-pointer"
         [ngClass]="{ 'selected-option': selectedPayerCate === 'all' }"
-        (click)="onChangeOptions('all', 'payer')"
+        (click)="!isBillDetail && onChangeOptions('all', 'payer')"
+        [class.cursor-not-allowed]="isBillDetail"
       >
         Everyone paid
       </div>
@@ -74,7 +75,8 @@
         [ngClass]="{
           'selected-option': selectedPayerCate === 'custom-payer'
         }"
-        (click)="onChangeOptions('custom-payer', 'payer')"
+        (click)="!isBillDetail && onChangeOptions('custom-payer', 'payer')"
+        [class.cursor-not-allowed]="isBillDetail"
       >
         Pay for everyone
       </div>
@@ -86,7 +88,8 @@
           nzSize="large"
           [nzShowArrow]="true"
           class="min-w-[350px] w-full"
-          (ngModelChange)="payerChange.emit($event)"
+          (ngModelChange)="!isBillDetail && payerChange.emit($event)"
+          [disabled]="isBillDetail"
         >
           @for (participant of participants; track $index) {
           <nz-option
@@ -111,15 +114,15 @@
     <div class="flex flex-row gap-5 mt-5 px-5 w-full justify-between">
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
-        [ngClass]="{ 'selected-option': selectedCategory === 'equal' }"
-        (click)="onChangeOptions('equal', 'split')"
+        [ngClass]="{ 'selected-option': splitOptions === 'equal' }"
+        (click)="!isBillDetail && onChangeOptions('equal', 'split')"
       >
         Equal Split
       </div>
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
-        [ngClass]="{ 'selected-option': selectedCategory === 'custom' }"
-        (click)="onChangeOptions('custom', 'split')"
+        [ngClass]="{ 'selected-option': splitOptions === 'custom' }"
+        (click)="!isBillDetail && onChangeOptions('custom', 'split')"
       >
         Custom Split
       </div>
@@ -150,7 +153,7 @@
         </div>
       </div>
 
-      <div *ngIf="selectedCategory === 'equal'">
+      <div *ngIf="splitOptions === 'equal'">
         <nz-slider
           [nzMin]="0"
           [nzMax]="total_amount"
@@ -158,18 +161,20 @@
           [nzStep]="step"
           [(ngModel)]="participant.splitAmount"
           [nzTipFormatter]="formatTooltip"
-          (ngModelChange)="onSplitChange($event, $index)"
+          (ngModelChange)="!isBillDetail && onSplitChange($event, $index)"
+          [nzDisabled]="isBillDetail"
         >
         </nz-slider>
       </div>
-      <div *ngIf="selectedCategory === 'custom'">
+      <div *ngIf="splitOptions === 'custom'">
         <nz-select
           [(ngModel)]="participantSelections[$index]"
-          (ngModelChange)="onDetailSelect($event, $index)"
+          (ngModelChange)="!isBillDetail && onDetailSelect($event, $index)"
           style="width: 100%"
           nzMode="multiple"
           nzSize="large"
           [nzShowArrow]="true"
+          [disabled]="isBillDetail"
         >
           @for (detail of getAvailableDetails($index); track $index) {
           <nz-option

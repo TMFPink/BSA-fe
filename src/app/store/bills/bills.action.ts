@@ -3,6 +3,7 @@ const enum billsActionTypes {
   REMOVE_BILL = '[Bills] Remove Bill',
   UPDATE_BILL = '[Bills] Update Bill',
   LOAD_BILLS = '[Bills] Load Bills',
+  LOAD_BILL_DETAIL = '[Bills] Load Bill Detail',
 }
 
 export namespace BillAction {
@@ -20,6 +21,10 @@ export namespace BillAction {
   }
   export class UpdateBill {
     static readonly type = billsActionTypes.UPDATE_BILL;
+    constructor(public payload: any) {}
+  }
+  export class LoadBillDetail {
+    static readonly type = billsActionTypes.LOAD_BILL_DETAIL;
     constructor(public payload: any) {}
   }
 }

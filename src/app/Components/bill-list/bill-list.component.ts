@@ -1,18 +1,18 @@
 import { CommonModule } from '@angular/common';
 import {
   Component,
-  OnInit,
   CUSTOM_ELEMENTS_SCHEMA,
   effect,
+  OnInit,
 } from '@angular/core';
-import { Router, RouterLink, RouterModule } from '@angular/router';
-import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
-import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
-import { IonicModule, ModalController } from '@ionic/angular';
-import { BillListFilterComponent } from 'src/app/UI/bill-list-filter/bill-list-filter.component';
 import { FormBuilder } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { IonicModule, ModalController } from '@ionic/angular';
 import { createDispatchMap, createSelectMap } from '@ngxs/store';
 import { BillAction, BillsState } from 'src/app/store';
+import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
+import { BillCardComponent } from 'src/app/UI/bill-card/bill-card.component';
+import { BillListFilterComponent } from 'src/app/UI/bill-list-filter/bill-list-filter.component';
 
 @Component({
   selector: 'app-bill-list',
@@ -48,7 +48,8 @@ export class BillListComponent implements OnInit {
     bills: BillsState.billsList,
   });
 
-  ngOnInit() {
+  ngOnInit() {}
+  ionViewWillEnter() {
     this.actions.loadBills({});
   }
 

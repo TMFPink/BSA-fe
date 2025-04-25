@@ -8,6 +8,7 @@ import {
   Output,
   SimpleChanges,
   EventEmitter,
+  effect,
 } from '@angular/core';
 import { addIcons } from 'ionicons';
 import { NavigationService } from 'src/app/service/navigation.service';
@@ -29,6 +30,8 @@ import { NzSelectModule } from 'ng-zorro-antd/select';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
+import { createDispatchMap, createSelectMap, Store } from '@ngxs/store';
+import { BillAction, BillsState } from 'src/app/store';
 @Component({
   selector: 'bsa-bill-detail',
   templateUrl: './bill-detail.component.html',
@@ -57,13 +60,17 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
   };
   @Input() billDetails: { description: string; amount: number }[] = [];
   @Input() total_amount: number = 0;
-  @Input() participants: { id: string; name: string; splitAmount: number }[] =
-    [];
+  @Input() participants: {
+    id: string;
+    name: string;
+    splitAmount: number;
+    paid: boolean;
+  }[] = [];
 
   @Output() payerChange = new EventEmitter<string>();
   @Output() sharedChange = new EventEmitter<boolean>();
 
-  selectedCategory: string = 'equal';
+  splitOptions: string = 'equal';
   selectedPayerCate: string = 'all';
 
   totalParticipants: number = 0;
@@ -83,9 +90,17 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
   unsubscribe$ = new Subscription();
   isBillDetail$ = this.route.data;
 
+  actions = createDispatchMap({
+    loadBillDetail: BillAction.LoadBillDetail,
+  });
+  selectors = createSelectMap({
+    billDetail: BillsState.billDetail,
+  });
+
   constructor(
     private route: ActivatedRoute,
-    private routeService: NavigationService
+    private routeService: NavigationService,
+    private store: Store
   ) {
     addIcons({
       caretBackOutline,
@@ -98,11 +113,40 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     this.unsubscribe$.add(
       this.route.data.subscribe(({ isBillDetail }) => {
         this.isBillDetail = isBillDetail;
-
         if (this.isBillDetail) {
+          this.actions.loadBillDetail(this.route.snapshot.params['id']);
         }
       })
     );
+
+    effect(() => {
+      if (this.selectors.billDetail() && this.isBillDetail) {
+        const bill = this.selectors.billDetail();
+        console.log(this.selectors.billDetail());
+        this.billInfo = {
+          billName: bill?.billName ?? '',
+          category: bill?.category ?? '',
+          date: bill?.date ?? '',
+        };
+        this.billDetails = (bill?.billDetails ?? []).map((detail) => ({
+          description: detail.description,
+          amount: Number(detail.amount),
+        }));
+
+        this.total_amount = Number(bill?.total_amount) ?? 0;
+        this.participants = (bill?.participants ?? []).map((participant) => ({
+          id: participant.id,
+          name: participant.name,
+          splitAmount: Number(participant.split_amount),
+          paid: participant.paid,
+        }));
+
+        this.splitOptions = bill?.shared ? 'equal' : 'custom';
+        if (this.splitOptions === 'custom') {
+          this.selectedPayerCate = 'custom-payer';
+        }
+      }
+    });
 
     // this.totalParticipants = this.participants.length;
     // console.log(this.participants);
@@ -111,13 +155,13 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   getBillCategoryBG(billCategory: string) {
     switch (billCategory) {
-      case 'food':
+      case 'Food':
         return '#FEAE6F';
-      case 'transport':
+      case 'Transport':
         return '#2d98da';
-      case 'entertainment':
+      case 'Entertainment':
         return '#9333ea';
-      case 'others':
+      case 'Others':
         return 'var(--secondary-theme)';
       default:
         return '';
@@ -238,13 +282,13 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
                   this.total_amount / this.totalParticipants
                 );
               }
-              this.selectedCategory = 'equal';
+              this.splitOptions = 'equal';
               break;
             case 'custom':
               for (let i = 0; i < this.participants.length; i++) {
                 this.participants[i].splitAmount = 0;
               }
-              this.selectedCategory = 'custom';
+              this.splitOptions = 'custom';
               break;
           }
         }

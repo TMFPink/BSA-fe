@@ -103,11 +103,11 @@
       >
         <!-- Food -->
         <div
-          (click)="selectCategory('food')"
+          (click)="selectCategory('Food')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-[#FEAE6F] scale-105 transform transition-all opacity-100':
-              selectedCategory === 'food',
-            'opacity-30': selectedCategory !== 'food'
+              selectedCategory === 'Food',
+            'opacity-30': selectedCategory !== 'Food'
           }"
           class="bg-[#FEAE6F] rounded-xl p-6 text-white cursor-pointer w-40 h-40 max-w-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -119,11 +119,11 @@
 
         <!-- Game -->
         <div
-          (click)="selectCategory('entertainment')"
+          (click)="selectCategory('Entertainment')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-purple-600 scale-105 transform transition-all opacity-100':
-              selectedCategory === 'entertainment',
-            'opacity-30': selectedCategory !== 'entertainment'
+              selectedCategory === 'Entertainment',
+            'opacity-30': selectedCategory !== 'Entertainment'
           }"
           class="bg-purple-600 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -137,11 +137,11 @@
         </div>
         <!-- Transportation -->
         <div
-          (click)="selectCategory('transport')"
+          (click)="selectCategory('Transport')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-blue-700 scale-105 transform transition-all opacity-100':
-              selectedCategory === 'transport',
-            'opacity-30': selectedCategory !== 'transport'
+              selectedCategory === 'Transport',
+            'opacity-30': selectedCategory !== 'Transport'
           }"
           class="bg-blue-700 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -152,11 +152,11 @@
         </div>
         <!-- Others -->
         <div
-          (click)="selectCategory('others')"
+          (click)="selectCategory('Others')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-[var(--secondary-theme)] scale-105 transform transition-all opacity-100':
-              selectedCategory === 'others',
-            'opacity-30': selectedCategory !== 'others'
+              selectedCategory === 'Others',
+            'opacity-30': selectedCategory !== 'Others'
           }"
           class="bg-[var(--secondary-theme)] rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >

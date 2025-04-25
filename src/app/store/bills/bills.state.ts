@@ -10,6 +10,7 @@ import { BaseState } from 'src/app/utils/base-state/base-state-model';
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
   bills: Bill[];
+  billDetail: Bill | null;
   loading: boolean;
   error: string;
 }
@@ -20,6 +21,7 @@ interface BillStateModel {
   defaults: {
     status: null,
     bills: [],
+    billDetail: null,
     loading: false,
     error: '',
   },
@@ -35,6 +37,11 @@ export class BillsState extends BaseState<BillStateModel> {
   @Selector()
   static billsList({ bills }: BillStateModel) {
     return bills;
+  }
+
+  @Selector()
+  static billDetail({ billDetail }: BillStateModel) {
+    return billDetail;
   }
 
   @Action(BillAction.LoadBills)
@@ -66,6 +73,25 @@ export class BillsState extends BaseState<BillStateModel> {
             // const bills = ctx.getState().bills;
             // bills.push(data);
             // ctx.patchState({ bills });
+          }
+        );
+      })
+    );
+  }
+
+  @Action(BillAction.LoadBillDetail)
+  loadBillDetail(
+    ctx: StateContext<BillStateModel>,
+    action: BillAction.LoadBillDetail
+  ) {
+    return this.billService.billsRead({ hashedId: action.payload }).pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while getting bill detail',
+          (data: any) => {
+            ctx.patchState({ billDetail: data });
           }
         );
       })
