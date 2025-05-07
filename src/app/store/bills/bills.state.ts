@@ -6,6 +6,7 @@ import { Bill } from 'src/app/api/models';
 import { catchError, tap } from 'rxjs';
 import { HandleErrorService } from 'src/app/service/handle-error.service';
 import { BaseState } from 'src/app/utils/base-state/base-state-model';
+import { ToastService } from 'src/app/service/toast.service';
 
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
@@ -29,7 +30,8 @@ interface BillStateModel {
 export class BillsState extends BaseState<BillStateModel> {
   constructor(
     private billService: BillsService,
-    private handleErrorService: HandleErrorService
+    private handleErrorService: HandleErrorService,
+    private toast: ToastService
   ) {
     super();
   }
@@ -44,17 +46,26 @@ export class BillsState extends BaseState<BillStateModel> {
     return billDetail;
   }
 
+  @Selector()
+  static loading({ loading }: BillStateModel) {
+    return loading;
+  }
+  @Selector()
+  static status({ status }: BillStateModel) {
+    return status;
+  }
+
   @Action(BillAction.LoadBills)
   loadBills(ctx: StateContext<BillStateModel>, action: BillAction.LoadBills) {
     ctx.patchState({ loading: true });
-    return this.billService.billsList().pipe(
+    return this.billService.billsList(action.payload).pipe(
       tap((bill) => {
         this.handleApiResponse(
           ctx,
           bill,
           'Error while getting bills',
           (data: Bill[]) => {
-            ctx.patchState({ bills: data });
+            ctx.patchState({ bills: data, status: null });
           }
         );
       })
@@ -70,9 +81,8 @@ export class BillsState extends BaseState<BillStateModel> {
           bill,
           'Error while adding bill',
           (data: any) => {
-            // const bills = ctx.getState().bills;
-            // bills.push(data);
-            // ctx.patchState({ bills });
+            this.toast.showSnackBar('Bills create successfully', 'success');
+            ctx.patchState({ status: 'success' });
           }
         );
       })

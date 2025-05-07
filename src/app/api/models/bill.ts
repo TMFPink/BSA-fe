@@ -2,6 +2,7 @@
 import { BillDetail } from './bill-detail';
 import { Participant } from './participant';
 export interface Bill {
+  allPaid?: boolean;
   billDetails: Array<BillDetail>;
   billName: string;
   category: string;

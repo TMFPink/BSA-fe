@@ -28,10 +28,32 @@ class BillsService extends __BaseService {
   constructor(config: __Configuration, http: HttpClient) {
     super(config, http);
   }
-  billsListResponse(): __Observable<__StrictHttpResponse<Array<Bill>>> {
+
+  /**
+   * @param params The `BillsService.BillsListParams` containing the following parameters:
+   *
+   * - `date`: Filter by bill date (YYYY-MM-DD)
+   *
+   * - `category`: Filter by category
+   *
+   * - `billName`: Filter by bill name
+   *
+   * - `all_paid`: Filter by payment status (true/false)
+   */
+  billsListResponse(
+    params: BillsService.BillsListParams
+  ): __Observable<__StrictHttpResponse<Array<Bill>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
+    if (params.date != null)
+      __params = __params.set('date', params.date.toString());
+    if (params.category != null)
+      __params = __params.set('category', params.category.toString());
+    if (params.billName != null)
+      __params = __params.set('billName', params.billName.toString());
+    if (params.allPaid != null)
+      __params = __params.set('all_paid', params.allPaid.toString());
     let req = new HttpRequest<any>('GET', this.rootUrl + `/bills/`, __body, {
       headers: __headers,
       params: __params,
@@ -45,8 +67,21 @@ class BillsService extends __BaseService {
       })
     );
   }
-  billsList(): __Observable<Array<Bill>> {
-    return this.billsListResponse().pipe(__map((_r) => _r.body as Array<Bill>));
+  /**
+   * @param params The `BillsService.BillsListParams` containing the following parameters:
+   *
+   * - `date`: Filter by bill date (YYYY-MM-DD)
+   *
+   * - `category`: Filter by category
+   *
+   * - `billName`: Filter by bill name
+   *
+   * - `all_paid`: Filter by payment status (true/false)
+   */
+  billsList(params: BillsService.BillsListParams): __Observable<Array<Bill>> {
+    return this.billsListResponse(params).pipe(
+      __map((_r) => _r.body as Array<Bill>)
+    );
   }
 
   /**
@@ -57,19 +92,24 @@ class BillsService extends __BaseService {
     category: string;
     date: any;
     shared: boolean;
-    billDetails: Array<{ description?: string; amount?: number }>;
+    billDetails: Array<{
+      description?: string;
+      amount?: number;
+      user?: string;
+    }>;
     participants: Array<{
       id?: string;
       name?: string;
       split_amount?: number;
       paid?: boolean;
     }>;
-    payer: {
+    payer?: {
       id?: string;
       name?: string;
       split_amount?: number;
       paid?: boolean;
     };
+    allPaid?: boolean;
   }): __Observable<__StrictHttpResponse<Bill>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
@@ -96,19 +136,24 @@ class BillsService extends __BaseService {
     category: string;
     date: any;
     shared: boolean;
-    billDetails: Array<{ description?: string; amount?: number }>;
+    billDetails: Array<{
+      description?: string;
+      amount?: number;
+      user?: string;
+    }>;
     participants: Array<{
       id?: string;
       name?: string;
       split_amount?: number;
       paid?: boolean;
     }>;
-    payer: {
+    payer?: {
       id?: string;
       name?: string;
       split_amount?: number;
       paid?: boolean;
     };
+    allPaid?: boolean;
   }): __Observable<Bill> {
     return this.billsCreateResponse(data).pipe(__map((_r) => _r.body as Bill));
   }
@@ -300,6 +345,31 @@ class BillsService extends __BaseService {
 
 module BillsService {
   /**
+   * Parameters for billsList
+   */
+  export interface BillsListParams {
+    /**
+     * Filter by bill date (YYYY-MM-DD)
+     */
+    date?: string;
+
+    /**
+     * Filter by category
+     */
+    category?: string;
+
+    /**
+     * Filter by bill name
+     */
+    billName?: string;
+
+    /**
+     * Filter by payment status (true/false)
+     */
+    allPaid?: boolean;
+  }
+
+  /**
    * Parameters for billsPayUpdate
    */
   export interface BillsPayUpdateParams {
@@ -326,7 +396,6 @@ module BillsService {
     /**
      * Hashed bill ID
      */
-    // hashedId: string;
     hashedId: string;
   }
 }

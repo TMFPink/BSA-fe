@@ -98,7 +98,33 @@
       "get": {
         "operationId": "bills_list",
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name": "billName",
+            "in": "query",
+            "description": "Filter by bill name",
+            "type": "string"
+          },
+          {
+            "name": "category",
+            "in": "query",
+            "description": "Filter by category",
+            "type": "string"
+          },
+          {
+            "name": "all_paid",
+            "in": "query",
+            "description": "Filter by payment status (true/false)",
+            "type": "boolean"
+          },
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Filter by bill date (YYYY-MM-DD)",
+            "type": "string",
+            "format": "date"
+          }
+        ],
         "responses": {
           "200": {
             "description": "",
@@ -129,8 +155,7 @@
                 "date",
                 "shared",
                 "billDetails",
-                "participants",
-                "payer"
+                "participants"
               ],
               "type": "object",
               "properties": {
@@ -163,6 +188,11 @@
                       "amount": {
                         "description": "Price of the item",
                         "type": "number"
+                      },
+                      "user": {
+                        "description": "Hashed user ID",
+                        "type": "string",
+                        "nullable": true
                       }
                     }
                   }
@@ -213,6 +243,10 @@
                       "type": "boolean"
                     }
                   }
+                },
+                "allPaid": {
+                  "description": "Whether all participants have paid",
+                  "type": "boolean"
                 }
               }
             }
@@ -685,6 +719,11 @@
       ],
       "type": "object",
       "properties": {
+        "id": {
+          "title": "ID",
+          "type": "integer",
+          "readOnly": true
+        },
         "description": {
           "title": "Description",
           "type": "string",
@@ -695,6 +734,12 @@
           "title": "Amount",
           "type": "string",
           "format": "decimal"
+        },
+        "user": {
+          "title": "User",
+          "type": "string",
+          "minLength": 1,
+          "x-nullable": true
         }
       }
     },
@@ -784,6 +829,11 @@
           "title": "Total amount",
           "type": "string",
           "format": "decimal"
+        },
+        "allPaid": {
+          "title": "Allpaid",
+          "type": "boolean",
+          "readOnly": true
         }
       }
     },

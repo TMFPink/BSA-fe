@@ -58,7 +58,11 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     category: '',
     date: '',
   };
-  @Input() billDetails: { description: string; amount: number }[] = [];
+  @Input() billDetails: {
+    description: string;
+    amount: number;
+    user?: string;
+  }[] = [];
   @Input() total_amount: number = 0;
   @Input() participants: {
     id: string;
@@ -69,6 +73,10 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output() payerChange = new EventEmitter<string>();
   @Output() sharedChange = new EventEmitter<boolean>();
+  @Output() billDetailsChange = new EventEmitter<
+    { description: string; amount: number; user?: string }[]
+  >();
+  @Output() splitChange = new EventEmitter<string>();
 
   splitOptions: string = 'equal';
   selectedPayerCate: string = 'all';
@@ -84,6 +92,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
   selectedItems: { [key: number]: any } = {};
   participantSelections: any[] = new Array(this.totalParticipants).fill(null);
   payerOption: string = '';
+  payer: string = '';
 
   isBillDetail = false;
 
@@ -123,6 +132,8 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
       if (this.selectors.billDetail() && this.isBillDetail) {
         const bill = this.selectors.billDetail();
         console.log(this.selectors.billDetail());
+        this.payer = bill?.payer ?? '';
+        this.payerOption = this.payer;
         this.billInfo = {
           billName: bill?.billName ?? '',
           category: bill?.category ?? '',
@@ -131,8 +142,8 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
         this.billDetails = (bill?.billDetails ?? []).map((detail) => ({
           description: detail.description,
           amount: Number(detail.amount),
+          user: detail.user?.toString(),
         }));
-
         this.total_amount = Number(bill?.total_amount) ?? 0;
         this.participants = (bill?.participants ?? []).map((participant) => ({
           id: participant.id,
@@ -141,10 +152,32 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
           paid: participant.paid,
         }));
 
-        this.splitOptions = bill?.shared ? 'equal' : 'custom';
+        // Initialize participantSelections with appropriate length
+        this.participantSelections = new Array(this.participants.length).fill(
+          []
+        );
+
+        // Populate selections for each participant based on bill details
+        this.participants.forEach((participant, index) => {
+          const participantDetails = this.billDetails.filter(
+            (detail) => detail.user === participant.id
+          );
+
+          if (participantDetails.length > 0) {
+            this.participantSelections[index] = participantDetails;
+            this.selectedItems[index] = participantDetails;
+          }
+        });
+
+        // Check if any bill detail has a user assigned
+        const hasUserAssignedToDetail = this.billDetails.some(
+          (detail) => detail.user
+        );
+        this.splitOptions = hasUserAssignedToDetail ? 'custom' : 'equal';
+
         if (this.splitOptions === 'custom') {
           this.selectedPayerCate = 'custom-payer';
-        }
+        } else this.selectedPayerCate = 'all';
       }
     });
 
@@ -197,10 +230,24 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     }
   }
 
-  onDetailSelect(details: any[], participantIndex: number) {
+  onDetailSelect(
+    details: any[],
+    participantIndex: number,
+    participantId: string
+  ) {
     // Clear previous selections for this participant
     const previousSelections = this.selectedItems[participantIndex];
     if (previousSelections) {
+      // Remove the user reference from previous selections
+      previousSelections.forEach((detail: any) => {
+        const index = this.billDetails.findIndex(
+          (d) =>
+            d.description === detail.description && d.amount === detail.amount
+        );
+        if (index !== -1 && this.billDetails[index].user === participantId) {
+          this.billDetails[index].user = undefined;
+        }
+      });
       delete this.selectedItems[participantIndex];
     }
 
@@ -213,6 +260,20 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
       0
     );
     this.participants[participantIndex].splitAmount = total_amount;
+
+    // Assign the participant to each selected detail
+    details.forEach((detail) => {
+      const index = this.billDetails.findIndex(
+        (d) =>
+          d.description === detail.description && d.amount === detail.amount
+      );
+      if (index !== -1) {
+        this.billDetails[index].user = participantId;
+      }
+    });
+
+    // Emit the updated billDetails array
+    this.billDetailsChange.emit([...this.billDetails]);
   }
 
   getAvailableDetails(participantIndex: number) {
@@ -228,6 +289,14 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
         }
       );
     });
+  }
+
+  getDetailsForParticipant(participantIndex: number, participantId: string) {
+    if (this.isBillDetail) {
+      return this.billDetails.filter((d) => d.user === participantId);
+    } else {
+      return this.getAvailableDetails(participantIndex);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -283,12 +352,14 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
                 );
               }
               this.splitOptions = 'equal';
+              this.splitChange.emit('equal');
               break;
             case 'custom':
               for (let i = 0; i < this.participants.length; i++) {
                 this.participants[i].splitAmount = 0;
               }
               this.splitOptions = 'custom';
+              this.splitChange.emit('custom');
               break;
           }
         }

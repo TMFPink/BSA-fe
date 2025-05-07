@@ -12,11 +12,6 @@
       </ion-button>
     </div>
 
-    <!-- @for (bill of billList; track $index) {
-    <div (click)="toBillDetail(bill.id)" class="cursor-pointer">
-      <bill-card-ui [bill]="bill"></bill-card-ui>
-    </div>
-    } -->
     @for (bill of selectors.bills(); track $index) {
     <div (click)="toBillDetail(bill.id!)" class="cursor-pointer">
       <bill-card-ui [bill]="bill"></bill-card-ui>

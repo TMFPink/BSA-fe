@@ -1,12 +1,12 @@
 <div class="relative">
   <div
     class="shadow-xl mt-5 max-w-sm w-[400px] h-auto border border-[var(--main-theme)] rounded-t-2xl"
-    [class.opacity-60]="bill.billName"
+    [class.opacity-60]="bill.allPaid"
   >
     <div
       class="border border-t rounded-t-2xl text-lg font-bold py-5 px-5 flex flex-row justify-between items-center text-black bg-[var(--main-theme)]"
     >
-      <div class="text-md uppercase whitespace-nowrap">
+      <div class="text-md uppercase text-wrap">
         {{ bill.billName }}
       </div>
       <div class="">
@@ -15,7 +15,7 @@
     </div>
     <div class="px-5 flex flex-col bg-white rounded-b-2xl relative">
       <!-- Add the PAID stamp overlay here -->
-      <!-- @if (bill.isPaid) {
+      @if (bill.allPaid) {
       <div
         class="absolute top-16 left-0 flex items-center justify-center w-full h-[calc(100%-8rem)] z-10 opacity-60"
       >
@@ -27,7 +27,7 @@
           >
         </div>
       </div>
-      } -->
+      }
       <div class="flex flex-col justify-between items-center mt-5">
         <div
           class="w-full font-bold text-lg flex justify-center border-b pb-5 border-[var(--secondary-theme)]"

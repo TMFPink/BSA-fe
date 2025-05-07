@@ -231,10 +231,12 @@
       <bsa-bill-detail
         [billInfo]="billInfo"
         [billDetails]="billDetails"
-        [total_amount]="totalAmount ?? 0"
+        [total_amount]="totalAmount || 0"
         [participants]="participantsArray.value"
         (payerChange)="updatePayer($event)"
         (sharedChange)="updateShared($event)"
+        (billDetailsChange)="onBillDetailsChange($event)"
+        (splitChange)="onSplitChange($event)"
       ></bsa-bill-detail>
     </div>
     <div
@@ -247,7 +249,7 @@
       [attr.disabled]="!checkBillForm() ? true : null"
       (click)="nextStage()"
     >
-      Continue
+      {{ currentStage === 3 ? "Create Bill" : "Continue" }}
     </div>
   </div>
 </ion-content>

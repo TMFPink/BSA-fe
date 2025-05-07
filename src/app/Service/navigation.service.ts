@@ -25,4 +25,8 @@ export class NavigationService {
       this.router.navigate(['/']);
     }
   }
+
+  goTo(url: string): void {
+    this.router.navigate([url]);
+  }
 }

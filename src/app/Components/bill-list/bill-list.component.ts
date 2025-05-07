@@ -34,11 +34,7 @@ export class BillListComponent implements OnInit {
     private modalCtrl: ModalController,
     private fb: FormBuilder
   ) {
-    effect(() => {
-      if (this.selectors.bills()) {
-        console.log(this.selectors.bills());
-      }
-    });
+    effect(() => {});
   }
 
   actions = createDispatchMap({
@@ -55,9 +51,9 @@ export class BillListComponent implements OnInit {
 
   filterForm = this.fb.group({
     billName: [''],
-    billCategory: [''],
-    isPaid: [''],
-    billDate: [''],
+    category: [''],
+    all_paid: [''],
+    date: [''],
   });
 
   async openFilter() {
@@ -75,8 +71,16 @@ export class BillListComponent implements OnInit {
   }
 
   filterBill(data: any) {
-    const payload = data;
-    console.log(payload);
+    const payload = { ...data };
+
+    // Format date to yyyy-mm-dd if it exists
+    if (payload.date) {
+      const date = new Date(payload.date);
+      payload.date = date.toISOString().split('T')[0]; // Format as yyyy-mm-dd
+    }
+
+    console.log('payload', payload);
+    this.actions.loadBills(payload);
   }
 
   toBillDetail(id: number) {

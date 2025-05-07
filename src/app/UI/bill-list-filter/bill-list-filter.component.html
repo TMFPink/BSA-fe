@@ -31,7 +31,7 @@
             nzSize="large"
             [nzShowArrow]="true"
             class="min-w-[350px] w-full"
-            formControlName="billCategory"
+            formControlName="category"
           >
             @for (category of billCategories; track category) {
             <nz-option [nzValue]="category" [nzLabel]="category"></nz-option>
@@ -46,7 +46,7 @@
             nzSize="large"
             [nzShowArrow]="true"
             class="min-w-[350px] w-full"
-            formControlName="isPaid"
+            formControlName="all_paid"
           >
             <nz-option nzValue="true" nzLabel="Paid"></nz-option>
             <nz-option nzValue="false" nzLabel="Unpaid"></nz-option>
@@ -62,7 +62,7 @@
             [nzAllowClear]="false"
             nzSuffixIcon=""
             class="w-full"
-            formControlName="billDate"
+            formControlName="date"
           ></nz-date-picker>
         </nz-form-control>
       </nz-form-item>

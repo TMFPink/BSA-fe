@@ -90,6 +90,7 @@
           class="min-w-[350px] w-full"
           (ngModelChange)="!isBillDetail && payerChange.emit($event)"
           [disabled]="isBillDetail"
+          *ngIf="!isBillDetail; else patchPayer"
         >
           @for (participant of participants; track $index) {
           <nz-option
@@ -98,6 +99,18 @@
           ></nz-option>
           }
         </nz-select>
+
+        <ng-template #patchPayer>
+          <nz-select
+            [(ngModel)]="payerOption"
+            nzSize="large"
+            [nzShowArrow]="true"
+            class="min-w-[350px] w-full"
+            [disabled]="true"
+          >
+            <nz-option [nzValue]="payer" [nzLabel]="payer"></nz-option>
+          </nz-select>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -111,18 +124,21 @@
       {{ formatMoney(total_amount) }} VND
     </div>
 
-    <div class="flex flex-row gap-5 mt-5 px-5 w-full justify-between">
+    <div
+      class="flex flex-row gap-5 mt-5 px-5 w-full justify-between"
+      *ngIf="!isBillDetail"
+    >
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
         [ngClass]="{ 'selected-option': splitOptions === 'equal' }"
-        (click)="!isBillDetail && onChangeOptions('equal', 'split')"
+        (click)="onChangeOptions('equal', 'split')"
       >
         Equal Split
       </div>
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
         [ngClass]="{ 'selected-option': splitOptions === 'custom' }"
-        (click)="!isBillDetail && onChangeOptions('custom', 'split')"
+        (click)="onChangeOptions('custom', 'split')"
       >
         Custom Split
       </div>
@@ -162,21 +178,24 @@
           [(ngModel)]="participant.splitAmount"
           [nzTipFormatter]="formatTooltip"
           (ngModelChange)="!isBillDetail && onSplitChange($event, $index)"
-          [nzDisabled]="isBillDetail"
+          [nzDisabled]="true"
         >
         </nz-slider>
       </div>
       <div *ngIf="splitOptions === 'custom'">
         <nz-select
           [(ngModel)]="participantSelections[$index]"
-          (ngModelChange)="!isBillDetail && onDetailSelect($event, $index)"
+          (ngModelChange)="
+            !isBillDetail && onDetailSelect($event, $index, participant.id)
+          "
           style="width: 100%"
           nzMode="multiple"
           nzSize="large"
           [nzShowArrow]="true"
           [disabled]="isBillDetail"
         >
-          @for (detail of getAvailableDetails($index); track $index) {
+          @for (detail of getDetailsForParticipant($index,participant.id); track
+          $index) {
           <nz-option
             [nzValue]="detail"
             [nzLabel]="detail.description"
