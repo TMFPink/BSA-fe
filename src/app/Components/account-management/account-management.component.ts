@@ -39,15 +39,21 @@ export class AccountManagementComponent implements OnInit {
 
   user: User | null = null;
   ngOnInit() {
-    console.log(this.store.selectSnapshot(ProfileState.user));
     this.user = this.store.selectSnapshot(ProfileState.user);
+    if (this.user) {
+      this.user.avatarUrl =
+        localStorage.getItem('avatarUrl') || this.user.avatarUrl;
+      this.user.username =
+        localStorage.getItem('username') || this.user.username;
+    }
   }
   onLogout() {
     this.authFc.logout();
   }
 
-  onClick() {
-    const payload = {};
-    this.store.dispatch(new BillAction.LoadBills(payload));
+  onNavigate(path: string) {
+    this.router.navigate(['account', path]);
   }
+
+  imageUrl = (url: string) => `/assets/images/${url}`;
 }

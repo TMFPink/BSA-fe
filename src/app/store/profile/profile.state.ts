@@ -64,4 +64,79 @@ export class ProfileState extends BaseState<profileStateModel> {
       })
     );
   }
+
+  @Action(profileAction.GetProfile)
+  getProfile(ctx: StateContext<profileStateModel>) {
+    this.setLoading(ctx);
+    return this.profileService.usersMeList().pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while getting profile',
+          (data: User) => {
+            ctx.patchState({ user: data });
+          }
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
+  }
+
+  @Action(profileAction.UpdateProfile)
+  updateProfile(
+    ctx: StateContext<profileStateModel>,
+    { payload }: profileAction.UpdateProfile
+  ) {
+    this.setLoading(ctx);
+    return this.profileService.usersProfilePartialUpdate(payload).pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while updating profile',
+          (data: User) => {
+            ctx.patchState({ user: data });
+          }
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
+  }
+
+  @Action(profileAction.UpdatePassword)
+  updatePassword(
+    ctx: StateContext<profileStateModel>,
+    { payload }: profileAction.UpdatePassword
+  ) {
+    this.setLoading(ctx);
+    return this.profileService.usersPasswordCreate(payload).pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while updating password',
+          (data: User) => {
+            ctx.patchState({ user: data });
+          }
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
+  }
 }

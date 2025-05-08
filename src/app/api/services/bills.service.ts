@@ -13,7 +13,7 @@ import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
 import { Bill } from '../models/bill';
-import { BillParticipant } from '../models/bill-participant';
+import { BillFromImageResponse } from '../models/bill-from-image-response';
 @Injectable({
   providedIn: 'root',
 })
@@ -21,8 +21,7 @@ class BillsService extends __BaseService {
   static readonly billsListPath = '/bills/';
   static readonly billsCreatePath = '/bills/';
   static readonly billsAddParticipantsCreatePath = '/bills/add-participants/';
-  static readonly billsPayUpdatePath = '/bills/pay/{id}/';
-  static readonly billsPayPartialUpdatePath = '/bills/pay/{id}/';
+  static readonly billsProcessImageCreatePath = '/bills/process-image/';
   static readonly billsReadPath = '/bills/{hashed_id}/';
 
   constructor(config: __Configuration, http: HttpClient) {
@@ -200,25 +199,23 @@ class BillsService extends __BaseService {
   }
 
   /**
-   * @param params The `BillsService.BillsPayUpdateParams` containing the following parameters:
-   *
-   * - `pk`: Primary key of the bill participant
-   *
-   * - `id`:
-   *
-   * - `data`:
+   * Upload a bill image to extract information without saving the image
+   * @param image undefined
    */
-  billsPayUpdateResponse(
-    params: BillsService.BillsPayUpdateParams
-  ): __Observable<__StrictHttpResponse<BillParticipant>> {
+  billsProcessImageCreateResponse(
+    image: Blob
+  ): __Observable<__StrictHttpResponse<BillFromImageResponse>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
-
-    __body = params.data;
+    let __formData = new FormData();
+    __body = __formData;
+    if (image != null) {
+      __formData.append('image', image as string | Blob);
+    }
     let req = new HttpRequest<any>(
-      'PUT',
-      this.rootUrl + `/bills/pay/${encodeURIComponent(String(params.id))}/`,
+      'POST',
+      this.rootUrl + `/bills/process-image/`,
       __body,
       {
         headers: __headers,
@@ -230,72 +227,17 @@ class BillsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<BillParticipant>;
+        return _r as __StrictHttpResponse<BillFromImageResponse>;
       })
     );
   }
   /**
-   * @param params The `BillsService.BillsPayUpdateParams` containing the following parameters:
-   *
-   * - `pk`: Primary key of the bill participant
-   *
-   * - `id`:
-   *
-   * - `data`:
+   * Upload a bill image to extract information without saving the image
+   * @param image undefined
    */
-  billsPayUpdate(
-    params: BillsService.BillsPayUpdateParams
-  ): __Observable<BillParticipant> {
-    return this.billsPayUpdateResponse(params).pipe(
-      __map((_r) => _r.body as BillParticipant)
-    );
-  }
-
-  /**
-   * @param params The `BillsService.BillsPayPartialUpdateParams` containing the following parameters:
-   *
-   * - `id`:
-   *
-   * - `data`:
-   */
-  billsPayPartialUpdateResponse(
-    params: BillsService.BillsPayPartialUpdateParams
-  ): __Observable<__StrictHttpResponse<BillParticipant>> {
-    let __params = this.newParams();
-    let __headers = new HttpHeaders();
-    let __body: any = null;
-
-    __body = params.data;
-    let req = new HttpRequest<any>(
-      'PATCH',
-      this.rootUrl + `/bills/pay/${encodeURIComponent(String(params.id))}/`,
-      __body,
-      {
-        headers: __headers,
-        params: __params,
-        responseType: 'json',
-      }
-    );
-
-    return this.http.request<any>(req).pipe(
-      __filter((_r) => _r instanceof HttpResponse),
-      __map((_r) => {
-        return _r as __StrictHttpResponse<BillParticipant>;
-      })
-    );
-  }
-  /**
-   * @param params The `BillsService.BillsPayPartialUpdateParams` containing the following parameters:
-   *
-   * - `id`:
-   *
-   * - `data`:
-   */
-  billsPayPartialUpdate(
-    params: BillsService.BillsPayPartialUpdateParams
-  ): __Observable<BillParticipant> {
-    return this.billsPayPartialUpdateResponse(params).pipe(
-      __map((_r) => _r.body as BillParticipant)
+  billsProcessImageCreate(image: Blob): __Observable<BillFromImageResponse> {
+    return this.billsProcessImageCreateResponse(image).pipe(
+      __map((_r) => _r.body as BillFromImageResponse)
     );
   }
 
@@ -367,26 +309,6 @@ module BillsService {
      * Filter by payment status (true/false)
      */
     allPaid?: boolean;
-  }
-
-  /**
-   * Parameters for billsPayUpdate
-   */
-  export interface BillsPayUpdateParams {
-    /**
-     * Primary key of the bill participant
-     */
-    pk: number;
-    id: string;
-    data: BillParticipant;
-  }
-
-  /**
-   * Parameters for billsPayPartialUpdate
-   */
-  export interface BillsPayPartialUpdateParams {
-    id: string;
-    data: BillParticipant;
   }
 
   /**

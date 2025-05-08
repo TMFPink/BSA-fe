@@ -11,7 +11,7 @@ import { addIcons } from 'ionicons';
   imports: [IonIcon, IonButton],
 })
 export class BackButtonComponent implements OnInit {
-  constructor(private routeService: NavigationService) {
+  constructor(private navService: NavigationService) {
     addIcons({
       caretBackOutline,
     });
@@ -19,6 +19,6 @@ export class BackButtonComponent implements OnInit {
 
   ngOnInit() {}
   onNavigate() {
-    this.routeService.goBack();
+    this.navService.goBack();
   }
 }
