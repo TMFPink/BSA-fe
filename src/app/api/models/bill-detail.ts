@@ -1,5 +1,7 @@
 /* tslint:disable */
 export interface BillDetail {
-  item_name: string;
-  item_price: string;
+  amount: string;
+  description: string;
+  id?: number;
+  user?: null | string;
 }

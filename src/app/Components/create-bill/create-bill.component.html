@@ -6,7 +6,7 @@
   </ion-toolbar>
 </ion-header> -->
 <ion-content>
-  <div class="mx-5 mt-10 mb-32" [formGroup]="billForm">
+  <div class="mx-5 mt-10 mb-[40%]" [formGroup]="billForm">
     <div class="flex justify-between items-center content-center">
       <div class="flex items-center content-center gap-5">
         <ion-button
@@ -78,6 +78,12 @@
       </form>
 
       <div class="mt-5 grid auto-grid gap-5 place-items-center">
+        <bsa-user-card
+          [user]="selectors.user()!"
+          [isCreateBill]="true"
+          [isSelected]="true"
+          [isUser]="true"
+        ></bsa-user-card>
         @for (friend of selectors.friends(); track $index) {
         <bsa-user-card
           [user]="friend"
@@ -97,11 +103,11 @@
       >
         <!-- Food -->
         <div
-          (click)="selectCategory('food')"
+          (click)="selectCategory('Food')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-[#FEAE6F] scale-105 transform transition-all opacity-100':
-              selectedCategory === 'food',
-            'opacity-30': selectedCategory !== 'food'
+              selectedCategory === 'Food',
+            'opacity-30': selectedCategory !== 'Food'
           }"
           class="bg-[#FEAE6F] rounded-xl p-6 text-white cursor-pointer w-40 h-40 max-w-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -113,11 +119,11 @@
 
         <!-- Game -->
         <div
-          (click)="selectCategory('entertainment')"
+          (click)="selectCategory('Entertainment')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-purple-600 scale-105 transform transition-all opacity-100':
-              selectedCategory === 'entertainment',
-            'opacity-30': selectedCategory !== 'entertainment'
+              selectedCategory === 'Entertainment',
+            'opacity-30': selectedCategory !== 'Entertainment'
           }"
           class="bg-purple-600 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -131,11 +137,11 @@
         </div>
         <!-- Transportation -->
         <div
-          (click)="selectCategory('transport')"
+          (click)="selectCategory('Transport')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-blue-700 scale-105 transform transition-all opacity-100':
-              selectedCategory === 'transport',
-            'opacity-30': selectedCategory !== 'transport'
+              selectedCategory === 'Transport',
+            'opacity-30': selectedCategory !== 'Transport'
           }"
           class="bg-blue-700 rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -146,11 +152,11 @@
         </div>
         <!-- Others -->
         <div
-          (click)="selectCategory('others')"
+          (click)="selectCategory('Others')"
           [ngClass]="{
             'ring-4 ring-offset-2 ring-[var(--secondary-theme)] scale-105 transform transition-all opacity-100':
-              selectedCategory === 'others',
-            'opacity-30': selectedCategory !== 'others'
+              selectedCategory === 'Others',
+            'opacity-30': selectedCategory !== 'Others'
           }"
           class="bg-[var(--secondary-theme)] rounded-xl p-6 text-white cursor-pointer w-40 h-40 flex items-center justify-center content-center flex-col transition-all"
         >
@@ -218,19 +224,23 @@
       <div
         class="text-black text-3xl font-bold border-2 bill-border rounded-2xl p-5 bg-white"
       >
-        {{ formatMoney(totalAmount) }} VND
+        {{ formatMoney(totalAmount ?? 0) }} VND
       </div>
     </div>
     <div *ngIf="thirdStage">
       <bsa-bill-detail
         [billInfo]="billInfo"
         [billDetails]="billDetails"
-        [totalAmount]="totalAmount"
+        [total_amount]="totalAmount || 0"
         [participants]="participantsArray.value"
+        (payerChange)="updatePayer($event)"
+        (sharedChange)="updateShared($event)"
+        (billDetailsChange)="onBillDetailsChange($event)"
+        (splitChange)="onSplitChange($event)"
       ></bsa-bill-detail>
     </div>
     <div
-      class="z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-3xl w-80 fixed bottom-14 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+      class="z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-3xl w-80 fixed bottom-20 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
       [ngClass]="{
         'bg-gray-400': !checkBillForm(),
         'continue-button': checkBillForm()
@@ -239,7 +249,7 @@
       [attr.disabled]="!checkBillForm() ? true : null"
       (click)="nextStage()"
     >
-      Continue
+      {{ currentStage === 3 ? "Create Bill" : "Continue" }}
     </div>
   </div>
 </ion-content>

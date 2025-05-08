@@ -65,7 +65,8 @@
       <div
         class="text-gray-500 text-lg font-bold cursor-pointer"
         [ngClass]="{ 'selected-option': selectedPayerCate === 'all' }"
-        (click)="onChangeOptions('all', 'payer')"
+        (click)="!isBillDetail && onChangeOptions('all', 'payer')"
+        [class.cursor-not-allowed]="isBillDetail"
       >
         Everyone paid
       </div>
@@ -74,7 +75,8 @@
         [ngClass]="{
           'selected-option': selectedPayerCate === 'custom-payer'
         }"
-        (click)="onChangeOptions('custom-payer', 'payer')"
+        (click)="!isBillDetail && onChangeOptions('custom-payer', 'payer')"
+        [class.cursor-not-allowed]="isBillDetail"
       >
         Pay for everyone
       </div>
@@ -86,14 +88,29 @@
           nzSize="large"
           [nzShowArrow]="true"
           class="min-w-[350px] w-full"
+          (ngModelChange)="!isBillDetail && payerChange.emit($event)"
+          [disabled]="isBillDetail"
+          *ngIf="!isBillDetail; else patchPayer"
         >
           @for (participant of participants; track $index) {
           <nz-option
-            [nzValue]="participant"
+            [nzValue]="participant.id"
             [nzLabel]="participant.name"
           ></nz-option>
           }
         </nz-select>
+
+        <ng-template #patchPayer>
+          <nz-select
+            [(ngModel)]="payerOption"
+            nzSize="large"
+            [nzShowArrow]="true"
+            class="min-w-[350px] w-full"
+            [disabled]="true"
+          >
+            <nz-option [nzValue]="payer" [nzLabel]="payer"></nz-option>
+          </nz-select>
+        </ng-template>
       </div>
     </div>
   </div>
@@ -104,20 +121,23 @@
   >
     <div class="text-black text-xl font-bold">Total Amount</div>
     <div class="text-black text-3xl font-bold">
-      {{ formatMoney(totalAmount) }} VND
+      {{ formatMoney(total_amount) }} VND
     </div>
 
-    <div class="flex flex-row gap-5 mt-5 px-5 w-full justify-between">
+    <div
+      class="flex flex-row gap-5 mt-5 px-5 w-full justify-between"
+      *ngIf="!isBillDetail"
+    >
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
-        [ngClass]="{ 'selected-option': selectedCategory === 'equal' }"
+        [ngClass]="{ 'selected-option': splitOptions === 'equal' }"
         (click)="onChangeOptions('equal', 'split')"
       >
         Equal Split
       </div>
       <div
         class="text-gray-500 text-xl font-bold cursor-pointer"
-        [ngClass]="{ 'selected-option': selectedCategory === 'custom' }"
+        [ngClass]="{ 'selected-option': splitOptions === 'custom' }"
         (click)="onChangeOptions('custom', 'split')"
       >
         Custom Split
@@ -149,28 +169,33 @@
         </div>
       </div>
 
-      <div *ngIf="selectedCategory === 'equal'">
+      <div *ngIf="splitOptions === 'equal'">
         <nz-slider
           [nzMin]="0"
-          [nzMax]="totalAmount"
+          [nzMax]="total_amount"
           [nzMarks]="marks"
           [nzStep]="step"
           [(ngModel)]="participant.splitAmount"
           [nzTipFormatter]="formatTooltip"
-          (ngModelChange)="onSplitChange($event, $index)"
+          (ngModelChange)="!isBillDetail && onSplitChange($event, $index)"
+          [nzDisabled]="true"
         >
         </nz-slider>
       </div>
-      <div *ngIf="selectedCategory === 'custom'">
+      <div *ngIf="splitOptions === 'custom'">
         <nz-select
           [(ngModel)]="participantSelections[$index]"
-          (ngModelChange)="onDetailSelect($event, $index)"
+          (ngModelChange)="
+            !isBillDetail && onDetailSelect($event, $index, participant.id)
+          "
           style="width: 100%"
           nzMode="multiple"
           nzSize="large"
           [nzShowArrow]="true"
+          [disabled]="isBillDetail"
         >
-          @for (detail of getAvailableDetails($index); track $index) {
+          @for (detail of getDetailsForParticipant($index,participant.id); track
+          $index) {
           <nz-option
             [nzValue]="detail"
             [nzLabel]="detail.description"

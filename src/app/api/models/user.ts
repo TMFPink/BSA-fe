@@ -1,5 +1,6 @@
 /* tslint:disable */
 export interface User {
+  avatarUrl?: null | string;
   email: string;
   first_name?: string;
   id?: string;

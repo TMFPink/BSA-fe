@@ -1,0 +1,138 @@
+<ion-content>
+  <div class="mx-5 mt-10 mb-32">
+    <!-- Back Button -->
+    <ion-button
+      fill="clear"
+      class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
+      (click)="onBack()"
+    >
+      <ion-icon
+        name="caret-back-outline"
+        class="text-white text-3xl"
+      ></ion-icon>
+    </ion-button>
+
+    <!-- User Avatar -->
+    <div class="flex flex-col gap-5 items-center content-center">
+      <div
+        class="bg-white rounded-full p-5 border-4 border-[var(--main-theme)]"
+        (click)="toggleAvatarSelection()"
+      >
+        <img
+          [src]="imageUrl(user.avatarUrl!)"
+          alt="user-avatar"
+          class="w-40 h-40 rounded-full cursor-pointer"
+        />
+      </div>
+
+      <!-- Avatar Selection Modal -->
+      <div
+        *ngIf="showAvatarSelection"
+        class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+      >
+        <div class="bg-white p-5 rounded-lg max-w-md w-full">
+          <h3 class="text-xl font-bold mb-4">Select an Avatar</h3>
+          <div class="grid grid-cols-3 gap-4">
+            <img
+              *ngFor="let avatar of availableAvatars"
+              [src]="imageUrl(avatar)"
+              alt="avatar"
+              class="w-20 h-20 rounded-full border-2 border-border-[var(--main-theme)]"
+              (click)="onSelectAvatar(avatar)"
+            />
+          </div>
+          <button
+            class="mt-4 w-full bg-red-500 text-white py-2 rounded-lg"
+            (click)="toggleAvatarSelection()"
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Form Section -->
+      <form nz-form [formGroup]="userInfoForm" class="w-full max-w-md mt-5">
+        <!-- Username Field -->
+        <div nz-form-item class="mb-4">
+          <div nz-form-control nzHasFeedback>
+            <input
+              id="username"
+              type="text"
+              formControlName="username"
+              placeholder="UserName"
+              class="w-full p-5 border rounded-lg h-20 text-2xl text-white"
+            />
+            <ng-container
+              *ngIf="
+                userInfoForm.get('username')?.invalid &&
+                userInfoForm.get('username')?.touched
+              "
+            >
+              <div nz-form-explain class="text-red-500">
+                Username is required.
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Phone Field -->
+        <div nz-form-item class="mb-4">
+          <div nz-form-control nzHasFeedback>
+            <input
+              id="phone"
+              type="text"
+              formControlName="phone"
+              placeholder="Phone"
+              class="w-full p-5 border rounded-lg h-20 text-2xl text-white"
+            />
+            <ng-container
+              *ngIf="
+                userInfoForm.get('phone')?.invalid &&
+                userInfoForm.get('phone')?.touched
+              "
+            >
+              <div nz-form-explain class="text-red-500">
+                Phone number is required and must be numeric.
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Email Field -->
+        <div nz-form-item class="mb-4">
+          <div nz-form-control nzHasFeedback>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="Email"
+              class="w-full p-5 border rounded-lg h-20 text-2xl text-white"
+            />
+            <ng-container
+              *ngIf="
+                userInfoForm.get('email')?.invalid &&
+                userInfoForm.get('email')?.touched
+              "
+            >
+              <div nz-form-explain class="text-red-500">
+                Please enter a valid email address.
+              </div>
+            </ng-container>
+          </div>
+        </div>
+
+        <!-- Update Button -->
+        <div
+          class="z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-3xl w-80 fixed bottom-20 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+          (click)="onUpdateProfile()"
+          [ngClass]="{
+            'continue-button': userInfoForm.valid,
+            'bg-gray-400': !userInfoForm.valid
+          }"
+        >
+          Update
+        </div>
+      </form>
+    </div>
+  </div>
+</ion-content>

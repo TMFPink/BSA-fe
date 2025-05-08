@@ -1,5 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, ViewChild, OnInit } from '@angular/core';
+import { Bill } from 'src/app/api/models';
+import { formatCurrency, formatDateToString } from 'src/app/utils';
 import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
 
 @Component({
@@ -9,11 +11,33 @@ import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
   imports: [CommonModule],
 })
 export class BillCardComponent implements OnInit {
-  @Input() bill: any;
+  @Input() bill: Bill = {} as Bill;
   constructor() {}
 
   ngOnInit() {}
-  getBillCategoryBG(billCategory: keyof typeof BILL_CATEGORY_COLOR) {
-    return BILL_CATEGORY_COLOR[billCategory];
+
+  formatDate(date: string) {
+    return formatDateToString(date);
+  }
+
+  formatMoney(money: string) {
+    return formatCurrency(Number(money));
+  }
+
+  getBillCategoryBG(billCategory: string) {
+    switch (billCategory) {
+      case 'Food':
+        return BILL_CATEGORY_COLOR['Food'];
+      case 'Transport':
+        return BILL_CATEGORY_COLOR['Transportation'];
+      case 'Entertainment':
+        return BILL_CATEGORY_COLOR['Entertainment'];
+      case 'Others':
+        return BILL_CATEGORY_COLOR['Others'];
+      default:
+        return BILL_CATEGORY_COLOR['Others'];
+    }
+
+    // return BILL_CATEGORY_COLOR[billCategory];
   }
 }

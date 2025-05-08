@@ -10,6 +10,8 @@ import {
   IonHeader,
 } from '@ionic/angular/standalone';
 import { Store } from '@ngxs/store';
+import { User } from 'src/app/api/models';
+import { ProfileState } from 'src/app/store';
 import { AuthAction } from 'src/app/store/auth';
 import { AuthFacade } from 'src/app/store/auth/auth.facade';
 import { BillAction } from 'src/app/store/bills/bills.action';
@@ -35,14 +37,23 @@ export class AccountManagementComponent implements OnInit {
     private authFc: AuthFacade
   ) {}
 
-  ngOnInit() {}
+  user: User | null = null;
+  ngOnInit() {
+    this.user = this.store.selectSnapshot(ProfileState.user);
+    if (this.user) {
+      this.user.avatarUrl =
+        localStorage.getItem('avatarUrl') || this.user.avatarUrl;
+      this.user.username =
+        localStorage.getItem('username') || this.user.username;
+    }
+  }
   onLogout() {
-    console.log('logout');
     this.authFc.logout();
   }
 
-  onClick() {
-    const payload = {};
-    this.store.dispatch(new BillAction.LoadBills(payload));
+  onNavigate(path: string) {
+    this.router.navigate(['account', path]);
   }
+
+  imageUrl = (url: string) => `/assets/images/${url}`;
 }

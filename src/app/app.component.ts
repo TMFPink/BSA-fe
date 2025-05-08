@@ -13,6 +13,9 @@ import { HandleErrorService } from './service/handle-error.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ToastService } from './service/toast.service';
 import { NavigationEnd, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
+import { Store } from '@ngxs/store';
+import { profileAction } from './store/profile';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -36,7 +39,9 @@ export class AppComponent {
   constructor(
     private _handlerError: HandleErrorService,
     private _toast: ToastService,
-    private _router: Router
+    private _router: Router,
+    private _cookieService: CookieService,
+    private _store: Store
   ) {
     this._handlerError.messageError$
       .pipe(takeUntilDestroyed())
@@ -51,5 +56,8 @@ export class AppComponent {
         setTimeout(() => (this.showRouterOutlet = true));
       }
     });
+
+    if (this._cookieService.get('token'))
+      this._store.dispatch(new profileAction.GetMe());
   }
 }

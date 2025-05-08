@@ -75,6 +75,7 @@
     <ion-checkbox
       [checked]="isSelected"
       (ionChange)="toggleParticipant($event)"
+      [disabled]="isUser"
     ></ion-checkbox>
   </div>
 </div>

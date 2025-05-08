@@ -19,6 +19,8 @@ import {
   switchMap,
 } from 'rxjs/operators';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
+import { AuthAction } from '../store';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {
@@ -26,7 +28,11 @@ export class AuthInterceptor implements HttpInterceptor {
   private refreshTokenSubject: BehaviorSubject<string | null> =
     new BehaviorSubject<string | null>(null);
 
-  constructor(private store: Store, private cookieService: CookieService) {}
+  constructor(
+    private store: Store,
+    private cookieService: CookieService,
+    private router: Router // Add Router for navigation
+  ) {}
 
   getAccessToken(): string {
     return this.cookieService.get('token') || '';
@@ -74,10 +80,15 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     const token = this.getAccessToken();
     const authReq = this.setHeaders(req);
+
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        // Simple error handling - just pass through the error
-        return throwError(() => error);
+        if (error.status === 401) {
+          console.log('Token expired')
+          this.store.dispatch(new AuthAction.Logout()); // Dispatch logout action
+          this.router.navigate(['/auth']); // Navigate to login page
+        }
+        return throwError(() => error); // Pass the error along
       })
     );
   }

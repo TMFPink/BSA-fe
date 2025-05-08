@@ -45,6 +45,7 @@ export class UserCardComponent implements OnInit {
   @Input() isFriendRequest: boolean = false;
   @Input() isCreateBill: boolean = false;
   @Input() isSelected: boolean = false;
+  @Input() isUser: boolean = false;
   @Output() sendFriendRequest: EventEmitter<string> =
     new EventEmitter<string>();
   @Output() acceptFriendRequest: EventEmitter<string> =

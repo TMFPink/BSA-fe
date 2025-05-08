@@ -3,6 +3,7 @@ import { AuthAction } from './auth.action';
 import { Injectable } from '@angular/core';
 import { ToastService } from 'src/app/service/toast.service';
 import { Router } from '@angular/router';
+import { profileAction } from '../profile';
 
 @Injectable({
   providedIn: 'root',
@@ -23,6 +24,7 @@ export class AuthFacade {
   login(payload: any) {
     this.actionMap.login(payload).subscribe({
       complete: () => {
+        this.store.dispatch(new profileAction.GetMe());
         this.toast.showSnackBar('Login successful', 'success');
         this.router.navigate(['/home']);
       },

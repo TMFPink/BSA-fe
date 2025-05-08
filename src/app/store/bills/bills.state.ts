@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
-import { Action, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { BillsService } from 'src/app/api/services';
 import { BillAction } from './bills.action';
 import { Bill } from 'src/app/api/models';
 import { catchError, tap } from 'rxjs';
 import { HandleErrorService } from 'src/app/service/handle-error.service';
 import { BaseState } from 'src/app/utils/base-state/base-state-model';
+import { ToastService } from 'src/app/service/toast.service';
 
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
   bills: Bill[];
+  billDetail: Bill | null;
   loading: boolean;
   error: string;
 }
@@ -20,6 +22,7 @@ interface BillStateModel {
   defaults: {
     status: null,
     bills: [],
+    billDetail: null,
     loading: false,
     error: '',
   },
@@ -27,31 +30,78 @@ interface BillStateModel {
 export class BillsState extends BaseState<BillStateModel> {
   constructor(
     private billService: BillsService,
-    private handleErrorService: HandleErrorService
+    private handleErrorService: HandleErrorService,
+    private toast: ToastService
   ) {
     super();
+  }
+
+  @Selector()
+  static billsList({ bills }: BillStateModel) {
+    return bills;
+  }
+
+  @Selector()
+  static billDetail({ billDetail }: BillStateModel) {
+    return billDetail;
+  }
+
+  @Selector()
+  static loading({ loading }: BillStateModel) {
+    return loading;
+  }
+  @Selector()
+  static status({ status }: BillStateModel) {
+    return status;
   }
 
   @Action(BillAction.LoadBills)
   loadBills(ctx: StateContext<BillStateModel>, action: BillAction.LoadBills) {
     ctx.patchState({ loading: true });
-    this.billService.billsList().subscribe((bills) => console.log(bills));
+    return this.billService.billsList(action.payload).pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while getting bills',
+          (data: Bill[]) => {
+            ctx.patchState({ bills: data, status: null });
+          }
+        );
+      })
+    );
   }
 
-  @Action(BillAction.AddBill)
-  addBill(ctx: StateContext<BillStateModel>, action: BillAction.AddBill) {
-    ctx.patchState({ loading: true });
-    this.billService.billsCreate(action.payload).pipe(
+  @Action(BillAction.CreateBill)
+  CreateBill(ctx: StateContext<BillStateModel>, action: BillAction.CreateBill) {
+    return this.billService.billsCreate(action.payload).pipe(
       tap((bill) => {
         this.handleApiResponse(
           ctx,
           bill,
           'Error while adding bill',
           (data: any) => {
-            // const bills = ctx.getState().bills;
-            // bills.push(data);
-            // ctx.patchState({ bills });
-            console.log(data);
+            this.toast.showSnackBar('Bills create successfully', 'success');
+            ctx.patchState({ status: 'success' });
+          }
+        );
+      })
+    );
+  }
+
+  @Action(BillAction.LoadBillDetail)
+  loadBillDetail(
+    ctx: StateContext<BillStateModel>,
+    action: BillAction.LoadBillDetail
+  ) {
+    return this.billService.billsRead({ hashedId: action.payload }).pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while getting bill detail',
+          (data: any) => {
+            ctx.patchState({ billDetail: data });
           }
         );
       })
