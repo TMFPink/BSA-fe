@@ -21,7 +21,9 @@ class BillsService extends __BaseService {
   static readonly billsListPath = '/bills/';
   static readonly billsCreatePath = '/bills/';
   static readonly billsAddParticipantsCreatePath = '/bills/add-participants/';
+  static readonly billsBalanceListPath = '/bills/balance/';
   static readonly billsProcessImageCreatePath = '/bills/process-image/';
+  static readonly billsSpendingListPath = '/bills/spending/';
   static readonly billsReadPath = '/bills/{hashed_id}/';
 
   constructor(config: __Configuration, http: HttpClient) {
@@ -199,6 +201,65 @@ class BillsService extends __BaseService {
   }
 
   /**
+   * @return User balance details
+   */
+  billsBalanceListResponse(): __Observable<
+    __StrictHttpResponse<{
+      owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+      i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+      total_owed_to_me?: number;
+      total_i_owe?: number;
+    }>
+  > {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/bills/balance/`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      }
+    );
+
+    return this.http.request<any>(req).pipe(
+      __filter((_r) => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<{
+          owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+          i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+          total_owed_to_me?: number;
+          total_i_owe?: number;
+        }>;
+      })
+    );
+  }
+  /**
+   * @return User balance details
+   */
+  billsBalanceList(): __Observable<{
+    owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+    i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+    total_owed_to_me?: number;
+    total_i_owe?: number;
+  }> {
+    return this.billsBalanceListResponse().pipe(
+      __map(
+        (_r) =>
+          _r.body as {
+            owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+            i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+            total_owed_to_me?: number;
+            total_i_owe?: number;
+          }
+      )
+    );
+  }
+
+  /**
    * Upload a bill image to extract information without saving the image
    * @param image undefined
    */
@@ -238,6 +299,89 @@ class BillsService extends __BaseService {
   billsProcessImageCreate(image: Blob): __Observable<BillFromImageResponse> {
     return this.billsProcessImageCreateResponse(image).pipe(
       __map((_r) => _r.body as BillFromImageResponse)
+    );
+  }
+
+  /**
+   * @param params The `BillsService.BillsSpendingListParams` containing the following parameters:
+   *
+   * - `start_date`: Start date (YYYY-MM-DD), defaults to 7 days ago
+   *
+   * - `end_date`: End date (YYYY-MM-DD), defaults to today
+   *
+   * @return User's spending summary
+   */
+  billsSpendingListResponse(
+    params: BillsService.BillsSpendingListParams
+  ): __Observable<
+    __StrictHttpResponse<{
+      total_spent?: number;
+      period_start?: string;
+      period_end?: string;
+      spending_by_category?: { [key: string]: number };
+      daily_spending?: Array<{ date?: string; amount?: number }>;
+    }>
+  > {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    if (params.startDate != null)
+      __params = __params.set('start_date', params.startDate.toString());
+    if (params.endDate != null)
+      __params = __params.set('end_date', params.endDate.toString());
+    let req = new HttpRequest<any>(
+      'GET',
+      this.rootUrl + `/bills/spending/`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      }
+    );
+
+    return this.http.request<any>(req).pipe(
+      __filter((_r) => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<{
+          total_spent?: number;
+          period_start?: string;
+          period_end?: string;
+          spending_by_category?: { [key: string]: number };
+          daily_spending?: Array<{ date?: string; amount?: number }>;
+        }>;
+      })
+    );
+  }
+  /**
+   * @param params The `BillsService.BillsSpendingListParams` containing the following parameters:
+   *
+   * - `start_date`: Start date (YYYY-MM-DD), defaults to 7 days ago
+   *
+   * - `end_date`: End date (YYYY-MM-DD), defaults to today
+   *
+   * @return User's spending summary
+   */
+  billsSpendingList(
+    params: BillsService.BillsSpendingListParams
+  ): __Observable<{
+    total_spent?: number;
+    period_start?: string;
+    period_end?: string;
+    spending_by_category?: { [key: string]: number };
+    daily_spending?: Array<{ date?: string; amount?: number }>;
+  }> {
+    return this.billsSpendingListResponse(params).pipe(
+      __map(
+        (_r) =>
+          _r.body as {
+            total_spent?: number;
+            period_start?: string;
+            period_end?: string;
+            spending_by_category?: { [key: string]: number };
+            daily_spending?: Array<{ date?: string; amount?: number }>;
+          }
+      )
     );
   }
 
@@ -309,6 +453,21 @@ module BillsService {
      * Filter by payment status (true/false)
      */
     allPaid?: boolean;
+  }
+
+  /**
+   * Parameters for billsSpendingList
+   */
+  export interface BillsSpendingListParams {
+    /**
+     * Start date (YYYY-MM-DD), defaults to 7 days ago
+     */
+    startDate?: string;
+
+    /**
+     * End date (YYYY-MM-DD), defaults to today
+     */
+    endDate?: string;
   }
 
   /**

@@ -308,6 +308,61 @@
       },
       "parameters": []
     },
+    "/bills/balance/": {
+      "get": {
+        "operationId": "bills_balance_list",
+        "description": "",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "User balance details",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "owed_to_me_by_user": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "type": "object"
+                      },
+                      "total_amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "i_owe_to_user": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "type": "object"
+                      },
+                      "total_amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "total_owed_to_me": {
+                  "type": "number"
+                },
+                "total_i_owe": {
+                  "type": "number"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "bills"
+        ]
+      },
+      "parameters": []
+    },
     "/bills/process-image/": {
       "post": {
         "operationId": "bills_process-image_create",
@@ -338,6 +393,76 @@
           "multipart/form-data",
           "application/x-www-form-urlencoded"
         ],
+        "tags": [
+          "bills"
+        ]
+      },
+      "parameters": []
+    },
+    "/bills/spending/": {
+      "get": {
+        "operationId": "bills_spending_list",
+        "description": "",
+        "parameters": [
+          {
+            "name": "start_date",
+            "in": "query",
+            "description": "Start date (YYYY-MM-DD), defaults to 7 days ago",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          },
+          {
+            "name": "end_date",
+            "in": "query",
+            "description": "End date (YYYY-MM-DD), defaults to today",
+            "required": false,
+            "type": "string",
+            "format": "date"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User's spending summary",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "total_spent": {
+                  "type": "number"
+                },
+                "period_start": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "period_end": {
+                  "type": "string",
+                  "format": "date"
+                },
+                "spending_by_category": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                },
+                "daily_spending": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "date": {
+                        "type": "string",
+                        "format": "date"
+                      },
+                      "amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
         "tags": [
           "bills"
         ]
@@ -800,8 +925,6 @@
         "avatarUrl": {
           "title": "AvatarUrl",
           "type": "string",
-          "format": "uri",
-          "maxLength": 200,
           "x-nullable": true
         }
       }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -8,6 +8,10 @@ import { NzCollapseModule } from 'ng-zorro-antd/collapse';
 import { formatCurrency } from 'src/app/utils';
 import { NgxEchartsModule } from 'ngx-echarts';
 import { EChartsOption } from 'echarts';
+import { createSelectMap, Store } from '@ngxs/store';
+import { InsightAction, insightState } from 'src/app/store/insight';
+import { map } from 'rxjs';
+import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
 
 @Component({
   selector: 'app-home',
@@ -24,42 +28,19 @@ import { EChartsOption } from 'echarts';
     NgxEchartsModule,
   ],
 })
-export class HomePage {
-  constructor() {}
-  cardType: string = 'Create Bill';
+export class HomePage implements OnDestroy {
+  constructor(private store: Store) {}
 
+  listUser: any[] = [];
+  allUser: any[] = [];
+  totalOwedToMe: number = 0;
+  totalIOwe: number = 0;
+  totalSpent: number = 0;
   selectedFilter: string = 'all';
+  cardType: string = 'Create Bill';
+  isDataLoaded: boolean = false;
 
-  formatMoney(value: number) {
-    return formatCurrency(value);
-  }
-
-  selectFilter(filter: string) {
-    this.selectedFilter = filter;
-  }
-
-  listUser = [
-    {
-      avt: 'assets/images/user-avt.webp',
-      name: 'John',
-      amount: 100,
-      owed: true,
-    },
-    {
-      avt: 'assets/images/user-avt.webp',
-      name: 'Doe',
-      amount: 200,
-      owed: false,
-    },
-    {
-      avt: 'assets/images/user-avt.webp',
-      name: 'Smith',
-      amount: 300,
-      owed: true,
-    },
-  ];
-
-  chartOption = {
+  chartOptionBar: EChartsOption = {
     grid: {
       left: '1%',
       right: '1%',
@@ -69,10 +50,16 @@ export class HomePage {
     },
     xAxis: {
       type: 'category',
-      data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+      data: [],
       axisLabel: {
         color: '#000',
         fontSize: 14,
+        formatter: (value: string) => {
+          const date = new Date(value);
+          const day = String(date.getDate()).padStart(2, '0');
+          const month = String(date.getMonth() + 1).padStart(2, '0');
+          return `${day}/${month}`;
+        },
       },
     },
     yAxis: {
@@ -92,7 +79,7 @@ export class HomePage {
     },
     series: [
       {
-        data: [150000, 230000, 180000, 280000, 170000, 190000],
+        data: [],
         type: 'bar',
         barWidth: '40%',
         barCategoryGap: '20%',
@@ -115,5 +102,135 @@ export class HomePage {
         )} VND`;
       },
     },
-  } as EChartsOption;
+  };
+
+  chartOptionPie: EChartsOption = {
+    series: [
+      {
+        name: 'Spending by Category',
+        type: 'pie',
+        radius: ['40%', '70%'],
+        avoidLabelOverlap: false,
+
+        data: [],
+        emphasis: {
+          itemStyle: {
+            shadowBlur: 10,
+            shadowOffsetX: 0,
+            shadowColor: 'rgba(0, 0, 0, 0.5)',
+          },
+        },
+        labelLine: {
+          show: false,
+        },
+        itemStyle: {
+          borderRadius: 10,
+
+          borderWidth: 10,
+          // Set colors for each category based on BILL_CATEGORY_COLOR
+          color: (params: any) =>
+            BILL_CATEGORY_COLOR[
+              params.name as keyof typeof BILL_CATEGORY_COLOR
+            ] || '#1d4ed8',
+        },
+      },
+    ],
+    tooltip: {
+      trigger: 'item',
+    },
+    legend: {
+      top: '1%',
+      left: 'center',
+    },
+  };
+
+  ionViewWillEnter() {
+    this.store.dispatch(new InsightAction.GetBalance({}));
+    this.store.dispatch(new InsightAction.GetTotalSpend({}));
+
+    // Load user balances
+    this.store.select(insightState.data).subscribe((data: any) => {
+      if (data) {
+        this.totalOwedToMe = data.total_owed_to_me || 0;
+        this.totalIOwe = data.total_i_owe || 0;
+        this.allUser = [
+          ...data.owed_to_me_by_user.map((item: any) => ({
+            avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
+            name: item.user.username,
+            amount: item.total_amount,
+            owed: true,
+          })),
+          ...data.i_owe_to_user.map((item: any) => ({
+            avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
+            name: item.user.username,
+            amount: item.total_amount,
+            owed: false,
+          })),
+        ];
+        this.listUser = this.allUser;
+      }
+    });
+
+    // Load spending data
+    this.store.select(insightState.total_spent).subscribe((spending: any) => {
+      if (spending && spending.daily_spending) {
+        this.totalSpent = spending.total_spent || 0;
+        if (this.chartOptionBar.xAxis && 'data' in this.chartOptionBar.xAxis) {
+          this.chartOptionBar.xAxis.data = spending.daily_spending.map(
+            (item: any) => item.date
+          );
+        }
+        if (
+          Array.isArray(this.chartOptionBar.series) &&
+          this.chartOptionBar.series[0]
+        ) {
+          this.chartOptionBar.series[0].data = spending.daily_spending.map(
+            (item: any) => item.amount
+          );
+        }
+      }
+
+      if (spending && spending.spending_by_category) {
+        // Update pie chart (spending by category)
+        const categoryData = Object.entries(spending.spending_by_category).map(
+          ([category, amount]) => ({
+            name: category,
+            value: amount,
+          })
+        );
+
+        if (
+          Array.isArray(this.chartOptionPie.series) &&
+          this.chartOptionPie.series[0]
+        ) {
+          this.chartOptionPie.series[0].data = categoryData;
+        }
+
+        this.isDataLoaded = true; // Mark data as loaded
+      }
+    });
+  }
+
+  selectFilter(filter: string) {
+    this.selectedFilter = filter;
+    if (filter === 'all') {
+      this.updateUserList(this.allUser); // Show all users
+    } else if (filter === 'owed') {
+      this.updateUserList(this.allUser.filter((user) => user.owed)); // Show only users who owe
+    } else if (filter === 'you-owed') {
+      this.updateUserList(this.allUser.filter((user) => !user.owed)); // Show only users you owe
+    }
+  }
+
+  updateUserList(filteredUsers: any[]) {
+    this.listUser = filteredUsers;
+  }
+
+  formatMoney(value: number) {
+    return formatCurrency(value);
+  }
+
+  ngOnDestroy() {
+    console.log('HomePage destroyed');
+  }
 }

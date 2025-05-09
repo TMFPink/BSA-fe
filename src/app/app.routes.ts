@@ -19,6 +19,7 @@ import { AuthState, BillsState, FriendsState } from './store';
 import { ProfileState } from './store/profile/profile.state';
 import { ProfileComponent } from './Components/profile/profile.component';
 import { PasswordComponent } from './Components/password/password.component';
+import { insightState } from './store/insight';
 
 export const routes: Routes = [
   {
@@ -110,7 +111,12 @@ export const routes: Routes = [
         NgxEchartsModule.forRoot({
           echarts: () => import('echarts'),
         }),
-        NgxsModule.forFeature([BillsState, AuthState, FriendsState]),
+        NgxsModule.forFeature([
+          BillsState,
+          AuthState,
+          FriendsState,
+          insightState,
+        ]),
         MatSnackBarModule
       ),
     ],

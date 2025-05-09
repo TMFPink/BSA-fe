@@ -2,8 +2,8 @@
   <div class="mx-5 mt-10 mb-36">
     <div class="text-black text-2xl mt-5 font-bold">Total spent</div>
 
-    <div class="mt-5 h-[300px] w-full">
-      <div echarts [options]="chartOption" class="w-full h-full"></div>
+    <div class="mt-5 h-[300px] w-full" *ngIf="isDataLoaded">
+      <div echarts [options]="chartOptionBar" class="w-full h-full"></div>
     </div>
 
     <div class="text-black text-2xl font-bold">Summary</div>
@@ -12,19 +12,20 @@
         class="flex flex-col justify-between bg-[var(--secondary-theme)] py-6 px-3 rounded-2xl w-48 h-36 shadow-lg"
       >
         <div class="font-bold text-xl text-[var(--main-theme)]">Owed You</div>
-        <div class="text-xl flex justify-end font-bold">100 000vnd</div>
+        <div class="text-xl flex justify-end font-bold">
+          {{ formatMoney(totalOwedToMe) }} VND
+        </div>
       </div>
       <div
         class="flex flex-col justify-between bg-[var(--secondary-theme)] py-6 px-3 rounded-2xl w-48 h-36 shadow-lg"
       >
         <div class="font-bold text-xl text-red-400">You Owed</div>
-        <div class="text-xl flex justify-end font-bold">69 420vnd</div>
+        <div class="text-xl flex justify-end font-bold">
+          {{ formatMoney(totalIOwe) }} VND
+        </div>
       </div>
     </div>
 
-    <div class="flex justify-between">
-      <div></div>
-    </div>
     <div class="flex gap-4 my-5">
       <div
         (click)="selectFilter('all')"
@@ -57,9 +58,10 @@
         You Owed
       </div>
     </div>
+
     <div class="flex flex-col gap-y-5 mt-5">
-      @for (user of listUser; track $index) {
       <div
+        *ngFor="let user of listUser"
         class="bill-border border w-full flex flex-row justify-between rounded-2xl px-2 py-2"
       >
         <div class="flex flex-row gap-5 items-center">
@@ -76,9 +78,11 @@
           <div>{{formatMoney(user.amount)}} VND</div>
         </div>
       </div>
-      }
+    </div>
+    <!-- Pie chart for spending by category -->
+    <div class="text-black text-2xl mt-5 font-bold">Spending by Category</div>
+    <div class="mt-5 h-[300px] w-full" *ngIf="isDataLoaded">
+      <div echarts [options]="chartOptionPie" class="w-full h-full"></div>
     </div>
   </div>
-
-  <!-- </div> -->
 </ion-content>

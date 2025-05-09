@@ -239,7 +239,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
       const splitAmount = totalAmount / participants.length;
 
       participants.forEach((participant) => {
-        participant.get('split_amount')?.setValue(splitAmount);
+        participant.get('split_amount')?.setValue(splitAmount.toFixed(2));
 
         // Set paid status for the payer
         if (participant.get('id')?.value === payer) {
@@ -261,7 +261,9 @@ export class CreateBillComponent implements OnInit, OnDestroy {
           }
         });
 
-        participant.get('split_amount')?.setValue(userAmount);
+        participant
+          .get('split_amount')
+          ?.setValue(Number(userAmount.toFixed(2)));
 
         // Set paid status for the payer
         if (userId === payer) {
