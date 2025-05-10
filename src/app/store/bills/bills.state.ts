@@ -7,6 +7,7 @@ import { catchError, tap } from 'rxjs';
 import { HandleErrorService } from 'src/app/service/handle-error.service';
 import { BaseState } from 'src/app/utils/base-state/base-state-model';
 import { ToastService } from 'src/app/service/toast.service';
+import { NavigationService } from 'src/app/service/navigation.service';
 
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
@@ -31,7 +32,8 @@ export class BillsState extends BaseState<BillStateModel> {
   constructor(
     private billService: BillsService,
     private handleErrorService: HandleErrorService,
-    private toast: ToastService
+    private toast: ToastService,
+    private navService: NavigationService
   ) {
     super();
   }
@@ -57,7 +59,6 @@ export class BillsState extends BaseState<BillStateModel> {
 
   @Action(BillAction.LoadBills)
   loadBills(ctx: StateContext<BillStateModel>, action: BillAction.LoadBills) {
-    ctx.patchState({ loading: true });
     return this.billService.billsList(action.payload).pipe(
       tap((bill) => {
         this.handleApiResponse(
@@ -82,7 +83,7 @@ export class BillsState extends BaseState<BillStateModel> {
           'Error while adding bill',
           (data: any) => {
             this.toast.showSnackBar('Bills create successfully', 'success');
-            ctx.patchState({ status: 'success' });
+            this.navService.goTo('bills');
           }
         );
       })
@@ -102,6 +103,28 @@ export class BillsState extends BaseState<BillStateModel> {
           'Error while getting bill detail',
           (data: any) => {
             ctx.patchState({ billDetail: data });
+          }
+        );
+      })
+    );
+  }
+
+  @Action(BillAction.ProcessBill)
+  processBill(
+    ctx: StateContext<BillStateModel>,
+    action: BillAction.ProcessBill
+  ) {
+    ctx.patchState({ loading: true });
+    return this.billService.billsProcessImageCreate(action.payload).pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while processing bill',
+          (data: any) => {
+            ctx.patchState({ loading: false });
+            console.log('data', data);
+            this.toast.showSnackBar('Bills processed successfully', 'success');
           }
         );
       })

@@ -315,46 +315,86 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "User balance details",
+            "description": ""
+          }
+        },
+        "tags": [
+          "bills"
+        ]
+      },
+      "parameters": []
+    },
+    "/bills/pay/": {
+      "post": {
+        "operationId": "bills_pay_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "data",
+            "in": "body",
+            "required": true,
             "schema": {
+              "required": [
+                "bill_id",
+                "user_id"
+              ],
               "type": "object",
               "properties": {
-                "owed_to_me_by_user": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "user": {
-                        "type": "object"
-                      },
-                      "total_amount": {
-                        "type": "number"
-                      }
-                    }
-                  }
+                "bill_id": {
+                  "description": "Hashed bill ID",
+                  "type": "string"
                 },
-                "i_owe_to_user": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "user": {
-                        "type": "object"
-                      },
-                      "total_amount": {
-                        "type": "number"
-                      }
-                    }
-                  }
-                },
-                "total_owed_to_me": {
-                  "type": "number"
-                },
-                "total_i_owe": {
-                  "type": "number"
+                "user_id": {
+                  "description": "Hashed user ID of the person who paid",
+                  "type": "string"
                 }
               }
             }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Payment status updated successfully",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "participation": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "user": {
+                      "type": "object"
+                    },
+                    "bill_id": {
+                      "type": "string"
+                    },
+                    "bill_name": {
+                      "type": "string"
+                    },
+                    "split_amount": {
+                      "type": "number"
+                    },
+                    "is_paid": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters"
+          },
+          "403": {
+            "description": "Forbidden - Unauthorized to update payment status"
+          },
+          "404": {
+            "description": "Not Found - Bill or user not found"
           }
         },
         "tags": [

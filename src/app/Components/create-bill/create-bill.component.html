@@ -166,6 +166,30 @@
           <div class="text-center text-2xl font-semibold">Others</div>
         </div>
       </div>
+      <div class="text-black text-xl my-5 font-bold">Upload Bill Image</div>
+      <div class="flex gap-4 items-center">
+        <button
+          class="bg-[var(--secondary-theme)] text-white text-xl font-bold rounded-2xl px-5 py-3"
+          (click)="triggerFileInput()"
+          [disabled]="selectors.loadingProcess()"
+        >
+          {{ selectors.loadingProcess() ? "Processing..." : "Upload Image" }}
+        </button>
+        <input
+          type="file"
+          accept="image/*"
+          #fileInput
+          (change)="onImageSelected($event)"
+          hidden
+        />
+        <nz-spin
+          *ngIf="selectors.loadingProcess()"
+          nzSimple
+          nzSize="large"
+          class="text-[var(--secondary-theme)]"
+        ></nz-spin>
+      </div>
+
       <div class="text-black text-xl my-5 font-bold">Bill Details</div>
       <form nz-form>
         <div class="flex flex-col gap-4 mb-4">

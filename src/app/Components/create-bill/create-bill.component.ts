@@ -1,4 +1,11 @@
-import { Component, effect, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  effect,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+  ElementRef,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import {
   IonContent,
@@ -52,6 +59,7 @@ import {
 } from 'src/app/store';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
 import { User } from 'src/app/api/models';
+import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 interface Participant {
   id: string;
@@ -84,6 +92,7 @@ interface Participant {
     ReactiveFormsModule,
     NzFormModule,
     IonSearchbar,
+    NzSpinModule,
   ],
 })
 export class CreateBillComponent implements OnInit, OnDestroy {
@@ -127,6 +136,8 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     date: '',
   };
 
+  @ViewChild('fileInput') fileInput!: ElementRef;
+
   constructor(private navService: NavigationService, private fb: FormBuilder) {
     addIcons({
       caretBackOutline,
@@ -157,9 +168,6 @@ export class CreateBillComponent implements OnInit, OnDestroy {
           })
         );
       }
-      if (this.selectors.billStatus() === 'success') {
-        this.navService.goTo('bills');
-      }
     });
   }
 
@@ -171,11 +179,13 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     friends: FriendsState.friendsList,
     user: ProfileState.user,
     billStatus: BillsState.status,
+    loadingProcess: BillsState.loading,
   });
 
   actions = createDispatchMap({
     getFriends: FriendsAction.GetFriends,
     createBill: BillAction.CreateBill,
+    processBillImage: BillAction.ProcessBill,
   });
 
   onNavigate(): void {
@@ -434,6 +444,18 @@ export class CreateBillComponent implements OnInit, OnDestroy {
         })
       );
     });
+  }
+
+  triggerFileInput(): void {
+    this.fileInput.nativeElement.click();
+  }
+
+  onImageSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      const file = input.files[0];
+      this.actions.processBillImage(file);
+    }
   }
 
   ngOnDestroy() {

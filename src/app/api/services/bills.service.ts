@@ -22,6 +22,7 @@ class BillsService extends __BaseService {
   static readonly billsCreatePath = '/bills/';
   static readonly billsAddParticipantsCreatePath = '/bills/add-participants/';
   static readonly billsBalanceListPath = '/bills/balance/';
+  static readonly billsPayCreatePath = '/bills/pay/';
   static readonly billsProcessImageCreatePath = '/bills/process-image/';
   static readonly billsSpendingListPath = '/bills/spending/';
   static readonly billsReadPath = '/bills/{hashed_id}/';
@@ -199,18 +200,7 @@ class BillsService extends __BaseService {
       __map((_r) => _r.body as null)
     );
   }
-
-  /**
-   * @return User balance details
-   */
-  billsBalanceListResponse(): __Observable<
-    __StrictHttpResponse<{
-      owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
-      i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
-      total_owed_to_me?: number;
-      total_i_owe?: number;
-    }>
-  > {
+  billsBalanceListResponse(): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -228,32 +218,97 @@ class BillsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
+        return _r as __StrictHttpResponse<null>;
+      })
+    );
+  }
+  billsBalanceList(): __Observable<null> {
+    return this.billsBalanceListResponse().pipe(__map((_r) => _r.body as null));
+  }
+
+  /**
+   * @param data undefined
+   * @return Payment status updated successfully
+   */
+  billsPayCreateResponse(data: {
+    bill_id: string;
+    user_id: string;
+  }): __Observable<
+    __StrictHttpResponse<{
+      message?: string;
+      participation?: {
+        id?: string;
+        user?: {};
+        bill_id?: string;
+        bill_name?: string;
+        split_amount?: number;
+        is_paid?: boolean;
+      };
+    }>
+  > {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    __body = data;
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/bills/pay/`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json',
+      }
+    );
+
+    return this.http.request<any>(req).pipe(
+      __filter((_r) => _r instanceof HttpResponse),
+      __map((_r) => {
         return _r as __StrictHttpResponse<{
-          owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
-          i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
-          total_owed_to_me?: number;
-          total_i_owe?: number;
+          message?: string;
+          participation?: {
+            id?: string;
+            user?: {};
+            bill_id?: string;
+            bill_name?: string;
+            split_amount?: number;
+            is_paid?: boolean;
+          };
         }>;
       })
     );
   }
   /**
-   * @return User balance details
+   * @param data undefined
+   * @return Payment status updated successfully
    */
-  billsBalanceList(): __Observable<{
-    owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
-    i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
-    total_owed_to_me?: number;
-    total_i_owe?: number;
+  billsPayCreate(data: {
+    bill_id: string;
+    user_id: string;
+  }): __Observable<{
+    message?: string;
+    participation?: {
+      id?: string;
+      user?: {};
+      bill_id?: string;
+      bill_name?: string;
+      split_amount?: number;
+      is_paid?: boolean;
+    };
   }> {
-    return this.billsBalanceListResponse().pipe(
+    return this.billsPayCreateResponse(data).pipe(
       __map(
         (_r) =>
           _r.body as {
-            owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
-            i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
-            total_owed_to_me?: number;
-            total_i_owe?: number;
+            message?: string;
+            participation?: {
+              id?: string;
+              user?: {};
+              bill_id?: string;
+              bill_name?: string;
+              split_amount?: number;
+              is_paid?: boolean;
+            };
           }
       )
     );

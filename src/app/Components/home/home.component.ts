@@ -54,9 +54,6 @@ export class HomePage implements OnDestroy {
   }
 
   destroyCharts() {
-    console.log('Destroying charts');
-    console.log(this.chartInstanceBar);
-    console.log(this.chartInstancePie);
     if (this.chartInstanceBar) {
       this.chartInstanceBar.dispose();
     }

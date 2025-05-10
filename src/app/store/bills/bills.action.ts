@@ -4,6 +4,8 @@ const enum billsActionTypes {
   UPDATE_BILL = '[Bills] Update Bill',
   LOAD_BILLS = '[Bills] Load Bills',
   LOAD_BILL_DETAIL = '[Bills] Load Bill Detail',
+
+  PROCESS_BILL_ = '[Bills] Process Bill',
 }
 
 export namespace BillAction {
@@ -25,6 +27,11 @@ export namespace BillAction {
   }
   export class LoadBillDetail {
     static readonly type = billsActionTypes.LOAD_BILL_DETAIL;
+    constructor(public payload: any) {}
+  }
+
+  export class ProcessBill {
+    static readonly type = billsActionTypes.PROCESS_BILL_;
     constructor(public payload: any) {}
   }
 }
