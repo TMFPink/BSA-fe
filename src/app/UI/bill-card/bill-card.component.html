@@ -50,8 +50,8 @@
           >
             <!-- <img [src]="user.avt" class="w-10 h-10" alt="avatar" /> -->
             <img
-              src="assets/images/user-avt.webp"
-              class="w-10 h-10"
+              [src]="imageUrl(user.avatarUrl)"
+              class="w-10 h-10 rounded-full"
               alt="avatar"
             />
           </div>

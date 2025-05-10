@@ -218,6 +218,10 @@
                       "paid": {
                         "description": "Whether the participant has paid",
                         "type": "boolean"
+                      },
+                      "avatarUrl": {
+                        "description": "Avatar URL of the participant",
+                        "type": "string"
                       }
                     }
                   }
@@ -315,7 +319,46 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "User balance details",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "owed_to_me_by_user": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "type": "object"
+                      },
+                      "total_amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "i_owe_to_user": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "user": {
+                        "type": "object"
+                      },
+                      "total_amount": {
+                        "type": "number"
+                      }
+                    }
+                  }
+                },
+                "total_owed_to_me": {
+                  "type": "number"
+                },
+                "total_i_owe": {
+                  "type": "number"
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -557,7 +600,13 @@
         ],
         "responses": {
           "200": {
-            "description": "List of friends"
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserWithMutualFriends"
+              }
+            }
           }
         },
         "tags": [
@@ -675,7 +724,13 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": ""
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/UserWithMutualFriends"
+              }
+            }
           }
         },
         "tags": [
@@ -732,7 +787,48 @@
         ],
         "responses": {
           "200": {
-            "description": "List of friend suggestions"
+            "description": "",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "user": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "username": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "first_name": {
+                        "type": "string"
+                      },
+                      "last_name": {
+                        "type": "string"
+                      },
+                      "phone": {
+                        "type": "string"
+                      },
+                      "avatarUrl": {
+                        "type": "string"
+                      },
+                      "mutual_friends_count": {
+                        "description": "Number of mutual friends",
+                        "type": "integer"
+                      }
+                    }
+                  },
+                  "has_sent_request": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
           }
         },
         "tags": [
@@ -1004,6 +1100,7 @@
       "required": [
         "id",
         "name",
+        "avatarUrl",
         "split_amount",
         "paid"
       ],
@@ -1016,6 +1113,11 @@
         },
         "name": {
           "title": "Name",
+          "type": "string",
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "title": "Avatarurl",
           "type": "string",
           "minLength": 1
         },
@@ -1146,6 +1248,68 @@
           "title": "Error",
           "type": "string",
           "minLength": 1
+        }
+      }
+    },
+    "UserWithMutualFriends": {
+      "required": [
+        "username",
+        "email",
+        "password"
+      ],
+      "type": "object",
+      "properties": {
+        "id": {
+          "title": "Id",
+          "type": "string",
+          "readOnly": true
+        },
+        "username": {
+          "title": "Username",
+          "type": "string",
+          "maxLength": 150,
+          "minLength": 1
+        },
+        "first_name": {
+          "title": "First name",
+          "type": "string",
+          "maxLength": 150,
+          "minLength": 1
+        },
+        "last_name": {
+          "title": "Last name",
+          "type": "string",
+          "maxLength": 150,
+          "minLength": 1
+        },
+        "email": {
+          "title": "Email",
+          "type": "string",
+          "format": "email",
+          "maxLength": 254,
+          "minLength": 1
+        },
+        "phone": {
+          "title": "Phone",
+          "type": "string",
+          "maxLength": 15,
+          "x-nullable": true
+        },
+        "password": {
+          "title": "Password",
+          "type": "string",
+          "maxLength": 128,
+          "minLength": 1
+        },
+        "avatarUrl": {
+          "title": "AvatarUrl",
+          "type": "string",
+          "x-nullable": true
+        },
+        "mutual_friends_count": {
+          "title": "Mutual friends count",
+          "type": "string",
+          "readOnly": true
         }
       }
     }

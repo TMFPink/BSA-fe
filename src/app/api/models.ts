@@ -5,3 +5,4 @@ export { Participant } from './models/participant';
 export { Bill } from './models/bill';
 export { BillItemFromImage } from './models/bill-item-from-image';
 export { BillFromImageResponse } from './models/bill-from-image-response';
+export { UserWithMutualFriends } from './models/user-with-mutual-friends';

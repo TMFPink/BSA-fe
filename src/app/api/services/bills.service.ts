@@ -104,6 +104,7 @@ class BillsService extends __BaseService {
       name?: string;
       split_amount?: number;
       paid?: boolean;
+      avatarUrl?: string;
     }>;
     payer?: {
       id?: string;
@@ -148,6 +149,7 @@ class BillsService extends __BaseService {
       name?: string;
       split_amount?: number;
       paid?: boolean;
+      avatarUrl?: string;
     }>;
     payer?: {
       id?: string;
@@ -200,7 +202,18 @@ class BillsService extends __BaseService {
       __map((_r) => _r.body as null)
     );
   }
-  billsBalanceListResponse(): __Observable<__StrictHttpResponse<null>> {
+
+  /**
+   * @return User balance details
+   */
+  billsBalanceListResponse(): __Observable<
+    __StrictHttpResponse<{
+      owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+      i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+      total_owed_to_me?: number;
+      total_i_owe?: number;
+    }>
+  > {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -218,12 +231,35 @@ class BillsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter((_r) => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<{
+          owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+          i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+          total_owed_to_me?: number;
+          total_i_owe?: number;
+        }>;
       })
     );
   }
-  billsBalanceList(): __Observable<null> {
-    return this.billsBalanceListResponse().pipe(__map((_r) => _r.body as null));
+  /**
+   * @return User balance details
+   */
+  billsBalanceList(): __Observable<{
+    owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+    i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+    total_owed_to_me?: number;
+    total_i_owe?: number;
+  }> {
+    return this.billsBalanceListResponse().pipe(
+      __map(
+        (_r) =>
+          _r.body as {
+            owed_to_me_by_user?: Array<{ user?: {}; total_amount?: number }>;
+            i_owe_to_user?: Array<{ user?: {}; total_amount?: number }>;
+            total_owed_to_me?: number;
+            total_i_owe?: number;
+          }
+      )
+    );
   }
 
   /**

@@ -18,7 +18,7 @@ import {
   IonCheckbox,
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
-import { User } from 'src/app/api/models';
+import { User, UserWithMutualFriends } from 'src/app/api/models';
 import { Store } from '@ngxs/store';
 import { FriendsAction } from 'src/app/store';
 @Component({
@@ -39,7 +39,9 @@ import { FriendsAction } from 'src/app/store';
   ],
 })
 export class UserCardComponent implements OnInit {
-  @Input() user: User = {} as User;
+  @Input() user: UserWithMutualFriends = {} as
+    | UserWithMutualFriends
+    | UserWithMutualFriends;
   @Input() hasSentRequest: boolean = false;
   @Input() isFriendAdd: boolean = false;
   @Input() isFriendRequest: boolean = false;
@@ -85,4 +87,6 @@ export class UserCardComponent implements OnInit {
       this.toggleParticipantEvent.emit(this.user);
     }
   }
+
+  imageUrl = (url: string) => `/assets/images/${url}`;
 }

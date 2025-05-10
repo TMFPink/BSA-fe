@@ -4,15 +4,15 @@
     'friend-card': defaultCard,
     'friend-add-bill': isCreateBill
   }"
-  class="bg-white rounded-2xl p-5 justify-around flex flex-row items-center content-center border-2 border-[var(--main-theme)] shadow h-[170px]"
+  class="bg-white rounded-2xl py-5 justify-around flex flex-row items-center content-center border-2 border-[var(--main-theme)] shadow h-[170px]"
 >
   <div
     class="bg-white rounded-full shadow-md border-2 border-[var(--main-theme)] p-5"
   >
     <img
-      src="/assets/images/user-avt.webp"
+      [src]="imageUrl(user.avatarUrl!)"
       alt="user-avt"
-      class="w-[70px] h-[70px]"
+      class="w-[70px] h-[70px] rounded-full"
     />
   </div>
 
@@ -20,7 +20,9 @@
     <div class="text-[var(--main-theme)] font-bold text-xl">
       {{ user.username }}
     </div>
-    <div class="text-sm text-black">4 mutual friends</div>
+    <div class="text-sm text-black">
+      {{ user.mutual_friends_count }} mutual friend(s)
+    </div>
 
     <!-- friend request part -->
     <div *ngIf="isFriendRequest" class="flex flex-row gap-5">

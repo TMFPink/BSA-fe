@@ -153,14 +153,14 @@
         <div class="flex content-center items-center gap-5">
           <div class="rounded-3xl border-[var(--main-theme)] border-2 p-2">
             <img
-              src="/assets/images/user-avt.webp"
+              [src]="imageUrl(participant.avatarUrl)"
               alt="user-avt"
-              class="w-16 h-16"
+              class="w-16 h-16 rounded-full"
             />
           </div>
           <div class="flex flex-col">
             <div class="text-[var(--main-theme)] text-2xl font-bold">
-              {{ participant.name }} pay's for:
+              {{ participant.name }} pay for:
             </div>
             <div class="text-black text-2xl font-bold">
               {{ formatTooltip(participant.splitAmount) }} VND

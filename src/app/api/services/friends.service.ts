@@ -7,6 +7,7 @@ import { StrictHttpResponse as __StrictHttpResponse } from '../strict-http-respo
 import { Observable as __Observable } from 'rxjs';
 import { map as __map, filter as __filter } from 'rxjs/operators';
 
+import { UserWithMutualFriends } from '../models/user-with-mutual-friends';
 @Injectable({
   providedIn: 'root',
 })
@@ -29,7 +30,7 @@ class FriendsService extends __BaseService {
   /**
    * @param username Username to filter friends by
    */
-  friendsListResponse(username?: string): __Observable<__StrictHttpResponse<null>> {
+  friendsListResponse(username?: string): __Observable<__StrictHttpResponse<Array<UserWithMutualFriends>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -47,16 +48,16 @@ class FriendsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<Array<UserWithMutualFriends>>;
       })
     );
   }
   /**
    * @param username Username to filter friends by
    */
-  friendsList(username?: string): __Observable<null> {
+  friendsList(username?: string): __Observable<Array<UserWithMutualFriends>> {
     return this.friendsListResponse(username).pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as Array<UserWithMutualFriends>)
     );
   }
 
@@ -161,7 +162,7 @@ class FriendsService extends __BaseService {
       __map(_r => _r.body as null)
     );
   }
-  friendsRequestsListResponse(): __Observable<__StrictHttpResponse<null>> {
+  friendsRequestsListResponse(): __Observable<__StrictHttpResponse<Array<UserWithMutualFriends>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -178,12 +179,12 @@ class FriendsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<Array<UserWithMutualFriends>>;
       })
     );
-  }  friendsRequestsList(): __Observable<null> {
+  }  friendsRequestsList(): __Observable<Array<UserWithMutualFriends>> {
     return this.friendsRequestsListResponse().pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as Array<UserWithMutualFriends>)
     );
   }
 
@@ -224,7 +225,7 @@ class FriendsService extends __BaseService {
   /**
    * @param username Username to search for
    */
-  friendsSuggestionsListResponse(username?: string): __Observable<__StrictHttpResponse<null>> {
+  friendsSuggestionsListResponse(username?: string): __Observable<__StrictHttpResponse<Array<{user?: {id?: number, username?: string, email?: string, first_name?: string, last_name?: string, phone?: string, avatarUrl?: string, mutual_friends_count?: number}, has_sent_request?: boolean}>>> {
     let __params = this.newParams();
     let __headers = new HttpHeaders();
     let __body: any = null;
@@ -242,16 +243,16 @@ class FriendsService extends __BaseService {
     return this.http.request<any>(req).pipe(
       __filter(_r => _r instanceof HttpResponse),
       __map((_r) => {
-        return _r as __StrictHttpResponse<null>;
+        return _r as __StrictHttpResponse<Array<{user?: {id?: number, username?: string, email?: string, first_name?: string, last_name?: string, phone?: string, avatarUrl?: string, mutual_friends_count?: number}, has_sent_request?: boolean}>>;
       })
     );
   }
   /**
    * @param username Username to search for
    */
-  friendsSuggestionsList(username?: string): __Observable<null> {
+  friendsSuggestionsList(username?: string): __Observable<Array<{user?: {id?: number, username?: string, email?: string, first_name?: string, last_name?: string, phone?: string, avatarUrl?: string, mutual_friends_count?: number}, has_sent_request?: boolean}>> {
     return this.friendsSuggestionsListResponse(username).pipe(
-      __map(_r => _r.body as null)
+      __map(_r => _r.body as Array<{user?: {id?: number, username?: string, email?: string, first_name?: string, last_name?: string, phone?: string, avatarUrl?: string, mutual_friends_count?: number}, has_sent_request?: boolean}>)
     );
   }
 }

@@ -66,6 +66,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     name: string;
     splitAmount: number;
     paid: boolean;
+    avatarUrl: string;
   }[] = [];
 
   @Output() payerChange = new EventEmitter<string>();
@@ -145,6 +146,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
           name: participant.name,
           splitAmount: Number(participant.split_amount),
           paid: participant.paid,
+          avatarUrl: participant.avatarUrl,
         }));
 
         // Initialize participantSelections with appropriate length
@@ -378,6 +380,8 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
         break;
     }
   }
+
+  imageUrl = (url: string) => `/assets/images/${url}`;
 
   ngOnDestroy() {
     this.unsubscribe$.unsubscribe();

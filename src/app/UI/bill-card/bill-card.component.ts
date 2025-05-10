@@ -40,4 +40,6 @@ export class BillCardComponent implements OnInit {
 
     // return BILL_CATEGORY_COLOR[billCategory];
   }
+
+  imageUrl = (url: string) => `/assets/images/${url}`;
 }
