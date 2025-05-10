@@ -168,6 +168,15 @@ export class CreateBillComponent implements OnInit, OnDestroy {
           })
         );
       }
+      if (this.selectors.billStatus() === 'success') {
+        this.billForm.reset();
+        this.billDetails = [];
+
+        this.currentStage = 1;
+        this.firstStage = true;
+        this.secondStage = false;
+        this.thirdStage = false;
+      }
     });
 
     effect(() => {

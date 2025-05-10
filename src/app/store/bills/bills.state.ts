@@ -11,6 +11,7 @@ import { NavigationService } from 'src/app/service/navigation.service';
 
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
+  createStatus: 'loading' | 'success' | 'error' | null;
   bills: Bill[];
   billDetail: Bill | null;
   uploadedBill: Bill | null;
@@ -23,6 +24,7 @@ interface BillStateModel {
   name: 'bills',
   defaults: {
     status: null,
+    createStatus: null,
     bills: [],
     billDetail: null,
     uploadedBill: null,
@@ -55,8 +57,8 @@ export class BillsState extends BaseState<BillStateModel> {
     return loading;
   }
   @Selector()
-  static status({ status }: BillStateModel) {
-    return status;
+  static status({ createStatus }: BillStateModel) {
+    return createStatus;
   }
 
   @Selector()
@@ -73,7 +75,7 @@ export class BillsState extends BaseState<BillStateModel> {
           bill,
           'Error while getting bills',
           (data: Bill[]) => {
-            ctx.patchState({ bills: data, status: null });
+            ctx.patchState({ bills: data, createStatus: null });
           }
         );
       })
@@ -90,7 +92,8 @@ export class BillsState extends BaseState<BillStateModel> {
           'Error while adding bill',
           (data: any) => {
             this.toast.showSnackBar('Bills create successfully', 'success');
-            this.navService.goTo('bills');
+            ctx.patchState({ createStatus: 'success' });
+            this.navService.goBack();
           }
         );
       })
