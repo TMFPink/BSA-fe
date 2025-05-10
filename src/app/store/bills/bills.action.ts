@@ -34,4 +34,8 @@ export namespace BillAction {
     static readonly type = billsActionTypes.PROCESS_BILL_;
     constructor(public payload: any) {}
   }
+
+  export class ResetUploadedBill {
+    static readonly type = '[Bill] Reset Uploaded Bill';
+  }
 }

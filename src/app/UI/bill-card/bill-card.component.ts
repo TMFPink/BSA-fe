@@ -29,7 +29,7 @@ export class BillCardComponent implements OnInit {
       case 'Food':
         return BILL_CATEGORY_COLOR['Food'];
       case 'Transport':
-        return BILL_CATEGORY_COLOR['Transportation'];
+        return BILL_CATEGORY_COLOR['Transport'];
       case 'Entertainment':
         return BILL_CATEGORY_COLOR['Entertainment'];
       case 'Others':

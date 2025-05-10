@@ -58,7 +58,7 @@ import {
   ProfileState,
 } from 'src/app/store';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
-import { User } from 'src/app/api/models';
+import { BillDetail, User } from 'src/app/api/models';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
 
 interface Participant {
@@ -104,7 +104,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
   newDetailDescription: string = '';
   newDetailAmount: number = 0;
-  billDetails: { description: string; amount: number; user?: string }[] = [];
+  billDetails: BillDetail[] = [];
   participants: Participant[] = [];
 
   splitOptions: string = 'equal';
@@ -169,6 +169,38 @@ export class CreateBillComponent implements OnInit, OnDestroy {
         );
       }
     });
+
+    effect(() => {
+      const uploadedBill = this.selectors.uploadedBill();
+
+      if (uploadedBill?.billName) {
+        this.billForm.patchValue({
+          category: uploadedBill.category,
+          total_amount: Number(uploadedBill.total_amount),
+        });
+
+        this.selectCategory(uploadedBill.category);
+
+        const billDetailsArray = this.billForm.get('billDetails') as FormArray;
+        billDetailsArray.clear(); // Clear the existing form array
+
+        uploadedBill.billDetails.forEach((detail) => {
+          billDetailsArray.push(
+            this.fb.group({
+              description: detail.description,
+              amount: detail.amount,
+              user: detail.user || null,
+            })
+          );
+        });
+
+        // Update local billDetails array to keep UI in sync
+        this.billDetails = uploadedBill.billDetails;
+
+        // Reset uploadedBill state
+        this.actions.resetUploadedBill();
+      }
+    });
   }
 
   ngOnInit() {
@@ -180,12 +212,14 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     user: ProfileState.user,
     billStatus: BillsState.status,
     loadingProcess: BillsState.loading,
+    uploadedBill: BillsState.uploadedBill,
   });
 
   actions = createDispatchMap({
     getFriends: FriendsAction.GetFriends,
     createBill: BillAction.CreateBill,
     processBillImage: BillAction.ProcessBill,
+    resetUploadedBill: BillAction.ResetUploadedBill,
   });
 
   onNavigate(): void {
@@ -267,7 +301,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
         // Sum up amounts from bill details assigned to this user
         this.billDetails.forEach((detail) => {
           if (detail.user === userId) {
-            userAmount += detail.amount;
+            userAmount += Number(detail.amount);
           }
         });
 
@@ -324,9 +358,9 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     }
   }
 
-  formatMoneyDetail(value: number) {
-    if (value <= 100000000) return formatCurrency(value);
-    return formatCurrency(value, true);
+  formatMoneyDetail(value: string) {
+    if (Number(value) <= 100000000) return formatCurrency(Number(value));
+    return formatCurrency(Number(value), true);
   }
 
   formatMoney(value: number) {
@@ -346,7 +380,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
 
       this.billDetails.push({
         description: this.newDetailDescription,
-        amount: this.newDetailAmount,
+        amount: String(this.newDetailAmount),
       });
       this.billForm
         .get('total_amount')
@@ -360,7 +394,9 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     const billDetailsArray = this.billForm.get('billDetails') as FormArray;
     const currentTotal = this.billForm.get('total_amount')?.value || 0;
     const detail = this.billDetails[index];
-    this.billForm.get('total_amount')?.setValue(currentTotal - detail.amount);
+    this.billForm
+      .get('total_amount')
+      ?.setValue(currentTotal - Number(detail.amount));
 
     this.billDetails.splice(index, 1);
     billDetailsArray.removeAt(index);
@@ -428,9 +464,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
     this.splitOptions = split;
   }
 
-  onBillDetailsChange(
-    details: { description: string; amount: number; user?: string }[]
-  ): void {
+  onBillDetailsChange(details: BillDetail[]): void {
     this.billDetails = details;
     // This ensures the billDetails FormArray stays in sync
     const billDetailsArray = this.billForm.get('billDetails') as FormArray;

@@ -32,6 +32,7 @@ import { Subscription } from 'rxjs';
 import { BackButtonComponent } from 'src/app/UI/back-button/back-button.component';
 import { createDispatchMap, createSelectMap, Store } from '@ngxs/store';
 import { BillAction, BillsState } from 'src/app/store';
+import { BillDetail } from 'src/app/api/models';
 @Component({
   selector: 'bsa-bill-detail',
   templateUrl: './bill-detail.component.html',
@@ -58,11 +59,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     category: '',
     date: '',
   };
-  @Input() billDetails: {
-    description: string;
-    amount: number;
-    user?: string;
-  }[] = [];
+  @Input() billDetails: BillDetail[] = [];
   @Input() total_amount: number = 0;
   @Input() participants: {
     id: string;
@@ -73,9 +70,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
 
   @Output() payerChange = new EventEmitter<string>();
   @Output() sharedChange = new EventEmitter<boolean>();
-  @Output() billDetailsChange = new EventEmitter<
-    { description: string; amount: number; user?: string }[]
-  >();
+  @Output() billDetailsChange = new EventEmitter<BillDetail[]>();
   @Output() splitChange = new EventEmitter<string>();
 
   splitOptions: string = 'equal';
@@ -141,7 +136,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
         };
         this.billDetails = (bill?.billDetails ?? []).map((detail) => ({
           description: detail.description,
-          amount: Number(detail.amount),
+          amount: detail.amount,
           user: detail.user?.toString(),
         }));
         this.total_amount = Number(bill?.total_amount) ?? 0;
@@ -223,7 +218,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
     if (this.newDetailDescription && this.newDetailAmount > 0) {
       this.billDetails.push({
         description: this.newDetailDescription,
-        amount: this.newDetailAmount,
+        amount: String(this.newDetailAmount),
       });
       this.newDetailDescription = '';
       this.newDetailAmount = 0;

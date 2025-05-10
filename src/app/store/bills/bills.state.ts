@@ -13,6 +13,7 @@ interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
   bills: Bill[];
   billDetail: Bill | null;
+  uploadedBill: Bill | null;
   loading: boolean;
   error: string;
 }
@@ -24,6 +25,7 @@ interface BillStateModel {
     status: null,
     bills: [],
     billDetail: null,
+    uploadedBill: null,
     loading: false,
     error: '',
   },
@@ -55,6 +57,11 @@ export class BillsState extends BaseState<BillStateModel> {
   @Selector()
   static status({ status }: BillStateModel) {
     return status;
+  }
+
+  @Selector()
+  static uploadedBill({ uploadedBill }: BillStateModel) {
+    return uploadedBill;
   }
 
   @Action(BillAction.LoadBills)
@@ -123,11 +130,16 @@ export class BillsState extends BaseState<BillStateModel> {
           'Error while processing bill',
           (data: any) => {
             ctx.patchState({ loading: false });
-            console.log('data', data);
+            ctx.patchState({ uploadedBill: data });
             this.toast.showSnackBar('Bills processed successfully', 'success');
           }
         );
       })
     );
+  }
+
+  @Action(BillAction.ResetUploadedBill)
+  resetUploadedBill(ctx: StateContext<BillStateModel>) {
+    ctx.patchState({ uploadedBill: null });
   }
 }
