@@ -21,6 +21,7 @@ import {
 import { CookieService } from 'ngx-cookie-service';
 import { Router } from '@angular/router';
 import { AuthAction } from '../store';
+import { ToastService } from '../service/toast.service';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {
@@ -31,7 +32,8 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(
     private store: Store,
     private cookieService: CookieService,
-    private router: Router // Add Router for navigation
+    private router: Router,
+    private toast: ToastService
   ) {}
 
   getAccessToken(): string {
@@ -84,7 +86,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
-          console.log('Token expired')
+          this.toast.showSnackBar('Token expired, please login again', 'error');
           this.store.dispatch(new AuthAction.Logout()); // Dispatch logout action
           this.router.navigate(['/auth']); // Navigate to login page
         }

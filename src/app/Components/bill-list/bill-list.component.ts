@@ -52,7 +52,7 @@ export class BillListComponent implements OnInit {
   filterForm = this.fb.group({
     billName: [''],
     category: [''],
-    all_paid: [''],
+    allPaid: [''],
     date: [''],
   });
 

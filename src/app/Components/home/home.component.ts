@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { IonContent } from '@ionic/angular/standalone';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -12,6 +12,7 @@ import { createSelectMap, Store } from '@ngxs/store';
 import { InsightAction, insightState } from 'src/app/store/insight';
 import { map } from 'rxjs';
 import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
+import * as echarts from 'echarts';
 
 @Component({
   selector: 'app-home',
@@ -39,6 +40,74 @@ export class HomePage implements OnDestroy {
   selectedFilter: string = 'all';
   cardType: string = 'Create Bill';
   isDataLoaded: boolean = false;
+
+  @ViewChild('barChart', { static: false }) barChartElement!: ElementRef;
+  @ViewChild('pieChart', { static: false }) pieChartElement!: ElementRef;
+  chartInstanceBar: any;
+  chartInstancePie: any;
+
+  initCharts() {
+    this.chartInstanceBar = echarts.init(this.barChartElement.nativeElement);
+    this.chartInstancePie = echarts.init(this.pieChartElement.nativeElement);
+    this.chartInstanceBar.setOption(this.chartOptionBar);
+    this.chartInstancePie.setOption(this.chartOptionPie);
+  }
+
+  destroyCharts() {
+    console.log('Destroying charts');
+    console.log(this.chartInstanceBar);
+    console.log(this.chartInstancePie);
+    if (this.chartInstanceBar) {
+      this.chartInstanceBar.dispose();
+    }
+    if (this.chartInstancePie) {
+      this.chartInstancePie.dispose();
+    }
+  }
+
+  updateChart(spending: any) {
+    // Destroy the existing charts before updating
+    this.destroyCharts();
+
+    if (spending && spending.daily_spending) {
+      this.totalSpent = spending.total_spent || 0;
+      if (this.chartOptionBar.xAxis && 'data' in this.chartOptionBar.xAxis) {
+        this.chartOptionBar.xAxis.data = spending.daily_spending.map(
+          (item: any) => item.date
+        );
+      }
+      if (
+        Array.isArray(this.chartOptionBar.series) &&
+        this.chartOptionBar.series[0]
+      ) {
+        this.chartOptionBar.series[0].data = spending.daily_spending.map(
+          (item: any) => item.amount
+        );
+      }
+    }
+
+    if (spending && spending.spending_by_category) {
+      // Update pie chart (spending by category)
+      const categoryData = Object.entries(spending.spending_by_category).map(
+        ([category, amount]) => ({
+          name: category,
+          value: amount,
+        })
+      );
+
+      if (
+        Array.isArray(this.chartOptionPie.series) &&
+        this.chartOptionPie.series[0]
+      ) {
+        this.chartOptionPie.series[0].data = categoryData;
+      }
+
+      this.isDataLoaded = true; // Mark data as loaded
+    }
+
+    // Reinitialize the charts with updated data
+    this.initCharts();
+  }
 
   chartOptionBar: EChartsOption = {
     grid: {
@@ -173,41 +242,7 @@ export class HomePage implements OnDestroy {
 
     // Load spending data
     this.store.select(insightState.total_spent).subscribe((spending: any) => {
-      if (spending && spending.daily_spending) {
-        this.totalSpent = spending.total_spent || 0;
-        if (this.chartOptionBar.xAxis && 'data' in this.chartOptionBar.xAxis) {
-          this.chartOptionBar.xAxis.data = spending.daily_spending.map(
-            (item: any) => item.date
-          );
-        }
-        if (
-          Array.isArray(this.chartOptionBar.series) &&
-          this.chartOptionBar.series[0]
-        ) {
-          this.chartOptionBar.series[0].data = spending.daily_spending.map(
-            (item: any) => item.amount
-          );
-        }
-      }
-
-      if (spending && spending.spending_by_category) {
-        // Update pie chart (spending by category)
-        const categoryData = Object.entries(spending.spending_by_category).map(
-          ([category, amount]) => ({
-            name: category,
-            value: amount,
-          })
-        );
-
-        if (
-          Array.isArray(this.chartOptionPie.series) &&
-          this.chartOptionPie.series[0]
-        ) {
-          this.chartOptionPie.series[0].data = categoryData;
-        }
-
-        this.isDataLoaded = true; // Mark data as loaded
-      }
+      this.updateChart(spending);
     });
   }
 
@@ -229,6 +264,7 @@ export class HomePage implements OnDestroy {
   formatMoney(value: number) {
     return formatCurrency(value);
   }
+  imageUrl = (url: string) => `/assets/images/${url}`;
 
   ngOnDestroy() {
     console.log('HomePage destroyed');

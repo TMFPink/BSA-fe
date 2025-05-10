@@ -2,8 +2,13 @@
   <div class="mx-5 mt-10 mb-36">
     <div class="text-black text-2xl mt-5 font-bold">Total spent</div>
 
-    <div class="mt-5 h-[300px] w-full" *ngIf="isDataLoaded">
-      <div echarts [options]="chartOptionBar" class="w-full h-full"></div>
+    <div class="mt-5 h-[300px] w-full">
+      <div
+        echarts
+        #barChart
+        [options]="chartOptionBar"
+        class="w-full h-full"
+      ></div>
     </div>
 
     <div class="text-black text-2xl font-bold">Summary</div>
@@ -66,7 +71,7 @@
       >
         <div class="flex flex-row gap-5 items-center">
           <div class="rounded-full border bill-border p-2">
-            <img [src]="user.avt" alt="avatar" class="w-10 h-10" />
+            <img [src]="imageUrl(user.avt)" alt="avatar" class="w-10 h-10" />
           </div>
           <div class="text-black text-lg">{{user.name}}</div>
         </div>
@@ -81,8 +86,13 @@
     </div>
     <!-- Pie chart for spending by category -->
     <div class="text-black text-2xl mt-5 font-bold">Spending by Category</div>
-    <div class="mt-5 h-[300px] w-full" *ngIf="isDataLoaded">
-      <div echarts [options]="chartOptionPie" class="w-full h-full"></div>
+    <div class="mt-5 h-[300px] w-full">
+      <div
+        echarts
+        #pieChart
+        [options]="chartOptionPie"
+        class="w-full h-full"
+      ></div>
     </div>
   </div>
 </ion-content>
