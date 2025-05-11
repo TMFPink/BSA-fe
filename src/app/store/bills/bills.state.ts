@@ -12,6 +12,7 @@ import { NavigationService } from 'src/app/service/navigation.service';
 interface BillStateModel {
   status: 'loading' | 'success' | 'error' | null;
   createStatus: 'loading' | 'success' | 'error' | null;
+  payLoading: boolean;
   bills: Bill[];
   billDetail: Bill | null;
   uploadedBill: Bill | null;
@@ -24,6 +25,7 @@ interface BillStateModel {
   name: 'bills',
   defaults: {
     status: null,
+    payLoading: false,
     createStatus: null,
     bills: [],
     billDetail: null,
@@ -59,6 +61,11 @@ export class BillsState extends BaseState<BillStateModel> {
   @Selector()
   static status({ createStatus }: BillStateModel) {
     return createStatus;
+  }
+
+  @Selector()
+  static payLoading({ payLoading }: BillStateModel) {
+    return payLoading;
   }
 
   @Selector()
@@ -135,6 +142,24 @@ export class BillsState extends BaseState<BillStateModel> {
             ctx.patchState({ loading: false });
             ctx.patchState({ uploadedBill: data });
             this.toast.showSnackBar('Bills processed successfully', 'success');
+          }
+        );
+      })
+    );
+  }
+
+  @Action(BillAction.PayBill)
+  payBill(ctx: StateContext<BillStateModel>, action: BillAction.PayBill) {
+    ctx.patchState({ payLoading: true });
+    return this.billService.billsPayCreate(action.payload).pipe(
+      tap((bill) => {
+        this.handleApiResponse(
+          ctx,
+          bill,
+          'Error while processing bill',
+          (data: any) => {
+            ctx.patchState({ payLoading: false });
+            this.toast.showSnackBar('Bills paid successfully', 'success');
           }
         );
       })

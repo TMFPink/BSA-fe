@@ -13,6 +13,10 @@ import { InsightAction, insightState } from 'src/app/store/insight';
 import { map } from 'rxjs';
 import { BILL_CATEGORY_COLOR } from 'src/app/utils/Constant';
 import * as echarts from 'echarts';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { PayCardComponent } from 'src/app/UI/pay-card/pay-card.component';
+import { BillAction } from 'src/app/store';
 
 @Component({
   selector: 'app-home',
@@ -27,10 +31,12 @@ import * as echarts from 'echarts';
     RouterModule,
     NzCollapseModule,
     NgxEchartsModule,
+    NzModalModule,
+    PayCardComponent,
   ],
 })
 export class HomePage implements OnDestroy {
-  constructor(private store: Store) {}
+  constructor(private store: Store, private modal: NzModalService) {}
 
   listUser: any[] = [];
   allUser: any[] = [];
@@ -221,12 +227,14 @@ export class HomePage implements OnDestroy {
         this.totalIOwe = data.total_i_owe || 0;
         this.allUser = [
           ...data.owed_to_me_by_user.map((item: any) => ({
+            id: item.user.id,
             avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
             name: item.user.username,
             amount: item.total_amount,
             owed: true,
           })),
           ...data.i_owe_to_user.map((item: any) => ({
+            id: item.user.id,
             avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
             name: item.user.username,
             amount: item.total_amount,
@@ -262,6 +270,35 @@ export class HomePage implements OnDestroy {
     return formatCurrency(value);
   }
   imageUrl = (url: string) => `/assets/images/${url}`;
+
+  showPaymentPopup(user: any) {
+    console.log('User selected for payment:', user);
+    setTimeout(() => {
+      const modalRef = this.modal.create({
+        nzContent: PayCardComponent,
+        nzData: {
+          user: user, // Pass user data to the component
+          number: 1,
+          onProcessPayment: () => this.processPayment(user),
+        },
+        nzFooter: null,
+        nzMaskStyle: {
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        },
+        nzBodyStyle: {
+          background: 'transparent',
+          boxShadow: 'none',
+          padding: '0',
+        },
+        nzClassName: 'custom-payment-modal',
+      });
+    }, 0);
+  }
+
+  processPayment(user: any) {
+    console.log('Processing payment for user:', user);
+    this.store.dispatch(new BillAction.PayBill({ user_id: user.id }));
+  }
 
   ngOnDestroy() {
     console.log('HomePage destroyed');

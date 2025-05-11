@@ -378,17 +378,12 @@
             "required": true,
             "schema": {
               "required": [
-                "bill_id",
                 "user_id"
               ],
               "type": "object",
               "properties": {
-                "bill_id": {
-                  "description": "Hashed bill ID",
-                  "type": "string"
-                },
                 "user_id": {
-                  "description": "Hashed user ID of the person who paid",
+                  "description": "Hashed user ID of the participant to mark as paid",
                   "type": "string"
                 }
               }
@@ -404,26 +399,26 @@
                 "message": {
                   "type": "string"
                 },
-                "participation": {
-                  "type": "object",
-                  "properties": {
-                    "id": {
-                      "type": "string"
-                    },
-                    "user": {
-                      "type": "object"
-                    },
-                    "bill_id": {
-                      "type": "string"
-                    },
-                    "bill_name": {
-                      "type": "string"
-                    },
-                    "split_amount": {
-                      "type": "number"
-                    },
-                    "is_paid": {
-                      "type": "boolean"
+                "updated_participations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "bill_id": {
+                        "type": "string"
+                      },
+                      "bill_name": {
+                        "type": "string"
+                      },
+                      "split_amount": {
+                        "type": "number"
+                      },
+                      "is_paid": {
+                        "type": "boolean"
+                      }
                     }
                   }
                 }
@@ -433,11 +428,8 @@
           "400": {
             "description": "Bad Request - Invalid parameters"
           },
-          "403": {
-            "description": "Forbidden - Unauthorized to update payment status"
-          },
           "404": {
-            "description": "Not Found - Bill or user not found"
+            "description": "Not Found - User not found"
           }
         },
         "tags": [

@@ -253,7 +253,7 @@ export class BillDetailComponent implements OnInit, OnDestroy, OnChanges {
 
     // Calculate total amount for all selected items
     const total_amount = details.reduce(
-      (sum, detail) => sum + detail.amount,
+      (sum, detail) => sum + Number(detail.amount),
       0
     );
     this.participants[participantIndex].splitAmount = total_amount;

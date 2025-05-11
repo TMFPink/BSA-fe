@@ -1,0 +1,33 @@
+<div class="pay-card">
+  <h2 class="text-[var(--main-theme)] text-3xl font-bold mb-4">
+    Pay for {{ user?.name }}
+  </h2>
+  <p class="text-gray-700 text-xl font-medium mb-6">
+    Amount:
+    <span class="text-[var(--secondary-theme)] text-2xl font-semibold">
+      {{ user?.amount }} VND
+    </span>
+  </p>
+
+  <div
+    class="slider-container"
+    *ngIf="!(isProcessing$ | async)"
+    (mousedown)="startSlide($event)"
+    (touchstart)="startSlide($event)"
+  >
+    <div class="slider-track"></div>
+    <div
+      class="slider-thumb"
+      #sliderThumb
+      (mousedown)="startSlide($event)"
+      (touchstart)="startSlide($event)"
+    >
+      Slide to Pay
+    </div>
+  </div>
+
+  <div class="processing-container" *ngIf="isProcessing$ | async">
+    <div class="spinner"></div>
+    <p>Processing Payment...</p>
+  </div>
+</div>

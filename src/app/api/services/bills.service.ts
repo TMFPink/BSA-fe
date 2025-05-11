@@ -267,19 +267,17 @@ class BillsService extends __BaseService {
    * @return Payment status updated successfully
    */
   billsPayCreateResponse(data: {
-    bill_id: string;
     user_id: string;
   }): __Observable<
     __StrictHttpResponse<{
       message?: string;
-      participation?: {
+      updated_participations?: Array<{
         id?: string;
-        user?: {};
         bill_id?: string;
         bill_name?: string;
         split_amount?: number;
         is_paid?: boolean;
-      };
+      }>;
     }>
   > {
     let __params = this.newParams();
@@ -302,14 +300,13 @@ class BillsService extends __BaseService {
       __map((_r) => {
         return _r as __StrictHttpResponse<{
           message?: string;
-          participation?: {
+          updated_participations?: Array<{
             id?: string;
-            user?: {};
             bill_id?: string;
             bill_name?: string;
             split_amount?: number;
             is_paid?: boolean;
-          };
+          }>;
         }>;
       })
     );
@@ -319,32 +316,29 @@ class BillsService extends __BaseService {
    * @return Payment status updated successfully
    */
   billsPayCreate(data: {
-    bill_id: string;
     user_id: string;
   }): __Observable<{
     message?: string;
-    participation?: {
+    updated_participations?: Array<{
       id?: string;
-      user?: {};
       bill_id?: string;
       bill_name?: string;
       split_amount?: number;
       is_paid?: boolean;
-    };
+    }>;
   }> {
     return this.billsPayCreateResponse(data).pipe(
       __map(
         (_r) =>
           _r.body as {
             message?: string;
-            participation?: {
+            updated_participations?: Array<{
               id?: string;
-              user?: {};
               bill_id?: string;
               bill_name?: string;
               split_amount?: number;
               is_paid?: boolean;
-            };
+            }>;
           }
       )
     );

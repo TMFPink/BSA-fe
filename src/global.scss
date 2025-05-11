@@ -373,3 +373,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .ant-select-selection-item-disabled{
   color: white !important;
 }
+
+.custom-payment-modal .ant-modal-content {
+  background: transparent;
+  border-radius: 0;
+  box-shadow: none;
+  overflow: visible;
+}
+
+.custom-payment-modal .ant-modal-body {
+  padding: 0;
+}
+
+.custom-payment-modal .ant-modal-header {
+  background: transparent;
+  border-bottom: none;
+}
+
+.custom-payment-modal .ant-modal-close {
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  top: -15px;
+  right: -15px;
+  padding: 4px;
+}
+
+.custom-payment-modal .ant-modal-close-x {
+  font-size: 16px;
+  color: #555555;
+}
