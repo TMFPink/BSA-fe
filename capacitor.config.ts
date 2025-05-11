@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'io.ionic.starter',
+  appId: 'com.bsa.app',
   appName: 'BSA-fe',
-  webDir: 'www'
+  webDir: 'www',
 };
 
 export default config;

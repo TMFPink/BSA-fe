@@ -165,6 +165,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
             split_amount: [0],
             name: [this.selectors.user()?.username],
             paid: [false],
+            avatarUrl: [this.selectors.user()?.avatarUrl],
           })
         );
       }
@@ -449,6 +450,7 @@ export class CreateBillComponent implements OnInit, OnDestroy {
           split_amount: [0],
           name: [user.username],
           paid: [false],
+          avatarUrl: [user.avatarUrl],
         })
       );
     } else {

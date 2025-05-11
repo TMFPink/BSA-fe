@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  ApiUrl: '',
+  ApiUrl: 'https://bsa-api-o3vj.onrender.com/api',
 };
