@@ -12,7 +12,7 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { ProfileFacade } from 'src/app/store/profile/profile.facade';
 import { addIcons } from 'ionicons';
 import { caretBackOutline } from 'ionicons/icons';
-
+import { IonSearchbar } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -27,6 +27,7 @@ import { caretBackOutline } from 'ionicons/icons';
     NzFormModule,
     ReactiveFormsModule,
     IonButton,
+    IonSearchbar,
   ],
 })
 export class ProfileComponent implements OnInit, OnDestroy {

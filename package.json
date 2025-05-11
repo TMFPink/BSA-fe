@@ -10,7 +10,8 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "generate-api": "ng-swagger-gen"
+    "generate-api": "ng-swagger-gen",
+    "build-ionic-android": "ionic build --configuration --prod && npx cap copy && npx cap open android"
   },
   "private": true,
   "dependencies": {
