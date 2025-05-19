@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  ApiUrl: 'http://localhost:8000/api',
-  // ApiUrl: 'https://bsa-api-o3vj.onrender.com/api',
+  // ApiUrl: 'http://localhost:8000/api',
+  ApiUrl: 'https://bsa-api-o3vj.onrender.com/api',
 };
 
 /*

@@ -1222,6 +1222,11 @@
   dependencies:
     tslib "^2.1.0"
 
+"@capacitor/filesystem@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/@capacitor/filesystem/-/filesystem-7.0.1.tgz"
+  integrity sha512-dxuKNLFoUejm7tBKkQPs1j7+BLpDh5JKPSVu7nT8jgCbA/KXt5FoCLiepfkjWkYfq60X0JNFzGnIquc5FPOLzQ==
+
 "@capacitor/haptics@7.0.0":
   version "7.0.0"
   resolved "https://registry.npmjs.org/@capacitor/haptics/-/haptics-7.0.0.tgz"
@@ -1236,6 +1241,11 @@
   version "7.0.0"
   resolved "https://registry.npmjs.org/@capacitor/keyboard/-/keyboard-7.0.0.tgz"
   integrity sha512-Tqwy8wG+sx4UqiFCX4Q+bFw6uKgG7BiHKAPpeefoIgoEB8H8Jf3xZNZoVPnJIMuPsCdSvuyHXZbJXH9IEEirGA==
+
+"@capacitor/share@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/@capacitor/share/-/share-7.0.1.tgz"
+  integrity sha512-7GAtWrb2inEWohC8E7mx38qAX6D9yqPDDnUtJaZ8JRpo15jjFRS40Cx388M8h4NlBWjV5NU3qf1sHXnyOBSJ5g==
 
 "@capacitor/status-bar@7.0.0":
   version "7.0.0"

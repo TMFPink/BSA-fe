@@ -11,6 +11,8 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { BillsState, InsightAction } from 'src/app/store';
 import { formatCurrency } from 'src/app/utils';
+import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
+import { Share } from '@capacitor/share';
 
 @Component({
   selector: 'app-pay-card',
@@ -44,28 +46,65 @@ export class PayCardComponent implements OnInit {
     return formatCurrency(value);
   }
 
-  downloadQRCode() {
+  // downloadQRCode() {
+  //   if (!this.user?.qrCode) return;
+
+  //   fetch(this.user.qrCode, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'image/png',
+  //     },
+  //     mode: 'cors', // Ensure the request is made with CORS
+  //   })
+  //     .then((response) => response.blob())
+  //     .then((blob) => {
+  //       const url = URL.createObjectURL(blob);
+  //       const link = document.createElement('a');
+  //       link.href = url;
+  //       link.setAttribute('download', `${this.user.name}-QR-code.png`);
+  //       document.body.appendChild(link);
+  //       link.click();
+  //       document.body.removeChild(link);
+  //       URL.revokeObjectURL(url); // Clean up the URL object
+  //     })
+  //     .catch((error) => console.error('Error downloading the QR code:', error));
+  // }
+
+  async downloadQRCode() {
     if (!this.user?.qrCode) return;
 
-    fetch(this.user.qrCode, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'image/png',
-      },
-      mode: 'cors', // Ensure the request is made with CORS
-    })
-      .then((response) => response.blob())
-      .then((blob) => {
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', `${this.user.name}-QR-code.png`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url); // Clean up the URL object
-      })
-      .catch((error) => console.error('Error downloading the QR code:', error));
+    try {
+      // Fetch the image as a blob
+      const response = await fetch(this.user.qrCode);
+      const blob = await response.blob();
+
+      // Convert the blob to base64
+      const reader = new FileReader();
+      reader.readAsDataURL(blob);
+      reader.onloadend = async () => {
+        const base64Data = reader.result?.toString().split(',')[1];
+
+        // Save the file to the filesystem
+        const fileName = `${this.user.name || 'qr-code'}.png`;
+        const result = await Filesystem.writeFile({
+          path: fileName,
+          data: base64Data || '',
+          directory: Directory.Documents,
+        });
+
+        // Share the file
+        await Share.share({
+          title: 'Download QR Code',
+          text: 'Your QR Code is ready!',
+          url: result.uri,
+          dialogTitle: 'Share QR Code',
+        });
+
+        console.log('File saved to:', result.uri);
+      };
+    } catch (error) {
+      console.error('Error downloading the QR code:', error);
+    }
   }
 
   ngOnInit() {
