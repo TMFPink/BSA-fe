@@ -20,6 +20,7 @@ import { ProfileState } from './store/profile/profile.state';
 import { ProfileComponent } from './Components/profile/profile.component';
 import { PasswordComponent } from './Components/password/password.component';
 import { insightState } from './store/insight';
+import { QrCodeComponent } from './Components/qr-code/qr-code.component';
 
 export const routes: Routes = [
   {
@@ -72,6 +73,10 @@ export const routes: Routes = [
           {
             path: 'password',
             component: PasswordComponent,
+          },
+          {
+            path: 'qr',
+            component: QrCodeComponent,
           },
         ],
       },

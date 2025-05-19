@@ -1,0 +1,60 @@
+<ion-content>
+  <div class="mx-5 mt-10 mb-32">
+    <!-- Back Button -->
+    <ion-button
+      fill="clear"
+      class="no-ripple bg-[var(--secondary-theme)] rounded-lg"
+      (click)="onBack()"
+    >
+      <ion-icon
+        name="caret-back-outline"
+        class="text-white text-3xl"
+      ></ion-icon>
+    </ion-button>
+
+    <div class="mt-5">
+      <div class="block text-white text-lg font-bold mb-2">QR Code</div>
+      <div
+        class="w-full h-80 flex items-center justify-center border border-gray-300 rounded-lg bg-gray-100"
+      >
+        <img
+          *ngIf="qrCodeUrl"
+          [src]="qrCodeUrl"
+          (error)="qrCodeUrl = null"
+          id="qrCodeImage"
+          alt="QR Code"
+          class="max-w-full max-h-full"
+        />
+        <p *ngIf="!qrCodeUrl" class="text-gray-500">No image uploaded</p>
+      </div>
+    </div>
+    <div class="mt-5">
+      <div class="relative">
+        <button
+          type="button"
+          class="block w-full text-sm py-2 px-4 rounded-lg bg-[var(--secondary-theme)] text-white font-semibold"
+        >
+          Choose File
+        </button>
+        <input
+          type="file"
+          id="imageUpload"
+          (change)="onImageUpload($event)"
+          accept="image/*"
+          class="absolute inset-0 opacity-0 cursor-pointer"
+        />
+      </div>
+    </div>
+
+    <div
+      class="z-50 text-white text-xl font-bold px-10 py-5 flex content-center items-center justify-center rounded-3xl w-80 fixed bottom-20 translate-y-1/2 left-1/2 -translate-x-1/2 bill-border"
+      (click)="onUpload()"
+      [ngClass]="{
+        'continue-button': isUploaded,
+        'bg-gray-400': !isUploaded
+      }"
+    >
+      Upload QR Code
+    </div>
+  </div>
+</ion-content>

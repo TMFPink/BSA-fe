@@ -383,7 +383,7 @@
               "type": "object",
               "properties": {
                 "user_id": {
-                  "description": "Hashed user ID of the participant to mark as paid",
+                  "description": "Hashed user ID of the payer",
                   "type": "string"
                 }
               }
@@ -829,6 +829,45 @@
       },
       "parameters": []
     },
+    "/users/QR/": {
+      "post": {
+        "operationId": "users_QR_create",
+        "description": "",
+        "parameters": [
+          {
+            "name": "image",
+            "in": "formData",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "qrCode": {
+                  "description": "URL of the uploaded QR code image",
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "consumes": [
+          "multipart/form-data",
+          "application/x-www-form-urlencoded"
+        ],
+        "tags": [
+          "users"
+        ]
+      },
+      "parameters": []
+    },
     "/users/all/": {
       "get": {
         "operationId": "users_all_list",
@@ -1052,6 +1091,11 @@
         },
         "avatarUrl": {
           "title": "AvatarUrl",
+          "type": "string",
+          "x-nullable": true
+        },
+        "qrCode": {
+          "title": "QrCode",
           "type": "string",
           "x-nullable": true
         }
@@ -1295,6 +1339,11 @@
         },
         "avatarUrl": {
           "title": "AvatarUrl",
+          "type": "string",
+          "x-nullable": true
+        },
+        "qrCode": {
+          "title": "QrCode",
           "type": "string",
           "x-nullable": true
         },

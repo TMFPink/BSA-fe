@@ -12,6 +12,7 @@ import { User } from 'src/app/api/models';
 interface profileStateModel {
   status: 'loading' | 'success' | 'error' | null;
   user: User | null;
+  uploadQrStatus: 'loading' | 'success' | 'error' | null;
 }
 
 @Injectable()
@@ -20,6 +21,7 @@ interface profileStateModel {
   defaults: {
     status: null,
     user: null,
+    uploadQrStatus: null,
   },
 })
 export class ProfileState extends BaseState<profileStateModel> {
@@ -133,6 +135,39 @@ export class ProfileState extends BaseState<profileStateModel> {
       }),
       catchError((error) => {
         this.handleError(ctx, error);
+        const errorMessage = error.error.error;
+        this.handleErrorService.messageError$.next(errorMessage);
+        return error;
+      })
+    );
+  }
+
+  @Action(profileAction.UpdateQrCode)
+  updateQrCode(
+    ctx: StateContext<profileStateModel>,
+    { payload }: profileAction.UpdateQrCode
+  ) {
+    this.setLoading(ctx);
+    return this.profileService.usersQRCreate(payload).pipe(
+      tap((response) => {
+        this.handleApiResponse(
+          ctx,
+          response,
+          'Error while updating QR code',
+          (data: User) => {
+            ctx.patchState({ uploadQrStatus: 'success' });
+            const user = localStorage.getItem('user');
+            if (user) {
+              const parsedUser = JSON.parse(user);
+              parsedUser.qrCode = data.qrCode;
+              localStorage.setItem('user', JSON.stringify(parsedUser));
+            }
+          }
+        );
+      }),
+      catchError((error) => {
+        this.handleError(ctx, error);
+        ctx.patchState({ uploadQrStatus: 'error' });
         const errorMessage = error.error.error;
         this.handleErrorService.messageError$.next(errorMessage);
         return error;

@@ -4,4 +4,5 @@ export const DISABLED_ROUTES = {
   FriendsAdding: '/friends/add',
   Profile: '/account/profile',
   Password: '/account/password',
+  QrCode: '/account/qr',
 };

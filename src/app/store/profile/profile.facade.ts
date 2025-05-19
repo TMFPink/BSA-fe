@@ -19,6 +19,7 @@ export class ProfileFacade {
     getMe: profileAction.GetMe,
     updateProfile: profileAction.UpdateProfile,
     updatePassword: profileAction.UpdatePassword,
+    uploadQrCode: profileAction.UpdateQrCode,
   });
 
   updateProfile(payload: any) {
@@ -34,6 +35,14 @@ export class ProfileFacade {
     this.actionMap.updatePassword(payload).subscribe({
       complete: () => {
         this.toast.showSnackBar('Password updated successfully', 'success');
+        this.router.navigate(['/account']);
+      },
+    });
+  }
+  uploadQrCode(payload: any) {
+    this.actionMap.uploadQrCode(payload).subscribe({
+      complete: () => {
+        this.toast.showSnackBar('QR Code updated successfully', 'success');
         this.router.navigate(['/account']);
       },
     });

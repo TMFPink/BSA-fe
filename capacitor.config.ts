@@ -1,7 +1,7 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.bsa.app',
+  appId: 'com.bill_splitter.app',
   appName: 'BSA-fe',
   webDir: 'www',
 };

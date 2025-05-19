@@ -17,6 +17,7 @@ import { NzModalService } from 'ng-zorro-antd/modal';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { PayCardComponent } from 'src/app/UI/pay-card/pay-card.component';
 import { BillAction } from 'src/app/store';
+import { qrCode } from 'ionicons/icons';
 
 @Component({
   selector: 'app-home',
@@ -231,6 +232,7 @@ export class HomePage implements OnDestroy {
             avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
             name: item.user.username,
             amount: item.total_amount,
+            qrCode: item.user.qrCode,
             owed: true,
           })),
           ...data.i_owe_to_user.map((item: any) => ({
@@ -238,6 +240,7 @@ export class HomePage implements OnDestroy {
             avt: item.user.avatarUrl || 'assets/images/user-avt.webp',
             name: item.user.username,
             amount: item.total_amount,
+            qrCode: item.user.qrCode,
             owed: false,
           })),
         ];

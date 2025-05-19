@@ -8,5 +8,6 @@ export interface UserWithMutualFriends {
   mutual_friends_count?: string;
   password: string;
   phone?: null | string;
+  qrCode?: null | string;
   username: string;
 }

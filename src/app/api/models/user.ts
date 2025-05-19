@@ -7,5 +7,6 @@ export interface User {
   last_name?: string;
   password: string;
   phone?: null | string;
+  qrCode?: null | string;
   username: string;
 }

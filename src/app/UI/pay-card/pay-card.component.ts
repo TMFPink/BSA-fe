@@ -7,15 +7,17 @@ import {
   ViewChild,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalRef } from 'ng-zorro-antd/modal';
 import { BillsState, InsightAction } from 'src/app/store';
+import { formatCurrency } from 'src/app/utils';
 
 @Component({
   selector: 'app-pay-card',
   templateUrl: './pay-card.component.html',
   styleUrls: ['./pay-card.component.scss'],
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NzIconModule],
 })
 export class PayCardComponent implements OnInit {
   user: any = null;
@@ -36,6 +38,34 @@ export class PayCardComponent implements OnInit {
         this.store.dispatch(new InsightAction.GetBalance({}));
       }
     });
+  }
+
+  formatCurrency(value: number) {
+    return formatCurrency(value);
+  }
+
+  downloadQRCode() {
+    if (!this.user?.qrCode) return;
+
+    fetch(this.user.qrCode, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'image/png',
+      },
+      mode: 'cors', // Ensure the request is made with CORS
+    })
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', `${this.user.name}-QR-code.png`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url); // Clean up the URL object
+      })
+      .catch((error) => console.error('Error downloading the QR code:', error));
   }
 
   ngOnInit() {

@@ -12,6 +12,7 @@ import { User } from '../models/user';
   providedIn: 'root',
 })
 class UsersService extends __BaseService {
+  static readonly usersQRCreatePath = '/users/QR/';
   static readonly usersAllListPath = '/users/all/';
   static readonly usersMeListPath = '/users/me/';
   static readonly usersPasswordCreatePath = '/users/password';
@@ -23,6 +24,42 @@ class UsersService extends __BaseService {
     http: HttpClient
   ) {
     super(config, http);
+  }
+
+  /**
+   * @param image undefined
+   */
+  usersQRCreateResponse(image: Blob): __Observable<__StrictHttpResponse<{qrCode?: string}>> {
+    let __params = this.newParams();
+    let __headers = new HttpHeaders();
+    let __body: any = null;
+    let __formData = new FormData();
+    __body = __formData;
+    if (image != null) { __formData.append('image', image as string | Blob);}
+    let req = new HttpRequest<any>(
+      'POST',
+      this.rootUrl + `/users/QR/`,
+      __body,
+      {
+        headers: __headers,
+        params: __params,
+        responseType: 'json'
+      });
+
+    return this.http.request<any>(req).pipe(
+      __filter(_r => _r instanceof HttpResponse),
+      __map((_r) => {
+        return _r as __StrictHttpResponse<{qrCode?: string}>;
+      })
+    );
+  }
+  /**
+   * @param image undefined
+   */
+  usersQRCreate(image: Blob): __Observable<{qrCode?: string}> {
+    return this.usersQRCreateResponse(image).pipe(
+      __map(_r => _r.body as {qrCode?: string})
+    );
   }
   usersAllListResponse(): __Observable<__StrictHttpResponse<null>> {
     let __params = this.newParams();
